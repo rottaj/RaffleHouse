@@ -1,7 +1,19 @@
+import internal from 'node:stream';
 import React from 'react';
 
 
-export default class PoolComponent extends React.Component {
+interface IPoolComponentProps {
+    tickets?: number;
+    maxTickets?: number;
+}
+
+interface IPoolComponentState {
+    tickets?: number;
+    maxTickets?: number;
+}
+
+
+export default class PoolComponent extends React.Component<IPoolComponentProps, IPoolComponentState> {
     state = {
         tickets: 0,
         maxTickets: this.props.maxTickets
