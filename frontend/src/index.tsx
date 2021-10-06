@@ -7,7 +7,7 @@ import { ChainId, DAppProvider, useEtherBalance, useEthers } from '@usedapp/core
 const config = {
     readOnlyChainId: ChainId.Mainnet,
     readOnlyUrls: {
-      [ChainId.Mainnet]: 'https://mainnet.infura.io/v3/8936a6ecfe9245159a186a0fbec7bdce',
+      [ChainId.Mainnet]: 'https://rinkeby.infura.io/v3/8936a6ecfe9245159a186a0fbec7bdce',
     },
   }
 
