@@ -9,7 +9,7 @@ export default class Home extends React.Component {
     render() {
         return (
             <div className="main-container">
-                <div className="title-container">
+                <div className="home-title-container">
                     <h1>Token Lotto!</h1>
                     <h3>Win big with the fastest growing crypto lottery!</h3>
                     <h4>Fully decentralized and transparent, operated on the Ethereum blockchain.</h4>
