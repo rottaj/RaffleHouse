@@ -1,9 +1,9 @@
 pragma solidity ^0.8.0;
 
-//import "@openzeppelin/contracts/ownership/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Token.sol";
 
-contract Pool {
+contract Pool is Ownable{
     enum State {
         LOCKED,
         UNLOCKED
@@ -14,20 +14,16 @@ contract Pool {
     uint private tokenCount; // returns current token count
     uint private maxTokens; // max number of tokens for pool
     address private winnerAddress; // winning address.
+    address private tokenAddress;
 
     constructor() { // initialize pool
         state = State.UNLOCKED; // set state to unlocked
     }
 
-    function createToken() private isUnlocked{
-
-    }
 
     function currentTokens() private view returns(uint){ // return current token count
         return tokenCount;
     }
-
-
 
 
 
