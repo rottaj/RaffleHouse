@@ -1,14 +1,15 @@
 # Basic Sample Hardhat Project
 
-Pool Contract 
---> Keeps track of total price of jackpot. 
---> Grabs current tokens. 
---> Picks random winner out of tokens.
---> ( Maybe having an external treasury contract to send to winner.)
+This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
 
+Try running some of the following tasks:
 
-Token Contract
---> NFT contract.
---> Mints NFT for that pool
---> Keeps track of NFT owners addresses in "tokens"
---> Points to it's creation pool.
+```shell
+npx hardhat accounts
+npx hardhat compile
+npx hardhat clean
+npx hardhat test
+npx hardhat node
+node scripts/sample-script.js
+npx hardhat help
+```
