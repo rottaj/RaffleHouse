@@ -1,4 +1,9 @@
 const https = require('https');
+const ethers = require('ethers');
+require('dotenv').config();
+
+var provider = new ethers.providers.JsonRpcProvider(process.env.RINKEBY_URL);
+console.log("PROVIDER", provider)
 const options = {
   host: 'api-rinkeby.etherscan.io',
   port: 443,
@@ -7,14 +12,22 @@ const options = {
 }
 
 requestData = []
+var data = ''
+var tokenIds = []
 const req = https.request(options, res => {
-  console.log(`Status:  ${res.statusCode}`);
   res.on('data', d => {
+    data += d
+  });
+  res.on('end', function () {
+    data = JSON.parse(data)
+    jsonData = data[Object.keys(data)[2]]
 
-    const test = process.stdout.write(d);
-    const data = JSON.parse(test);
-    console.log(data,);
-    requestData.push(data);
+    for (key in jsonData) {
+      //console.log(key, jsonData[key])
+      tokenIds.push(jsonData[key]['tokenID']) 
+    }
+    console.log(data)
+    console.log(tokenIds) // from here remove duplicate values.
   });
 });
 
@@ -23,9 +36,3 @@ req.on('error', error => {
 });
 
 req.end()
-
-console.log(requestData, requestData.length);
-
-for (let i=0; i<=requestData.length; i++) {
-  console.log(requestData[i], '\n\n\n');
-}
