@@ -1,33 +1,43 @@
 import React from 'react';
 import './Home.css';
 import { Link } from 'react-router-dom';
-import { ChainId, DAppProvider, useEtherBalance, useEthers } from '@usedapp/core'
-import { formatEther } from '@ethersproject/units'
-
+import EnterApp from "../Components/EnterApp";
+import RaffleCreator from "../Components/RaffleCreator"
 
 function onClickPool() {
 
 }
 
-export function Home() {
+declare let window: any;
+export default class Home extends React.Component {
 
-    const { activateBrowserWallet, account } = useEthers()
-    const etherBalance = useEtherBalance(account)
-    return (
-        <div className="main-container">
-            <div className="home-title-container">
-                <h1>Token Lotto!</h1>
-                <h3>Win big with the fastest growing crypto lottery!</h3>
-                <h4>Fully decentralized and transparent, operated on the Ethereum blockchain.</h4>
-                <Link to="/pools">
-                    <button>Join Pool!</button>
-                </Link>
-                <div>
-                    <button onClick={() => activateBrowserWallet()}>Connect</button>
+    state = {
+        RaffleFormOpen: false
+      }
+    
+    handleRaffleForm = () => {
+        this.setState({
+          RaffleFormOpen: !this.state.RaffleFormOpen
+        })
+      }
+
+    render() {
+        return (
+            <div className="main-container">
+                <div className="home-title-container">
+                    <h1>Token Lotto!</h1>
+                    <h3>Win big with the fastest growing crypto lottery!</h3>
+                    <h4>Fully decentralized and transparent, operated on the Ethereum blockchain.</h4>
+                    <EnterApp/>
+                    <Link to="/pools">
+                        <button>Join Pool!</button>
+                    </Link>
+                    <div>
+                        <button onClick={this.handleRaffleForm}>Create Raffle!</button>
+                    </div>
+                    <RaffleCreator isOpen={this.state.RaffleFormOpen}/>
                 </div>
-                {account && <p>Account: {account}</p>}
-                {etherBalance && <p>Balance: {formatEther(etherBalance)}</p>}
             </div>
-        </div>
-    )
+        )
+    }
 }
