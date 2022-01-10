@@ -1,4 +1,5 @@
 import React from 'react';
+import NFTSelector from "./NFTSelector";
 import "./RaffleCreator.css";
 
 interface Props {
@@ -19,6 +20,7 @@ export default class RaffleCreator extends React.Component <Props>{
                         <input className="RaffleForm-Minimum-Buyin" defaultValue="0.08"></input>
                         <br></br>
                         <br></br>
+                        <NFTSelector/>
                         <button>Submit Proposal</button>
                     </form>
                 </div>
