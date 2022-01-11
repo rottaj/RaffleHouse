@@ -6,7 +6,7 @@ const ETHERSCAN_NFT_TXN = process.env.ETHERSCAN_API_NFT_TXN;
 /*
 process.env.ETHERSCAN_API_NFT_TXN + ${0xB702DC679dCe8d27c77AC49A63B9A138B674929E} + ${&startblock=0&endblock=999999999&sort=asc&apikey=} + process.env.API_KEY
 */
-const ETHERSCAN_API_NFT_TXN = 'api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=';
+const ETHERSCAN_API_NFT_TXN = 'https://api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=';
 const ETHERSCAN_API_KEY = 'JPARDRW9CAVF9ZKISWVC3YYM6RP93JNQUC';
 
 interface Props {
@@ -28,9 +28,14 @@ export default class NFTSelector extends React.Component {
         fetch(url)
         .then(res => {
             console.log(res)
-            res.json();
+            return res.json();
         })
-        .then(data => console.log(data))
+        .then(data => {
+            console.log("TESTING", data)
+            this.setState({
+                tokens: data.result
+            })
+        })
     }
 
     componentDidMount() {
@@ -41,6 +46,7 @@ export default class NFTSelector extends React.Component {
     render() {
         return (
             <div>
+                {console.log(this.state)}
                 NFT SELECTOR
             </div>
         )
