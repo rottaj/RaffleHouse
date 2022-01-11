@@ -16,17 +16,21 @@ const signer = provider.getSigner();
 console.log("TESTING", signer);
 
 async function getContract() {
-  var contract = await new ethers.Contract(address, _abi, signer);
+  var contract = new ethers.Contract(address, _abi, signer);
   return contract
 }
 
 async function getTokens(contract) {
   const totalAmount = await contract.totalSupply();
+  return totalAmount
 }
-var contract = getContract();
+//var contract = getContract();
+var contract = new ethers.Contract(address, _abi, provider);
 console.log(contract);
-//var totalAmount = getTokens(contract);
-//console.log(totalAmount);
+var totalAmount = getTokens(contract).then(res => {
+  console.log(parseInt(res, 16))
+});
+console.log(totalAmount);
 /*
 pool.query('SELECT * FROM Eyescream', (err, res) => {
   console.log(err, res);
