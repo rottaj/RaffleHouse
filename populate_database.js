@@ -31,6 +31,9 @@ async function getMetaData(contract, totalSupply) {
   try {
     let metaData = await contract.tokenURI(i);
       console.log(metaData);
+      pool.query(`INSERT INTO Eyescream(id, Metadata) VALUES($1, $2)`, [i, metaData], (err, res) => {
+        console.log(err, res);
+      })
     } catch (error) {
       console.log(error);
     }
