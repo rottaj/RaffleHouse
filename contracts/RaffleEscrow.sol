@@ -3,18 +3,18 @@ pragma solidity ^0.8.11;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 
-contract RaffleEscrow is Ownable {
+contract RaffleEscrow {
   //address private raffleAddress;
+  //uint256 private timeLimit;
   address payable private creatorAddress;
   bool private allowWithdraw = false; 
-  uint256 private timeLimit;
+  uint256 public MIN_DEPOSIT;
    
   //address private tickets = [];  // [0x02342351, 0x025243123, 0x0234234234, 0x0235234134, 0x235123124]
 
-  constructor(address payable _creatorAddress, uint256 _timeLimit) {
-    //raffleAddress = _raffleAddress;
+  constructor(address payable _creatorAddress, uint256 _minDeposit) {
     creatorAddress = _creatorAddress;
-    timeLimit = _timeLimit
+    MIN_DEPOSIT = _minDeposit;
   }
 
   mapping (address => uint256) _userDeposits;
@@ -26,26 +26,23 @@ contract RaffleEscrow is Ownable {
     _userDeposits[msg.sender] += msg.value;
     //userTickets = []
     //tickets.push(...userTickets) 
-    processProposal()
+    //processProposal()
   }
  
-  function withdrawEther(address payable _winner) public onlyOwner{
-    require(_winner != address(0), "WITHDRAW: INVALID ADDRESS");
+  function withdrawEther() public {
     require(allowWithdraw == true, "WITHDRAW: NOT ALLOWED TO WITHDRAW");
     creatorAddress.send(address(this).balance);  
   }
 
+  /*
   function processProposal() private {
     // logic 
-    if (block.timestamp >= timeLimit) {
-      enableWithdraw()
-      
-    }
   }
 
-  function enableWithdraw() public onlyOwner {
+  function enableWithdraw() private {
     allowWithdraw = true; 
   }
+  */
 
   function getBalance() public view { // only for testing
     console.log(address(this).balance / 1 ether);

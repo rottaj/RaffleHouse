@@ -1,7 +1,8 @@
 import React from 'react';
 import NFTSelector from "./NFTSelector";
-import { ethers } from 'ethers';
+import { ethers, ContractFactory } from 'ethers';
 import { _abi } from '../interfaces/Eyescream_Interface';
+import { _Raffle_abi, _Raffle_bytecode } from "../interfaces/RaffleEscrow_Interface";
 import "./RaffleCreator.css";
 require('dotenv').config();
 const ETHERSCAN_NFT_TXN = process.env.ETHERSCAN_API_NFT_TXN;
@@ -87,10 +88,21 @@ export default class RaffleCreator extends React.Component <Props>{
         this.fetchNFTs()
     }
 
-    handleSubmit = (e: any) => {
+    handleSubmit = async (e: any) => {
         e.preventDefault();
-        console.log("handleSubmit", e);
-        console.log("NFT Selector state", this.tokenSelector.state.selectedToken);
+        if (window.ethereum) {
+            var accounts = await window.ethereum.send('eth_requestAccounts');
+            var provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+            console.log("handleSubmit", e.target[0].value);
+            console.log("NFT Selector state", this.tokenSelector.state.selectedToken);
+            const raffleFactory = new ContractFactory(_Raffle_abi, _Raffle_bytecode, signer)
+            console.log("SIGNER", accounts.result[0]);
+            const account = accounts.result[0];
+            const contract = await raffleFactory.deploy(account, parseInt(e.target[0].value));
+            await contract.deployed();
+            console.log(contract);
+        }
     }
 
     render() {
