@@ -1,5 +1,5 @@
 import React from 'react';
-
+import './NFT.css';
 interface Props {
     token: any;
 }
@@ -7,8 +7,8 @@ interface Props {
 export default class NFT extends React.Component<Props> {
     render() {
         return (
-            <div >
-                <img src={this.props.token}></img>
+            <div className="NFT-Main-Container">
+                <img className="NFT-Img"src={this.props.token}></img>
             </div>
         )
     }

@@ -1,14 +1,14 @@
 .CreateRaffleForm-Main {
-    height: 1000%;
-    width: 100%;
+    height: auto;
+    width: auto;
 }
 
 .PopUp-Form {
     /*position: fixed; */
     height: 100%;
-    width: 100%;
+    width: 70%;
     margin-top: 5%;
-    padding-left: 10%;
-    padding-right: 10%;
+    margin-left: 10%;
     background-color: grey;
+    overflow-y: scroll;
 }

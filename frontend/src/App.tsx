@@ -12,7 +12,7 @@ export default class App extends React.Component {
         <Route exact path = "/" component = {Home} />
 
 
-        <Route exact path = "/pools" component = {RaffleContainer}/>
+        <Route exact path = "/raffles" component = {RaffleContainer}/>
       </BrowserRouter>
     )
   }

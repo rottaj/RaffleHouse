@@ -1,11 +1,13 @@
-/*
-.token-select-img {
-    max-height: 25px;
-    max-width: 25px;
-
-}
-
 .NFT-Selector-Main {
-    text-align: center;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: 200px;
 }
-*/
+
+.token-select-img {
+
+}
+
+.NFT-Div-Container {
+}
+

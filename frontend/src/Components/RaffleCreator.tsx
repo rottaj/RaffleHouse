@@ -100,8 +100,16 @@ export default class RaffleCreator extends React.Component <Props>{
             console.log("SIGNER", accounts.result[0]);
             const account = accounts.result[0];
             const contract = await raffleFactory.deploy(account, parseInt(e.target[0].value));
-            await contract.deployed();
-            console.log(contract);
+            const selectedToken = this.tokenSelector.state.selectedToken;
+            await contract.deployed().then(async function (data) {
+                console.log(data);
+                console.log("TESTING FOOBAR", selectedToken)
+                console.log("TESTING", selectedToken.contractAddress);
+                const collectionContract = await new ethers.Contract(selectedToken.contractAddress, _abi, signer);
+                const sendingTxn = await collectionContract.transferFrom(account, contract.address, selectedToken.tokenID);
+                console.log("TOKEN TXN: ", sendingTxn);
+            })
+            console.log("CONTRACT: ", contract);
         }
     }
 
@@ -111,7 +119,7 @@ export default class RaffleCreator extends React.Component <Props>{
                 {this.props.isOpen && 
                 <div className="PopUp-Form">
                     {console.log(this.state)}
-                    <h3>Create New Proposal</h3>
+                    <h3>Create your Raffle!</h3>
                     <h3> 1 Share(FUN) = 0.08 ETH</h3>
                     <form className="CreateRaffle-Form" onSubmit={(e) => this.handleSubmit(e)}>
                         Minimum Buy in:
