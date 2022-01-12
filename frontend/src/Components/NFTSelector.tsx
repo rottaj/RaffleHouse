@@ -15,10 +15,10 @@ export default class NFTSelector extends React.Component <Props>{
     }
 
     handleClick = (e: any) => {
-        console.log(e)
         this.setState({
             selectedToken: e
         })
+        console.log(this.state.selectedToken)
     }
 
     render() {

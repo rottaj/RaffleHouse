@@ -22,6 +22,8 @@ export default class RaffleCreator extends React.Component <Props>{
         tokens: []
     }
 
+    tokenSelector: any = React.createRef() 
+
     fetchNFTs = async () => {
         if (window.ethereum) {
             var provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -83,10 +85,13 @@ export default class RaffleCreator extends React.Component <Props>{
 
     componentDidMount() {
         this.fetchNFTs()
-
     }
 
-
+    handleSubmit = (e: any) => {
+        e.preventDefault();
+        console.log("handleSubmit", e);
+        console.log("NFT Selector state", this.tokenSelector.state.selectedToken);
+    }
 
     render() {
         return (
@@ -96,13 +101,13 @@ export default class RaffleCreator extends React.Component <Props>{
                     {console.log(this.state)}
                     <h3>Create New Proposal</h3>
                     <h3> 1 Share(FUN) = 0.08 ETH</h3>
-                    <form className="CreateRaffle-Form" >
+                    <form className="CreateRaffle-Form" onSubmit={(e) => this.handleSubmit(e)}>
                         Minimum Buy in:
                         <input className="RaffleForm-Minimum-Buyin" defaultValue="0.08"></input>
                         <br></br>
                         <br></br>
-                        <NFTSelector tokens={this.state.tokens}/>
-                        <button>Submit Proposal</button>
+                        <NFTSelector tokens={this.state.tokens} ref={(tokenSelector) => this.tokenSelector = tokenSelector}/>
+                        <button type="submit">Submit Proposal</button>
                     </form>
                 </div>
                 }
