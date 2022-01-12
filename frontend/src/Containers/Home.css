@@ -1,3 +1,10 @@
+
+.main-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
 .home-title-container {
     padding-top: 10%;
     padding-left: 18%;

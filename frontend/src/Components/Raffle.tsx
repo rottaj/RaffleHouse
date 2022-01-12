@@ -12,6 +12,7 @@ export default class Raffle extends React.Component<Props> {
     render() {
         return (
             <div>
+                <img></img>
             </div>
         )
     }

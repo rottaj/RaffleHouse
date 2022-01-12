@@ -19,7 +19,7 @@ interface Props {
 declare let window: any;
 export default class RaffleCreator extends React.Component <Props>{
     state = {
-        tokenImages: []
+        tokens: []
     }
 
     fetchNFTs = async () => {
@@ -65,8 +65,9 @@ export default class RaffleCreator extends React.Component <Props>{
                     console.log(token.contractAddress)
                     let metaData = await contract.tokenURI(parseInt(token.tokenID))
                     fetch(metaData).then(res => {return res.json()}).then(data => {
+                        token['image'] = data.image
                         this.setState({
-                            tokenImages: [...this.state.tokenImages, data.image] 
+                            tokens: [...this.state.tokens, token] 
                         })
                     })
                 }
@@ -100,7 +101,7 @@ export default class RaffleCreator extends React.Component <Props>{
                         <input className="RaffleForm-Minimum-Buyin" defaultValue="0.08"></input>
                         <br></br>
                         <br></br>
-                        <NFTSelector tokens={this.state.tokenImages}/>
+                        <NFTSelector tokens={this.state.tokens}/>
                         <button>Submit Proposal</button>
                     </form>
                 </div>

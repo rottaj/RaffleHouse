@@ -4,11 +4,8 @@ import { Link } from 'react-router-dom';
 import EnterApp from "../Components/EnterApp";
 import RaffleCreator from "../Components/RaffleCreator"
 
-function onClickPool() {
 
-}
 
-declare let window: any;
 export default class Home extends React.Component {
 
     state = {
@@ -35,8 +32,9 @@ export default class Home extends React.Component {
                     <div>
                         <button onClick={this.handleRaffleForm}>Create Raffle!</button>
                     </div>
-                    <RaffleCreator isOpen={this.state.RaffleFormOpen}/>
+
                 </div>
+                <RaffleCreator isOpen={this.state.RaffleFormOpen}/>
             </div>
         )
     }
