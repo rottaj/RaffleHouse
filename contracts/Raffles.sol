@@ -9,16 +9,26 @@ contract Raffles is Ownable {
   }
   Raffle[] public raffles;
 
+  function addRaffle() public {
+    require(msg.sender != address(0), "INVALID ADDRESS");
+    Raffle memory raffle = Raffle ({
+      creatorAddress: msg.sender,
+      minTime: block.timestamp // for testing.
+    });
+    raffles.push(raffle);
+  }
+  
+  function removeRaffleByIndex(uint _index) public onlyOwner {
+    delete raffles[_index]; 
+  }
+
+  // Views
   function getRaffles() public view returns (uint) {
     return raffles.length;
   }
 
   function getRaffleByIndex(uint _index) public view returns (Raffle memory) {
     return raffles[_index];
-  }
-
-  function removeRaffleByIndex(uint _index) public onlyOwner {
-    delete raffles[_index]; 
   }
   
 }
