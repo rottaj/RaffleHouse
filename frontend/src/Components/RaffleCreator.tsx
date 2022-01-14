@@ -64,7 +64,7 @@ export default class RaffleCreator extends React.Component <Props>{
             // PERFORM FETCH ABI REQUEST ON VERIFIED CONTRACT
             //console.log(token.contractAddress, address)
             try {
-                if (String(token.contractAddress) == '0x05d79a33c0f7e719ae171b61f095f500635a0a21') {
+                if (String(token.contractAddress) == '0x05d79a33c0f7e719ae171b61f095f500635a0a21') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
                     let contract = new ethers.Contract(token.contractAddress, _abi, signer)
                     console.log(token.contractAddress)
                     let metaData = await contract.tokenURI(parseInt(token.tokenID))
