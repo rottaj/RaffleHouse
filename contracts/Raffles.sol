@@ -5,14 +5,16 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract Raffles is Ownable {
   struct Raffle {
     address creatorAddress;
+    string tokenImage;
     uint256 minTime;
   }
   Raffle[] public raffles;
 
-  function addRaffle() public {
+  function addRaffle(string memory _tokenImage) public {
     require(msg.sender != address(0), "INVALID ADDRESS");
     Raffle memory raffle = Raffle ({
       creatorAddress: msg.sender,
+      tokenImage: _tokenImage,
       minTime: block.timestamp // for testing.
     });
     raffles.push(raffle);

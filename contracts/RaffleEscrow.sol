@@ -9,12 +9,14 @@ contract RaffleEscrow {
   address payable private creatorAddress;
   bool private allowWithdraw = false; 
   uint256 public MIN_DEPOSIT;
+  string public tokenURI;
    
   //address private tickets = [];  // [0x02342351, 0x025243123, 0x0234234234, 0x0235234134, 0x235123124]
 
-  constructor(address payable _creatorAddress, uint256 _minDeposit) {
+  constructor(address payable _creatorAddress, uint256 _minDeposit, string memory _tokenURI) {
     creatorAddress = _creatorAddress;
     MIN_DEPOSIT = _minDeposit;
+    tokenURI = _tokenURI;
   }
 
   mapping (address => uint256) _userDeposits;

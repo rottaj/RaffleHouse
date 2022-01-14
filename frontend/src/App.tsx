@@ -3,7 +3,7 @@ import './App.css';
 import {BrowserRouter, Route} from 'react-router-dom';
 import React from 'react';
 import Home  from './Containers/Home';
-import RaffleContainer from './Containers/RaffleContainer'
+import Raffles from './Containers/Raffles'
 
 export default class App extends React.Component {
   render() {
@@ -12,7 +12,7 @@ export default class App extends React.Component {
         <Route exact path = "/" component = {Home} />
 
 
-        <Route exact path = "/raffles" component = {RaffleContainer}/>
+        <Route exact path = "/raffles" component = {Raffles}/>
       </BrowserRouter>
     )
   }

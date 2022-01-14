@@ -3,6 +3,7 @@ import NFTSelector from "./NFTSelector";
 import { ethers, ContractFactory } from 'ethers';
 import { _abi } from '../interfaces/Eyescream_Interface';
 import { _Raffle_abi, _Raffle_bytecode } from "../interfaces/RaffleEscrow_Interface";
+import { RafflesAddress, _abi_raffles } from '../interfaces/Raffles_Interface';
 import "./RaffleCreator.css";
 require('dotenv').config();
 const ETHERSCAN_NFT_TXN = process.env.ETHERSCAN_API_NFT_TXN;
@@ -96,11 +97,13 @@ export default class RaffleCreator extends React.Component <Props>{
             const signer = provider.getSigner();
             console.log("handleSubmit", e.target[0].value);
             console.log("NFT Selector state", this.tokenSelector.state.selectedToken);
-            const raffleFactory = new ContractFactory(_Raffle_abi, _Raffle_bytecode, signer)
+            const raffleFactory = new ContractFactory(_Raffle_abi, _Raffle_bytecode, signer) // Initialize new Raffle 
+            const rafflesContract = await new ethers.Contract(RafflesAddress, _abi_raffles, signer)  // connect to Raffles Contract
             console.log("SIGNER", accounts.result[0]);
+            // DEPLOY CONTRACT
             const account = accounts.result[0];
-            const contract = await raffleFactory.deploy(account, parseInt(e.target[0].value));
-            const selectedToken = this.tokenSelector.state.selectedToken;
+            const selectedToken = this.tokenSelector.state.selectedToken; // maybe remove?
+            const contract = await raffleFactory.deploy(account, parseInt(e.target[0].value), selectedToken.image);
             await contract.deployed().then(async function (data) {
                 console.log(data);
                 console.log("TESTING FOOBAR", selectedToken)
@@ -108,6 +111,10 @@ export default class RaffleCreator extends React.Component <Props>{
                 const collectionContract = await new ethers.Contract(selectedToken.contractAddress, _abi, signer);
                 const sendingTxn = await collectionContract.transferFrom(account, contract.address, selectedToken.tokenID);
                 console.log("TOKEN TXN: ", sendingTxn);
+            }).then(async function (dataTwo) {
+                console.log(dataTwo);
+                const addRaffleTxn = rafflesContract.addRaffle(selectedToken.image)
+                console.log("WENT THROUGH", addRaffleTxn)
             })
             console.log("CONTRACT: ", contract);
         }
