@@ -1,12 +1,13 @@
 import React from 'react';
 import Raffle from '../Components/Raffle';
-import Home from './Home';
 import { ethers } from "ethers";
 import { Link } from 'react-router-dom';
 import { RafflesAddress, _abi_raffles } from '../interfaces/Raffles_Interface';
+import RaffleViewer from './RaffleViewer';
+import {BrowserRouter, Route} from 'react-router-dom';
 import './Raffles.css';
 
-declare let window: any
+declare let window: any;
 export default class Raffles extends React.Component {
 
     state = {
@@ -40,11 +41,20 @@ export default class Raffles extends React.Component {
 
     componentDidUpdate() {
         console.log(this.state)
+        return <BrowserRouter>
+            {this.state.raffles.map(raffle => {<Link to={`raffle/${raffle['contractAddress']}`}/>})}
+            <Route path="raffle/:id" component={RaffleViewer}/>
+        </BrowserRouter>
     }
 
     render() {
         return (
             <div className="Raffles-container-main">
+                <BrowserRouter>
+
+                    {this.state.raffles.map(raffle => {<Link to={`raffle/${raffle['contractAddress']}`}/>})}
+                    <Route path="raffle/:id" component={RaffleViewer}/>
+                </BrowserRouter>
                 <Link to="/">
                     <button>Raffle House</button>
                 </Link>
