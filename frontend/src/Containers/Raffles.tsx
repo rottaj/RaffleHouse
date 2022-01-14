@@ -38,9 +38,6 @@ export default class Raffles extends React.Component {
     render() {
         return (
             <div className="Raffles-container-main">
-                <BrowserRouter>
-                    <Route path="raffle/:contractAddress" component={RaffleViewer}/>
-                </BrowserRouter>
                 <Link to="/">
                     <button>Raffle House</button>
                 </Link>

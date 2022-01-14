@@ -12,7 +12,7 @@ export default class App extends React.Component {
       <BrowserRouter>
         <Route exact path = "/" component = {Home} />
         <Route exact path = "/raffles" component = {Raffles}/>
-        <Route path = "raffle/:contractAddress" component = {require('./Containers/RaffleViewer').default}/>
+        <Route path = "/raffle/:contractAddress" component = {RaffleViewer}/>
       </BrowserRouter>
     )
   }
