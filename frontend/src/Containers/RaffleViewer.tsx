@@ -1,5 +1,7 @@
 import React from 'react';
+import Deposit from "../Components/Deposit";
 import { ethers } from 'ethers';
+import { Link } from 'react-router-dom';
 import { _abi } from "../interfaces/Eyescream_Interface";
 import { _Raffle_abi } from '../interfaces/RaffleEscrow_Interface';
 import "./RaffleViewer.css";
@@ -14,7 +16,9 @@ export default class RaffleViewer extends React.Component {
 
 
     state: any = {
-        tokenMetaData: {}
+        tokenMetaData: {},
+        isDepositOpen: false,
+        raffleContractAddress: ""
     }
 
     fetchNFTs = async (contractAddress: any) => {
@@ -33,8 +37,7 @@ export default class RaffleViewer extends React.Component {
                 return res.json();
             })
             .then(data => {
-                console.log("TESTING DATA", data.result)
-                this.getMetaData(data.result[0])
+                this.getMetaData(data.result[0]) // POTENTIAL FIX IS PROBALY GOOD
             })
 
         }
@@ -51,7 +54,6 @@ export default class RaffleViewer extends React.Component {
             //console.log(token.contractAddress, address)
             try {
                 if (String(token.contractAddress) == '0x05d79a33c0f7e719ae171b61f095f500635a0a21') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
-                    console.log("PENNNISSSS")
                     let contract = new ethers.Contract(token.contractAddress, _abi, signer)
                     console.log(token.contractAddress)
                     let metaData = await contract.tokenURI(parseInt(token.tokenID))
@@ -78,14 +80,22 @@ export default class RaffleViewer extends React.Component {
             const signer = provider.getSigner();
             const contractAddress = window.location.pathname.split('/').at(-1);
             const contract = new ethers.Contract(contractAddress, _Raffle_abi, signer) 
-            console.log("COntract", contract);
             console.log("NFT", this.state.tokenMetaData);
 
         }
     }
 
+    handleDepositClicked = () => {
+        this.setState({
+            isDepositOpen: !this.state.isDepositOpen
+        })
+    }
+
     componentDidMount() {
         const contractAddress = window.location.pathname.split('/').at(-1);
+        this.setState({
+            raffleContractAddress: contractAddress
+        })
         console.log(contractAddress);
         this.fetchNFTs(contractAddress);
     }
@@ -97,9 +107,13 @@ export default class RaffleViewer extends React.Component {
     render() {
         return (
             <div className="RaffleViewer-Div-Main">
+                <Link to="/raffles">
+                    <button>View Open Raffles</button>
+                </Link>
                 <h3>Raffle Viewer</h3>
-                {console.log("STATE", this.state)}
                 <img src={this.state.tokenMetaData.image}></img>
+                <button onClick={this.handleDepositClicked}>Deposit</button>
+                <Deposit isDepositOpen={this.state.isDepositOpen} raffleContractAddress={this.state.raffleContractAddress}/>
             </div>
         )
     }
