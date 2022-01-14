@@ -29,6 +29,10 @@ export default class Raffles extends React.Component {
         }
     }
 
+    handleClick = (e: any) => {
+        console.log(e)
+    }
+
 
     componentDidMount() {
         this.getRaffles()
@@ -49,7 +53,7 @@ export default class Raffles extends React.Component {
                 </div> 
                 <div className="Raffles-Viewer-Main">
                     {this.state.raffles.map(raffle => {
-                        return <Raffle token={raffle}/>
+                        return <div onClick={(e) => this.handleClick(e)} className="Raffle-Div-Main-Container"><Raffle token={raffle}/></div>
                     })}
                 </div>
             </div>

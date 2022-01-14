@@ -105,6 +105,8 @@ export default class RaffleCreator extends React.Component <Props>{
             const selectedToken = this.tokenSelector.state.selectedToken; // maybe remove?
             const contract = await raffleFactory.deploy(account, parseInt(e.target[0].value), selectedToken.image);
             await contract.deployed().then(async function (data) {
+
+                console.log("CONTRACT INFO", contract)
                 console.log(data);
                 console.log("TESTING FOOBAR", selectedToken)
                 console.log("TESTING", selectedToken.contractAddress);
@@ -113,7 +115,7 @@ export default class RaffleCreator extends React.Component <Props>{
                 console.log("TOKEN TXN: ", sendingTxn);
             }).then(async function (dataTwo) {
                 console.log(dataTwo);
-                const addRaffleTxn = rafflesContract.addRaffle(selectedToken.image)
+                const addRaffleTxn = rafflesContract.addRaffle(selectedToken.image, contract.address)
                 console.log("WENT THROUGH", addRaffleTxn)
             })
             console.log("CONTRACT: ", contract);

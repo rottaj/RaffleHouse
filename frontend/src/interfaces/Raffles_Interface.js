@@ -1,4 +1,4 @@
-export const RafflesAddress = "0xad869f83C6A6c68C411aF94CF75D082B57c4E3A0"
+export const RafflesAddress = "0x54DB1134A0754808f1316aF0Ea26bfA71E042cDC"
 
 export const _abi_raffles = [
     {
@@ -26,6 +26,11 @@ export const _abi_raffles = [
           "internalType": "string",
           "name": "_tokenImage",
           "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "_contractAddress",
+          "type": "address"
         }
       ],
       "name": "addRaffle",
@@ -48,6 +53,11 @@ export const _abi_raffles = [
             {
               "internalType": "address",
               "name": "creatorAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "contractAddress",
               "type": "address"
             },
             {
@@ -108,6 +118,11 @@ export const _abi_raffles = [
         {
           "internalType": "address",
           "name": "creatorAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "contractAddress",
           "type": "address"
         },
         {
