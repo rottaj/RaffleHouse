@@ -30,30 +30,16 @@ export default class Raffles extends React.Component {
         }
     }
 
-    handleClick = (e: any) => {
-        console.log(e)
-    }
-
-
     componentDidMount() {
         this.getRaffles()
     }
 
-    componentDidUpdate() {
-        console.log(this.state)
-        return <BrowserRouter>
-            {this.state.raffles.map(raffle => {<Link to={`raffle/${raffle['contractAddress']}`}/>})}
-            <Route path="raffle/:id" component={RaffleViewer}/>
-        </BrowserRouter>
-    }
 
     render() {
         return (
             <div className="Raffles-container-main">
                 <BrowserRouter>
-
-                    {this.state.raffles.map(raffle => {<Link to={`raffle/${raffle['contractAddress']}`}/>})}
-                    <Route path="raffle/:id" component={RaffleViewer}/>
+                    <Route path="raffle/:contractAddress" component={RaffleViewer}/>
                 </BrowserRouter>
                 <Link to="/">
                     <button>Raffle House</button>
@@ -63,7 +49,13 @@ export default class Raffles extends React.Component {
                 </div> 
                 <div className="Raffles-Viewer-Main">
                     {this.state.raffles.map(raffle => {
-                        return <div onClick={(e) => this.handleClick(e)} className="Raffle-Div-Main-Container"><Raffle token={raffle}/></div>
+                        return (
+                            <Link to={`raffle/${raffle['contractAddress']}`}>
+                                <div className="Raffle-Div-Main-Container">
+                                    <Raffle token={raffle}/>
+                                </div>
+                            </Link>
+                        )
                     })}
                 </div>
             </div>

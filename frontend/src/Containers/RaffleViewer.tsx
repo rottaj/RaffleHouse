@@ -1,5 +1,4 @@
 import React from 'react';
-
 import "./RaffleViewer.css";
 
 export default class RaffleViewer extends React.Component {
