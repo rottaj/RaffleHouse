@@ -19,6 +19,8 @@ contract RaffleEscrow {
     tokenURI = _tokenURI;
   }
 
+  address[] tickets;
+
   mapping (address => uint256) _userDeposits;
 
   function deposit() payable public {
