@@ -4,6 +4,7 @@ import { _Raffle_abi } from "../interfaces/RaffleEscrow_Interface";
 
 interface Props {
     isDepositOpen: boolean;
+    tokenMetaData: any;
     raffleContractAddress: string;
 }
 
@@ -30,7 +31,7 @@ export default class Deposit extends React.Component <Props>{
             <div className="Deposit-Container-Main">
                 {this.props.isDepositOpen && 
                 <div className="Deposit-PopUp-Form">
-                    <h3>Deposit to raffle!</h3>
+                    <h3>Deposit to win {this.props.tokenMetaData.tokenName} #{this.props.tokenMetaData.tokenID}!</h3>
                     <form className="Deposit-Form" onSubmit={(e) => this.handleSubmit(e)}>
                         <input defaultValue="0.08"></input>
                         <button type="submit" >Submit Deposit</button>

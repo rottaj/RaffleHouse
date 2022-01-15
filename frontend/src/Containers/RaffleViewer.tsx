@@ -113,7 +113,7 @@ export default class RaffleViewer extends React.Component {
                 <h3>Raffle Viewer</h3>
                 <img src={this.state.tokenMetaData.image}></img>
                 <button onClick={this.handleDepositClicked}>Deposit</button>
-                <Deposit isDepositOpen={this.state.isDepositOpen} raffleContractAddress={this.state.raffleContractAddress}/>
+                <Deposit tokenMetaData={this.state.tokenMetaData} isDepositOpen={this.state.isDepositOpen} raffleContractAddress={this.state.raffleContractAddress}/>
             </div>
         )
     }
