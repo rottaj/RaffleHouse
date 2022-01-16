@@ -8,19 +8,23 @@ interface Props {
     tokens: Array<any>;
 }
 
+
 declare let window:any;
 export default class NFTSelector extends React.Component <Props>{
-
+    
     state = {
-        selectedToken: {}
+        selectedToken: {},
     }
+
+
 
     handleClick = (e: any) => {
         this.setState({
             selectedToken: e
         })
-        console.log(this.state.selectedToken)
+        console.log(e)
     }
+
 
     render() {
         return (
