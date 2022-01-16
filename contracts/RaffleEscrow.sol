@@ -4,13 +4,14 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 import "hardhat/console.sol";
 
-contract RaffleEscrow {
+contract RaffleEscrow is VRFConsumerBase {
   //address private raffleAddress;
   //uint256 private timeLimit;
   address payable private creatorAddress;
   bool private allowWithdraw = false; 
   uint256 public MIN_DEPOSIT;
   string public tokenURI;
+  uint256 public randomResult;
   uint256 internal fee;
    
   //address private tickets = [];  // [0x02342351, 0x025243123, 0x0234234234, 0x0235234134, 0x235123124]
@@ -18,9 +19,13 @@ contract RaffleEscrow {
   constructor(address payable _creatorAddress,
               uint256 _minDeposit,
               string memory _tokenURI,
-              //address _vrfCoordinator,
-              //address _link,
+              address _vrfCoordinator,
+              address _link,
               uint _fee)
+      VRFConsumerBase(
+        _vrfCoordinator,
+        _link
+      ) public
   {
     creatorAddress = _creatorAddress;
     MIN_DEPOSIT = _minDeposit;
@@ -42,11 +47,15 @@ contract RaffleEscrow {
     }
 
   }
-  /*
-  function getWinner() private returns (address) {
-         
+
+  function getRandomNumber() public returns (bytes32 requestId) {
+    require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK");         
+    return requestRandomness(bytes32(tickets.length), fee);
   }
-  */
+
+  function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
+    randomResult = randomness;
+  }
  
   function withdrawEther() public {
     require(allowWithdraw == true, "WITHDRAW: NOT ALLOWED TO WITHDRAW");

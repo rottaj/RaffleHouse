@@ -1,12 +1,35 @@
+const LinkInterface = require('../interfaces/ChainLink_Interface');
 const fs = require('fs');
 const Web3 = require('web3');
+const ethers = require('ethers');
+
+require('dotenv').config()
+const RINKEBY_URL = process.env.RINKEBY_URL;
+
 
 const main = async() => {
-  const funDaoContractFactory = await hre.ethers.getContractFactory("Raffles");
-  const funDaoContract = await funDaoContractFactory.deploy();
-  await funDaoContract.deployed();
-  console.log("CONTRACT DEPLOYED TO: ", funDaoContract.address);
+  const abi = JSON.parse(LinkInterface._abi_two.result);
+  const provider = new ethers.providers.JsonRpcProvider(RINKEBY_URL);
+  const signer = provider.getSigner()
+  console.log("SIGNER", signer)
+  console.log("LINK INTERFACE: ", abi);
+  console.log("LINK ADDRESS: ", LinkInterface.linkAddress);
+  const ChainLinkContract = new ethers.Contract(LinkInterface.linkAddress, abi, signer);
+  console.log("LINK CONTRACT", ChainLinkContract); 
+  // INITIALIZE RAFFLES CONTRACT
+  const rafflesContractFactory = await hre.ethers.getContractFactory("Raffles");
+  const RafflesContract = await rafflesContractFactory.deploy(LinkInterface.linkAddress);
+  await RafflesContract.deployed();
+  console.log("CONTRACT DEPLOYED TO: ", RafflesContract.address);
+ 
 
+  /* // WORK ON THIS LATER  ---> MANUALLY SEND LINK FOR NOW.
+  const address = RafflesContract.address;
+  console.log("RAFFLES ADDRESS: ", address);
+  console.log(signer);
+  const ChainLinkTransferTxn = await ChainLinkContract.transfer(address, parseInt(10));
+  console.log("TRANSFER COMPLETE!");
+  */
   let txn;
 }
 
