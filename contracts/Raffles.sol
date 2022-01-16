@@ -9,6 +9,7 @@ contract Raffles is Ownable {
     string tokenImage;
     uint256 minTime;
   }
+
   Raffle[] public raffles;
 
   function addRaffle(string memory _tokenImage, address _contractAddress) public {

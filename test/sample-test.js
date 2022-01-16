@@ -10,10 +10,10 @@ async function randomizeDeposits(addresses, contract) {
   console.log(addresses.length);
   for (let i =0; i<= addresses.length-1; i++) {
     let number = getRandomNumber(0.4, 5); 
-    let depositTxn = await contract.connect(addresses[i]).deposit({
+    let depositTxn = await contract.connect(addresses[i]).deposit(parseInt(parseFloat(number) / 0.01),{
       value: ethers.utils.parseEther(number.toString())
     });
-    console.log(addresses[i].address, number, " ether")
+    console.log(addresses[i].address, number, " ether", parseInt(parseFloat(number) / 0.01), " tickets")
   }
 }
 
@@ -22,12 +22,12 @@ describe("Test Deposit", function () {
     const addresses = await ethers.getSigners();
     const Escrow = await ethers.getContractFactory("RaffleEscrow");
     console.log(addresses[1].address)
-    const escrow = await Escrow.deploy(addresses[0].address, parseInt("0.08"));
+    const escrow = await Escrow.deploy(addresses[0].address, parseInt("0.08"), "hello", parseInt(0.1));
     await escrow.deployed();
-    const depositTx = await escrow.deposit({
+    const depositTx = await escrow.deposit(6, {
       value: ethers.utils.parseEther("8")
     });   
-     const depositTxTwo = await escrow.deposit({
+     const depositTxTwo = await escrow.deposit(7, {
       value: ethers.utils.parseEther("8")
     });   
     await randomizeDeposits(addresses, escrow); 
