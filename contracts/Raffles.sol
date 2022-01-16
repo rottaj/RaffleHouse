@@ -22,6 +22,8 @@ contract Raffles is Ownable {
 
   Raffle[] public raffles;
 
+  receive() external payable {}
+
   function addRaffle(string memory _tokenImage, address _contractAddress) public {
     require(msg.sender != address(0), "INVALID ADDRESS");
     Raffle memory raffle = Raffle ({
@@ -34,6 +36,7 @@ contract Raffles is Ownable {
     raffles.push(raffle); // Add raffle to raffles[]
     chainLink.transfer(_contractAddress, chainLinkFee); // transfer LINK to new raffle
   }
+
   
   function removeRaffleByIndex(uint _index) public onlyOwner {
     delete raffles[_index]; 

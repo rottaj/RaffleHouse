@@ -1,6 +1,17 @@
-export const RafflesAddress = "0x54DB1134A0754808f1316aF0Ea26bfA71E042cDC"
+export const RafflesAddress = "0x61B534D2c49C68AaD59EA7EB1FB22258C765Ead3"
 
-export const _abi_raffles = [
+export const _abi_raffles =  [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_chainLinkContractAddress",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
     {
       "anonymous": false,
       "inputs": [
@@ -171,5 +182,9 @@ export const _abi_raffles = [
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
     }
   ]

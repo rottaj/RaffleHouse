@@ -4,6 +4,7 @@ import { ethers, ContractFactory } from 'ethers';
 import { _abi } from '../interfaces/Eyescream_Interface';
 import { _Raffle_abi, _Raffle_bytecode } from "../interfaces/RaffleEscrow_Interface";
 import { RafflesAddress, _abi_raffles } from '../interfaces/Raffles_Interface';
+import { ChainLinkTokenAddress, VRFCoordinatorAddress, ChainLinkFee } from '../interfaces/ChainLink_interface';
 import "./RaffleCreator.css";
 import { timeStamp } from 'console';
 require('dotenv').config();
@@ -153,7 +154,7 @@ export default class RaffleCreator extends React.Component <Props>{
             // DEPLOY CONTRACT
             const account = accounts.result[0];
             const selectedToken = this.tokenSelector.state.selectedToken; // maybe remove?
-            const contract = await raffleFactory.deploy(account, parseInt(e.target[0].value), selectedToken.image);
+            const contract = await raffleFactory.deploy(account, parseInt(e.target[0].value), selectedToken.image, ChainLinkTokenAddress, VRFCoordinatorAddress, ChainLinkFee);
             await contract.deployed().then(async function (data) {
 
                 console.log(data);
