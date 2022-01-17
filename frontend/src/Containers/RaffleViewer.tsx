@@ -93,6 +93,7 @@ export default class RaffleViewer extends React.Component {
 
     componentDidMount() {
         const contractAddress = window.location.pathname.split('/').at(-1);
+
         this.setState({
             raffleContractAddress: contractAddress
         })

@@ -1,5 +1,6 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
+const VRFCoordinator = "0xb3dCcb4Cf7a26f6cf6B120Cf5A73875B7BBc655B";
 
 
 function getRandomNumber(min, max) {
@@ -22,7 +23,13 @@ describe("Test Deposit", function () {
     const addresses = await ethers.getSigners();
     const Escrow = await ethers.getContractFactory("RaffleEscrow");
     console.log(addresses[1].address)
-    const escrow = await Escrow.deploy(addresses[0].address, parseInt("0.08"), "hello", parseInt(0.1));
+    const escrow = await Escrow.deploy(addresses[0].address,
+                                       parseInt("0.08"),
+                                       "hello",
+                                       parseInt(0.1),
+                                       VRFCoordinator,
+                                       0.1 * 10 ** 18
+                                       );
     await escrow.deployed();
     const depositTx = await escrow.deposit(6, {
       value: ethers.utils.parseEther("8")

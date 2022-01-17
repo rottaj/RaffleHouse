@@ -11,16 +11,21 @@ contract RaffleEscrow is VRFConsumerBase {
   bool private allowWithdraw = false; 
   uint256 public MIN_DEPOSIT;
   string public tokenURI;
-  uint256 public randomResult;
-  uint256 internal fee = 1 * 1e16;
+  address public winner;
+  uint256 internal fee;
+  bytes32 keyhash;
    
   //address private tickets = [];  // [0x02342351, 0x025243123, 0x0234234234, 0x0235234134, 0x235123124]
+
+  event WinnerPicked(bytes32 indexed requestId, uint256 indexed result);
 
   constructor(address payable _creatorAddress,
               uint256 _minDeposit,
               string memory _tokenURI,
               address _vrfCoordinator,
-              address _link)
+              address _link,
+              bytes32 _keyhash,
+              uint _fee)
       VRFConsumerBase(
         _vrfCoordinator,
         _link
@@ -29,7 +34,8 @@ contract RaffleEscrow is VRFConsumerBase {
     creatorAddress = _creatorAddress;
     MIN_DEPOSIT = _minDeposit;
     tokenURI = _tokenURI;
-    //fee = _fee;
+    keyhash = _keyhash;
+    fee = _fee;
   }
 
   address[] tickets;
@@ -49,11 +55,13 @@ contract RaffleEscrow is VRFConsumerBase {
 
   function getRandomNumber() public returns (bytes32 requestId) {
     require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK");         
-    return requestRandomness(bytes32(tickets.length), fee);
+    return requestRandomness(keyhash, fee);
   }
 
   function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
-    randomResult = randomness;
+    uint256 valueBetween = (randomness % 20) + 1;
+    //winner = tickets[valueBetween];
+    emit WinnerPicked(requestId, valueBetween); // add winner instead of value?
   }
  
   function withdrawEther() public {
@@ -71,7 +79,12 @@ contract RaffleEscrow is VRFConsumerBase {
   }
   */
 
-  function getBalance() public view { // only for testing
-    console.log(address(this).balance / 1 ether);
+  function getBalance() public view returns (uint) { // only for testing
+    return address(this).balance / 1 ether;
   }
+  
+  function getWinner() public view returns (address) {
+    return winner;
+  }
+
 }
