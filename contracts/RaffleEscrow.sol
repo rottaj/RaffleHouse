@@ -21,21 +21,22 @@ contract RaffleEscrow is VRFConsumerBase {
 
   constructor(address payable _creatorAddress,
               uint256 _minDeposit,
-              string memory _tokenURI,
-              address _vrfCoordinator,
-              address _link,
-              bytes32 _keyhash,
-              uint _fee)
+              string memory _tokenURI
+              )
+              //address _vrfCoordinator,
+              //address _link,
+              //bytes32 _keyhash,
+              //uint _fee)
       VRFConsumerBase(
-        _vrfCoordinator,
-        _link
+        0xF64Cc5D9dc2A6245deE28686342cdEf6F41D2d5B,
+        0x01BE23585060835E02B77ef475b0Cc51aA1e0709
       ) public
   {
     creatorAddress = _creatorAddress;
     MIN_DEPOSIT = _minDeposit;
     tokenURI = _tokenURI;
-    keyhash = _keyhash;
-    fee = _fee;
+    keyhash = 0x2ed0feb3e7fd2022120aa84fab1945545a9f2ffc9076fd6156fa96eaff4c1311;
+    fee = 0.1 * 10 ** 18;
   }
 
   address[] tickets;

@@ -22,8 +22,9 @@ export default class Deposit extends React.Component <Props>{
                 value: ethers.utils.parseEther(e.target[0].value)
             })
             console.log(depositTxn);
-            const randomNumber = await raffleContract.getRandomNumber();
-            console.log("RANDOM NUMBER: ", randomNumber);
+            await raffleContract.getRandomNumber();
+
+            //console.log("RANDOM NUMBER: ", randomNumber);
         }
     }
 

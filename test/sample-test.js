@@ -26,9 +26,6 @@ describe("Test Deposit", function () {
     const escrow = await Escrow.deploy(addresses[0].address,
                                        parseInt("0.08"),
                                        "hello",
-                                       parseInt(0.1),
-                                       VRFCoordinator,
-                                       0.1 * 10 ** 18
                                        );
     await escrow.deployed();
     const depositTx = await escrow.deposit(6, {
@@ -40,6 +37,8 @@ describe("Test Deposit", function () {
     await randomizeDeposits(addresses, escrow); 
     console.log("------ CONTRACT BALANCE (ETHER) ------");
     await escrow.getBalance();
+    await escrow.getRandomNumber();
+    await escrow.getWinner();
   });
 });
 

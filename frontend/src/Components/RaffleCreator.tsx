@@ -158,10 +158,11 @@ export default class RaffleCreator extends React.Component <Props>{
             const contract = await raffleFactory.deploy(account, 
                                                         parseInt(e.target[0].value),
                                                         selectedToken.image, 
-                                                        ChainLinkTokenAddress, 
-                                                        VRFCoordinatorAddress, 
-                                                        KeyHash,
-                                                        ethers.utils.parseUnits("0.1")); // add ChainLinkFee (maybe)
+                                                        //ChainLinkTokenAddress, 
+                                                        //VRFCoordinatorAddress, 
+                                                        //KeyHash,
+                                                        );
+                                                        //ethers.utils.parseUnits("0.1")); // add ChainLinkFee (maybe)
             await contract.deployed().then(async function (data) {
                 console.log(data);
                 const collectionContract = await new ethers.Contract(selectedToken.contractAddress, _abi, signer);
