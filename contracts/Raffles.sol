@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract Raffles is Ownable {
 
   //address public chainLinkContractAddress;
-  uint256 private chainLinkFee = 3;
+  uint256 private chainLinkFee = 3 * 1e18;
   IERC20 chainLink; // Maybe change to private
   constructor(address _chainLinkContractAddress) {
     chainLink = IERC20(_chainLinkContractAddress);

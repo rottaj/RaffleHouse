@@ -1,4 +1,4 @@
-export const RafflesAddress = "0x61B534D2c49C68AaD59EA7EB1FB22258C765Ead3"
+export const RafflesAddress = "0x0E4f0749B4E6d608F7c4a27f1a37ec04bB8FcD45"
 
 export const _abi_raffles =  [
     {
