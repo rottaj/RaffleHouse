@@ -12,7 +12,7 @@ contract RaffleEscrow is VRFConsumerBase {
   uint256 public MIN_DEPOSIT;
   string public tokenURI;
   uint256 public randomResult;
-  uint256 internal fee;
+  uint256 internal fee = 1 * 1e16;
    
   //address private tickets = [];  // [0x02342351, 0x025243123, 0x0234234234, 0x0235234134, 0x235123124]
 
@@ -20,8 +20,7 @@ contract RaffleEscrow is VRFConsumerBase {
               uint256 _minDeposit,
               string memory _tokenURI,
               address _vrfCoordinator,
-              address _link,
-              uint _fee)
+              address _link)
       VRFConsumerBase(
         _vrfCoordinator,
         _link
@@ -30,7 +29,7 @@ contract RaffleEscrow is VRFConsumerBase {
     creatorAddress = _creatorAddress;
     MIN_DEPOSIT = _minDeposit;
     tokenURI = _tokenURI;
-    fee = _fee;
+    //fee = _fee;
   }
 
   address[] tickets;

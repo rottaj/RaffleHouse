@@ -154,9 +154,8 @@ export default class RaffleCreator extends React.Component <Props>{
             // DEPLOY CONTRACT
             const account = accounts.result[0];
             const selectedToken = this.tokenSelector.state.selectedToken; // maybe remove?
-            const contract = await raffleFactory.deploy(account, parseInt(e.target[0].value), selectedToken.image, ChainLinkTokenAddress, VRFCoordinatorAddress, ChainLinkFee);
+            const contract = await raffleFactory.deploy(account, parseInt(e.target[0].value), selectedToken.image, ChainLinkTokenAddress, VRFCoordinatorAddress); // add ChainLinkFee (maybe)
             await contract.deployed().then(async function (data) {
-
                 console.log(data);
                 const collectionContract = await new ethers.Contract(selectedToken.contractAddress, _abi, signer);
                 const sendingTxn = await collectionContract.transferFrom(account, contract.address, selectedToken.tokenID);
