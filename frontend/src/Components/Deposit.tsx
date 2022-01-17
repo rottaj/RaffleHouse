@@ -20,10 +20,11 @@ export default class Deposit extends React.Component <Props>{
             const raffleContract = await new ethers.Contract(this.props.raffleContractAddress, _Raffle_abi, signer);
             const depositTxn = await raffleContract.deposit(parseInt((parseFloat(e.target[0].value) / 0.1).toString()), {
                 value: ethers.utils.parseEther(e.target[0].value)
+            }).then(async (data: any) => {
+                console.log(data)
+                //console.log(depositTxn);
+                await raffleContract.getRandomNumber();
             })
-            console.log(depositTxn);
-            await raffleContract.getRandomNumber();
-
             //console.log("RANDOM NUMBER: ", randomNumber);
         }
     }

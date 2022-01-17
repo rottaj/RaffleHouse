@@ -28,7 +28,7 @@ contract RaffleEscrow is VRFConsumerBase {
               //bytes32 _keyhash,
               //uint _fee)
       VRFConsumerBase(
-        0xF64Cc5D9dc2A6245deE28686342cdEf6F41D2d5B,
+        0xb3dCcb4Cf7a26f6cf6B120Cf5A73875B7BBc655B,
         0x01BE23585060835E02B77ef475b0Cc51aA1e0709
       ) public
   {
