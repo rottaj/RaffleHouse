@@ -88,7 +88,7 @@ export default class RaffleCreator extends React.Component <Props>{
                             if (index == -1) {
                                 tokens.push(data.result[i])
                             } else {
-                                tokens.slice(index, 1)
+                                tokens.splice(index, 1)
                             }
                         } 
                         catch(err) {
