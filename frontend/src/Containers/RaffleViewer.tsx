@@ -1,4 +1,5 @@
 import React from 'react';
+import MenuItems from '../Components/MenuItems';
 import Deposit from "../Components/Deposit";
 import PlayersList from "../Components/PlayersList";
 import { ethers } from 'ethers';
@@ -95,7 +96,7 @@ export default class RaffleViewer extends React.Component {
             let ticketNumber = this.getOccurances(tickets, uniqueAddresses[i])
             if (uniqueAddresses[i] != undefined) {
                 console.log("TESTING GET_TICKETS", uniqueAddresses[i], ticketNumber, (ticketNumber * 0.01).toFixed(2))
-                let player = {address: uniqueAddresses[i], tickets: ticketNumber, totalEth: (ticketNumber * 0.01).toFixed(2)}
+                let player = {address: uniqueAddresses[i], tickets: ticketNumber, totalEth: (ticketNumber * 0.01).toFixed(2), chance: ((ticketNumber / tickets.length) * 100).toFixed(2)}
                 this.setState({
                     players: [...this.state.players, player]
                 })
@@ -131,15 +132,14 @@ export default class RaffleViewer extends React.Component {
     render() {
         return (
             <div className="RaffleViewer-Div-Main">
-                <Link to="/raffles">
-                    <button>View Open Raffles</button>
-                </Link>
-                <h3>Raffle Viewer</h3>
-                <img src={this.state.tokenMetaData.image}></img>
-
-                <PlayersList players={this.state.players}/>
+                <MenuItems/>
+                <div className="Token-Image-Div">
+                    <img className="Token-Image"src={this.state.tokenMetaData.image}></img>
+                </div>
                 <button onClick={this.handleDepositClicked}>Deposit</button>
                 <Deposit tokenMetaData={this.state.tokenMetaData} isDepositOpen={this.state.isDepositOpen} raffleContractAddress={this.state.raffleContractAddress}/>
+                <PlayersList players={this.state.players}/>
+
             </div>
         )
     }

@@ -6,6 +6,7 @@ interface PlayerInterface {
     address: string;
     tickets: number;
     totalEth: number;
+    chance: number;
 }
 
 interface Props {

@@ -4,6 +4,7 @@ interface PlayerInterface {
     address: string;
     tickets: number;
     totalEth: number;
+    chance: number;
 }
 
 interface Props {
@@ -17,6 +18,7 @@ export default class Player extends React.Component <Props>{
                 Player: {this.props.player.address}  
                 Tickets: {this.props.player.tickets}  
                 Total ETH: {this.props.player.totalEth}
+                Chance: {this.props.player.chance} %
             </div>
         )
     }
