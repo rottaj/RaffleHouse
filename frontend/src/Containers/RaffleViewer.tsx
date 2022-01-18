@@ -53,7 +53,7 @@ export default class RaffleViewer extends React.Component {
             // PERFORM FETCH ABI REQUEST ON VERIFIED CONTRACT
             //console.log(token.contractAddress, address)
             try {
-                if (String(token.contractAddress) == '0x05d79a33c0f7e719ae171b61f095f500635a0a21') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
+                if (String(token.contractAddress) == '0x8f44a8b9059b2bc914c893eed250a2e1097ee187') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
                     let contract = new ethers.Contract(token.contractAddress, _abi, signer)
                     console.log(token.contractAddress)
                     let metaData = await contract.tokenURI(parseInt(token.tokenID))
