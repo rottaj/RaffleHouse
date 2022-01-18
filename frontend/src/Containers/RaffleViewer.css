@@ -1,4 +1,14 @@
+
+
+.RaffleViewer-Viewer-Container {
+    margin-top: 5%;
+    margin-left: 3%;
+    margin-right: 3%;
+    display: flex;
+}
+
 .Token-Image-Div {
-    height: 50%;
-    width: 50%;
+    height: 25%;
+    width: 25%;
+    padding-right: 1%;
 }

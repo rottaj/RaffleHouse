@@ -15,10 +15,10 @@ export default class Player extends React.Component <Props>{
     render() {
         return (
             <div className="Player-Component-Main-Container">
-                Player: {this.props.player.address}  
-                Tickets: {this.props.player.tickets}  
-                Total ETH: {this.props.player.totalEth}
-                Chance: {this.props.player.chance} %
+                <p className="Player-Address">{this.props.player.address}</p>
+                <p className="Player-Tickets">{this.props.player.tickets}</p>
+                <p className="Player-TotalEth">{this.props.player.totalEth}</p>
+                <p className="Player-Chance">{this.props.player.chance} %</p>
             </div>
         )
     }

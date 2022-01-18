@@ -133,13 +133,15 @@ export default class RaffleViewer extends React.Component {
         return (
             <div className="RaffleViewer-Div-Main">
                 <MenuItems/>
-                <div className="Token-Image-Div">
-                    <img className="Token-Image"src={this.state.tokenMetaData.image}></img>
-                </div>
-                <button onClick={this.handleDepositClicked}>Deposit</button>
-                <Deposit tokenMetaData={this.state.tokenMetaData} isDepositOpen={this.state.isDepositOpen} raffleContractAddress={this.state.raffleContractAddress}/>
-                <PlayersList players={this.state.players}/>
+                <div className="RaffleViewer-Viewer-Container">
+                    <div className="Token-Image-Div">
+                        <img className="Token-Image"src={this.state.tokenMetaData.image}></img>
+                        <button onClick={this.handleDepositClicked}>Deposit</button>
+                        <Deposit tokenMetaData={this.state.tokenMetaData} isDepositOpen={this.state.isDepositOpen} raffleContractAddress={this.state.raffleContractAddress}/>
+                    </div>
 
+                    <PlayersList players={this.state.players}/>
+                </div>
             </div>
         )
     }

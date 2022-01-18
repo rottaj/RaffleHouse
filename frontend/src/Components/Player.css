@@ -1,7 +1,21 @@
 .Player-Component-Main-Container {
-    margin-top: 1%;
+    display: flex;
     margin-bottom: 1%;
     border: 1px solid black;
-    line-height: 1.8;
-    word-spacing: 16px;
+}
+
+.Player-Address {
+    margin-right: 5%;
+}
+
+.Player-Tickets {
+    margin-left: 5%;
+}
+
+.Player-TotalEth {
+    margin-left: 15%;
+}
+
+.Player-Chance {
+    margin-left: 10%;
 }
