@@ -80,6 +80,14 @@ contract RaffleEscrow is VRFConsumerBase {
   }
   */
 
+  function getTicket() public view returns (uint256) {
+    return tickets.length;
+  }
+
+  function getTicketByIndex (uint256 _index) public view returns (address) {
+    return tickets[_index];
+  }
+
   function getBalance() public view returns (uint) { // only for testing
     return address(this).balance / 1 ether;
   }

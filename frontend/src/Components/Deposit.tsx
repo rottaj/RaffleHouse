@@ -23,7 +23,8 @@ export default class Deposit extends React.Component <Props>{
             }).then(async (data: any) => {
                 console.log(data)
                 //console.log(depositTxn);
-                await raffleContract.getRandomNumber();
+                const randomTxn = await raffleContract.getRandomNumber();
+                console.log("RANDOM TXN TEST", randomTxn)
             })
             //console.log("RANDOM NUMBER: ", randomNumber);
         }
