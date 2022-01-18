@@ -6,6 +6,7 @@ import { RafflesAddress, _abi_raffles } from '../interfaces/Raffles_Interface';
 import RaffleViewer from './RaffleViewer';
 import {BrowserRouter, Route} from 'react-router-dom';
 import './Raffles.css';
+import MenuItems from "../Components/MenuItems";
 
 declare let window: any;
 export default class Raffles extends React.Component {
@@ -38,9 +39,7 @@ export default class Raffles extends React.Component {
     render() {
         return (
             <div className="Raffles-container-main">
-                <Link to="/">
-                    <button>Raffle House</button>
-                </Link>
+                <MenuItems/>
                 <div className="Raffles-title-container">
                     <h2>Current Raffles</h2>
                 </div> 
