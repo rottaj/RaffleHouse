@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { _abi } from "../interfaces/Eyescream_Interface";
 import { _Raffle_abi } from '../interfaces/RaffleEscrow_Interface';
 import "./RaffleViewer.css";
+import { readSync } from 'node:fs';
 
 const ETHERSCAN_API_NFT_TXN = 'https://api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=';
 const ETHERSCAN_API_KEY = 'JPARDRW9CAVF9ZKISWVC3YYM6RP93JNQUC';
@@ -78,18 +79,29 @@ export default class RaffleViewer extends React.Component {
         }
     }
 
-    getOccurances(array: any, val: any) {
-        let ret = array.reduce((a: any, v: any) => (v === val ? a + 1 : a), 0);
-        console.log("TESTING GETOCCURANCES", ret)
+    getUniqueAddresses(array: any) {
+        let unique = array.filter((item: any, i: any, ar: any) => ar.indexOf(item) === i);
+        return unique;
     }
 
-    getTickets = async (contractAddress: any) => {
-        var provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        let contract = new ethers.Contract(contractAddress, _Raffle_abi, signer);
-        const tickets = await contract.getTickets()
+    getOccurances(array: any, val: any) {
+        let ticketNumber = array.reduce((a: any, v: any) => (v === val ? a + 1 : a), 0);
+        return ticketNumber;
+    }
+
+    getTickets = async (uniqueAddresses: any, tickets: any) => {
         console.log(tickets)
-        this.getOccurances(tickets, tickets[0])
+        for (let i=0; i<=uniqueAddresses.length; i++ ) {
+            let ticketNumber = this.getOccurances(tickets, uniqueAddresses[i])
+            if (uniqueAddresses[i] != undefined) {
+                console.log("TESTING GET_TICKETS", uniqueAddresses[i], ticketNumber, (ticketNumber * 0.01).toFixed(2))
+                let player = {address: uniqueAddresses[i], tickets: ticketNumber, totalEth: (ticketNumber * 0.01).toFixed(2)}
+                this.setState({
+                    players: [...this.state.players, player]
+                })
+            }
+        }
+
     }
 
     handleDepositClicked = () => {
@@ -105,8 +117,14 @@ export default class RaffleViewer extends React.Component {
             raffleContractAddress: contractAddress
         })
         console.log(contractAddress);
-        this.fetchNFTs(contractAddress);
-        this.getTickets(contractAddress);
+        this.fetchNFTs(contractAddress); // refactor (can do this later)
+
+        var provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        let contract = new ethers.Contract(contractAddress, _Raffle_abi, signer);
+        const tickets = await contract.getTickets();
+        const uniqueAddresses = this.getUniqueAddresses(tickets);
+        this.getTickets(uniqueAddresses, tickets);
     }
 
 
@@ -118,9 +136,10 @@ export default class RaffleViewer extends React.Component {
                 </Link>
                 <h3>Raffle Viewer</h3>
                 <img src={this.state.tokenMetaData.image}></img>
+
+                <PlayersList players={this.state.players}/>
                 <button onClick={this.handleDepositClicked}>Deposit</button>
                 <Deposit tokenMetaData={this.state.tokenMetaData} isDepositOpen={this.state.isDepositOpen} raffleContractAddress={this.state.raffleContractAddress}/>
-                <PlayersList players={this.state.players}/>
             </div>
         )
     }
