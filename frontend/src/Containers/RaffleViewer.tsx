@@ -1,5 +1,6 @@
 import React from 'react';
 import Deposit from "../Components/Deposit";
+import PlayersList from "../Components/PlayersList";
 import { ethers } from 'ethers';
 import { Link } from 'react-router-dom';
 import { _abi } from "../interfaces/Eyescream_Interface";
@@ -22,7 +23,8 @@ export default class RaffleViewer extends React.Component {
     state: any = {
         tokenMetaData: {},
         isDepositOpen: false,
-        raffleContractAddress: ""
+        raffleContractAddress: "",
+        players: []
     }
 
     fetchNFTs = async (contractAddress: any) => {
@@ -76,12 +78,18 @@ export default class RaffleViewer extends React.Component {
         }
     }
 
+    getOccurances(array: any, val: any) {
+        let ret = array.reduce((a: any, v: any) => (v === val ? a + 1 : a), 0);
+        console.log("TESTING GETOCCURANCES", ret)
+    }
+
     getTickets = async (contractAddress: any) => {
         var provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         let contract = new ethers.Contract(contractAddress, _Raffle_abi, signer);
         const tickets = await contract.getTickets()
         console.log(tickets)
+        this.getOccurances(tickets, tickets[0])
     }
 
     handleDepositClicked = () => {
@@ -112,6 +120,7 @@ export default class RaffleViewer extends React.Component {
                 <img src={this.state.tokenMetaData.image}></img>
                 <button onClick={this.handleDepositClicked}>Deposit</button>
                 <Deposit tokenMetaData={this.state.tokenMetaData} isDepositOpen={this.state.isDepositOpen} raffleContractAddress={this.state.raffleContractAddress}/>
+                <PlayersList players={this.state.players}/>
             </div>
         )
     }
