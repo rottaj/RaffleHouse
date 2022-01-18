@@ -61,7 +61,7 @@ contract RaffleEscrow is VRFConsumerBase {
 
   function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
     uint256 valueBetween = (randomness % 20) + 1;
-    //winner = tickets[valueBetween];
+    winner = tickets[valueBetween];
     emit WinnerPicked(requestId, valueBetween); // add winner instead of value?
   }
  

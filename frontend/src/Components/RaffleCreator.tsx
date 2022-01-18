@@ -117,7 +117,7 @@ export default class RaffleCreator extends React.Component <Props>{
             //console.log(token.contractAddress, address)
             for (let i=0; i<=tokens.length; i++ ) {
                 try {
-                    if (String(tokens[i].contractAddress) == '0x05d79a33c0f7e719ae171b61f095f500635a0a21') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
+                    if (String(tokens[i].contractAddress) == '0x8f44a8b9059b2bc914c893eed250a2e1097ee187') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
                         let contract = new ethers.Contract(tokens[i].contractAddress, _abi, signer)
                         let metaData = await contract.tokenURI(parseInt(tokens[i].tokenID))
                         fetch(metaData).then(res => {return res.json()}).then(data => {
