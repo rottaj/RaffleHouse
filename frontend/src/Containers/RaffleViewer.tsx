@@ -9,6 +9,10 @@ import "./RaffleViewer.css";
 const ETHERSCAN_API_NFT_TXN = 'https://api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=';
 const ETHERSCAN_API_KEY = 'JPARDRW9CAVF9ZKISWVC3YYM6RP93JNQUC';
 
+/*
+            The reason for this shenanigans is RaffleViewer is not a child component.. so no props. ( getting contract address from path :shit: )
+            We are fetching all token info... again.
+*/
 
 
 declare let window: any;
@@ -72,17 +76,12 @@ export default class RaffleViewer extends React.Component {
         }
     }
 
-
-    handleRaffle = async () => {
-        console.log("HELLLO");
-        if (window.ethereum) {
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
-            const contractAddress = window.location.pathname.split('/').at(-1);
-            const contract = new ethers.Contract(contractAddress, _Raffle_abi, signer) 
-            console.log("NFT", this.state.tokenMetaData);
-
-        }
+    getTickets = async (contractAddress: any) => {
+        var provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        let contract = new ethers.Contract(contractAddress, _Raffle_abi, signer);
+        const tickets = await contract.getTickets()
+        console.log(tickets)
     }
 
     handleDepositClicked = () => {
@@ -91,19 +90,17 @@ export default class RaffleViewer extends React.Component {
         })
     }
 
-    componentDidMount() {
-        const contractAddress = window.location.pathname.split('/').at(-1);
 
+    async componentDidMount() {
+        const contractAddress = window.location.pathname.split('/').at(-1);
         this.setState({
             raffleContractAddress: contractAddress
         })
         console.log(contractAddress);
         this.fetchNFTs(contractAddress);
+        this.getTickets(contractAddress);
     }
 
-    componentDidUpdate() {
-        this.handleRaffle();
-    }
 
     render() {
         return (

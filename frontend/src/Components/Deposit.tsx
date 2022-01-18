@@ -18,7 +18,8 @@ export default class Deposit extends React.Component <Props>{
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const raffleContract = await new ethers.Contract(this.props.raffleContractAddress, _Raffle_abi, signer);
-            const depositTxn = await raffleContract.deposit(parseInt((parseFloat(e.target[0].value) / 0.1).toString()), {
+            console.log("TESTING DEPOSIT>> TICKETS", (parseInt((parseFloat(e.target[0].value) / 0.01).toString())))
+            const depositTxn = await raffleContract.deposit(parseInt((parseFloat(e.target[0].value) / 0.01).toString()), {
                 value: ethers.utils.parseEther(e.target[0].value)
             }).then(async (data: any) => {
                 console.log(data)
