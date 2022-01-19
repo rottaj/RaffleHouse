@@ -3,6 +3,7 @@ import Raffle from '../Components/Raffle';
 import { ethers } from "ethers";
 import { Link } from 'react-router-dom';
 import { RafflesAddress, _abi_raffles } from '../interfaces/Raffles_Interface';
+import { Grid } from "@mui/material";
 import RaffleViewer from './RaffleViewer';
 import {BrowserRouter, Route} from 'react-router-dom';
 import './Raffles.css';
@@ -44,15 +45,19 @@ export default class Raffles extends React.Component {
                     <h2>Current Raffles</h2>
                 </div> 
                 <div className="Raffles-Viewer-Main">
+                    <Grid container spacing={2}>
                     {this.state.raffles.map(raffle => {
                         return (
                             <Link to={`raffle/${raffle['contractAddress']}`}>
                                 <div className="Raffle-Div-Main-Container">
-                                    <Raffle token={raffle}/>
+                                    <Grid item xs={8}>
+                                        <Raffle token={raffle}/>
+                                    </Grid>
                                 </div>
                             </Link>
                         )
                     })}
+                    </Grid>
                 </div>
             </div>
         )

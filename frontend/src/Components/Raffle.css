@@ -1,6 +1,9 @@
 .Raffle-Div-Main {
     height: 100%;
     width: 100%;
+    margin: 3%;
+    padding-left: 3%;
+    padding-right: 3%;
 }
 
 .Raffle-Img{
