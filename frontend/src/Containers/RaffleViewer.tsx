@@ -2,6 +2,7 @@ import React from 'react';
 import MenuItems from '../Components/MenuItems';
 import Deposit from "../Components/Deposit";
 import PlayersList from "../Components/PlayersList";
+import WinnerBox from "../Components/WinnerBox";
 import { ethers } from 'ethers';
 import { Link } from 'react-router-dom';
 import { _abi } from "../interfaces/Eyescream_Interface";
@@ -26,6 +27,7 @@ export default class RaffleViewer extends React.Component {
         tokenMetaData: {},
         isDepositOpen: false,
         raffleContractAddress: "",
+        raffleBalance: 0,
         players: []
     }
 
@@ -133,6 +135,7 @@ export default class RaffleViewer extends React.Component {
         return (
             <div className="RaffleViewer-Div-Main">
                 <MenuItems/>
+                <WinnerBox/>
                 <div className="RaffleViewer-Viewer-Container">
                     <div className="Token-Image-Div">
                         <img className="Token-Image"src={this.state.tokenMetaData.image}></img>

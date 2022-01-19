@@ -1,0 +1,21 @@
+.WinnerBox-Main-Div {
+    margin-top: 8%;
+    margin-left: 30%;
+    margin-right: 30%;
+    border: 1px solid black;
+    display: flex;
+}
+
+.Title-Raffle-Winner {
+    margin-right: 10%;
+    margin-left: 5%;
+}
+
+.Title-Raffle-Total-Pot {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.Title-Raffle-Chance {
+    margin-left: 10%;
+}
