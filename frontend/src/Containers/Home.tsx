@@ -2,12 +2,8 @@ import React from 'react';
 import EnterApp from "../Components/EnterApp";
 import RaffleCreator from "../Components/RaffleCreator";
 import MenuItems from "../Components/MenuItems";
-import SwiperCore, { Autoplay, EffectCoverflow, Pagination } from 'swiper';
 import { Link } from 'react-router-dom';
 import './Home.css';
-import { Swiper, SwiperSlide } from 'swiper/react';
-SwiperCore.use([Autoplay, EffectCoverflow, Pagination]) 
-
 
 export default class Home extends React.Component {
 
