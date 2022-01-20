@@ -4,6 +4,7 @@ import MenuItems from '../Components/MenuItems';
 import { Link } from 'react-router-dom';
 import { ethers } from "ethers";
 import { CoinFlipAddress, _CoinFlips_abi } from "../interfaces/CoinFlips_Interface";
+import { _CoinFlip_abi, _CoinFlip_bytecode } from "../interfaces/CoinFlip_Interface";
 import "./CoinFlips.css";
 
 
@@ -24,6 +25,7 @@ export default class CoinFlips extends React.Component {
             console.log("COINFLIPLENGTH", parseInt(coinFlipLength, 16))
             for (let i =0; i<=coinFlipLength-1; i++ ) {
                 let coinFlip = await coinFlipContract.getCoinFlipByIndex(i);
+                //const coinFlipInstance = await new ethers.Contract()
                 this.setState({
                     coinFlips: [...this.state.coinFlips, coinFlip]
                 })
