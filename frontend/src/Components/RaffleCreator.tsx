@@ -4,6 +4,8 @@ import { ethers, ContractFactory } from 'ethers';
 import { _abi } from '../interfaces/Eyescream_Interface';
 import { _Raffle_abi, _Raffle_bytecode } from "../interfaces/RaffleEscrow_Interface";
 import { RafflesAddress, _abi_raffles } from '../interfaces/Raffles_Interface';
+import MenuItems from "../Components/MenuItems";
+import CoinFlipCreator from '../Components/CoinFlipCreator';
 import { ChainLinkTokenAddress, VRFCoordinatorAddress, KeyHash, ChainLinkFee } from '../interfaces/ChainLink_interface';
 import "./RaffleCreator.css";
 import { timeStamp } from 'console';
@@ -50,10 +52,23 @@ declare let window: any;
 export default class RaffleCreator extends React.Component <Props>{
     state = {
         tokens: [],
-
+        RaffleFormOpen: false,
+        CoinFlipFormOpen: false
     }
 
     tokenSelector: any = React.createRef() 
+
+    handleRaffleForm = () => {
+        this.setState({
+          RaffleFormOpen: !this.state.RaffleFormOpen
+        })
+    }
+
+    handleCoinFlipForm = () => {
+        this.setState({
+            CoinFlipFormOpen: !this.state.CoinFlipFormOpen
+        })
+    }
 
     filterTokenTxns = (token: any) => {
         for (let i=0; i<=this.state.tokens.length; i++ ) {
@@ -177,7 +192,20 @@ export default class RaffleCreator extends React.Component <Props>{
     render() {
         return (
             <div className="CreateRaffleForm-Main" >
-                {this.props.isOpen && 
+            <MenuItems/>
+
+            {/* <div>
+                <button onClick={this.handleRaffleForm}>Create Raffle!</button>
+            </div>
+            <div>
+                <button onClick={this.handleCoinFlipForm}> Create Coin Flip </button>
+            </div>
+
+                <RaffleCreator isOpen={this.state.RaffleFormOpen}/>
+                <CoinFlipCreator isOpen={this.state.CoinFlipFormOpen}/> */}
+
+
+                {/* {this.props.isOpen &&  */}
                 <div className="PopUp-Form">
                     <h3>Create your Raffle!</h3>
                     <h3> 1 Share(FUN) = 0.08 ETH</h3>
@@ -189,8 +217,20 @@ export default class RaffleCreator extends React.Component <Props>{
                         <NFTSelector tokens={this.state.tokens} ref={(tokenSelector) => this.tokenSelector = tokenSelector}/>
                         <button type="submit">Submit Proposal</button>
                     </form>
+                {/* <CoinFlipCreator/> */}
+
+                    <div className="PopUp-Form">
+                    <h3>Host a CoinFlip Game!</h3>
+                    <form className="CreateCoinFlip-Form" onSubmit={(e) => this.handleSubmit(e)}>
+                        Minimum Buy in:
+                        <input className="CoinFlipForm-Minimum-Buyin" defaultValue="0.5"></input>
+                        <br></br>
+                        <br></br>
+                        <button type="submit">Submit Proposal</button>
+                    </form>
+                    </div>
                 </div>
-                }
+                {/* } */}
             </div>
         )
     }

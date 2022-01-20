@@ -4,7 +4,6 @@ import RaffleCreator from "../Components/RaffleCreator";
 import MenuItems from "../Components/MenuItems";
 import Footer from "../Components/Footer";
 import CoinFlipCreator from '../Components/CoinFlipCreator';
-import SwiperCore, { Autoplay, EffectCoverflow, Pagination } from 'swiper';
 import { Link } from 'react-router-dom';
 import './Home.css';
 
@@ -40,16 +39,17 @@ export default class Home extends React.Component {
                     <Link to="/raffles">
                         <button>Join Pool!</button>
                     </Link>
-                    <div>
+                    {/* <div>
                         <button onClick={this.handleRaffleForm}>Create Raffle!</button>
                     </div>
                     <div>
                         <button onClick={this.handleCoinFlipForm}> Create Coin Flip </button>
-                    </div>
+                    </div> */}
+                     <div><button><a href="/host">Host</a></button></div>
 
                 </div>
-                <RaffleCreator isOpen={this.state.RaffleFormOpen}/>
-                <CoinFlipCreator isOpen={this.state.CoinFlipFormOpen}/>
+                {/* <RaffleCreator isOpen={this.state.RaffleFormOpen}/> */}
+                {/* <CoinFlipCreator isOpen={this.state.CoinFlipFormOpen}/> */}
                 <Footer/>
             </div>
         )

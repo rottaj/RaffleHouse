@@ -22,7 +22,7 @@ import './MenuItems.css';
 //             <Link to="/host">📄 Host</Link>
 //         </div>
 
-const pages = [ '/', 'Raffles', 'coin-flips', 'Profile', 'Host'];
+const pages = [ 'raffles','coin-flips', 'profile', 'host'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const ResponsiveAppBar = () => {
@@ -54,7 +54,7 @@ const ResponsiveAppBar = () => {
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
-            <img src={logo} alt="" className="logo"/>
+            <a href="/"><img src={logo} alt="" className="logo"/></a>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>

@@ -35,7 +35,7 @@ export default class CoinFlipCreator extends React.Component <Props>{
     render() {
         return (
             <div className="Create-Coin-Flip-Main">
-                {this.props.isOpen && 
+                {/* {this.props.isOpen &&  */}
                 <div className="PopUp-Form">
                     <h3>Host a CoinFlip Game!</h3>
                     <form className="CreateCoinFlip-Form" onSubmit={(e) => this.handleSubmit(e)}>
@@ -46,7 +46,7 @@ export default class CoinFlipCreator extends React.Component <Props>{
                         <button type="submit">Submit Proposal</button>
                     </form>
                 </div>
-                }
+                {/* } */}
             </div>
         )
     }
