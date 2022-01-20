@@ -44,7 +44,7 @@ contract RaffleEscrow is VRFConsumerBase {
   mapping (address => uint256) _userDeposits;
 
   function deposit(uint256 _tickets) payable public {
-    require(msg.value != 0, "DEPOSIT: INVALID FUNDS");
+    require(msg.value != 0, "DEPOSIT: INVALID FUNDS"); // Will update this later
     require(msg.sender != address(0), "DEPOSIT: INVALID ADDRESS");
     uint256 amount = msg.value;
     _userDeposits[msg.sender] += msg.value;
@@ -60,7 +60,7 @@ contract RaffleEscrow is VRFConsumerBase {
   }
 
   function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
-    uint256 valueBetween = (randomness % 20) + 1;
+    uint256 valueBetween = (randomness % tickets.length) + 1;
     winner = tickets[valueBetween];
     emit WinnerPicked(requestId, valueBetween); // add winner instead of value?
   }

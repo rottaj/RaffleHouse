@@ -20,7 +20,11 @@ const main = async() => {
   const rafflesContractFactory = await hre.ethers.getContractFactory("Raffles");
   const RafflesContract = await rafflesContractFactory.deploy(LinkInterface.linkAddress);
   await RafflesContract.deployed();
-  console.log("CONTRACT DEPLOYED TO: ", RafflesContract.address);
+  console.log("RAFFLES CONTRACT DEPLOYED TO: ", RafflesContract.address);
+  const coinFlipsContractFactory = await hre.ethers.getContractFactory("CoinFlips");
+  const CoinFlipsContract = await coinFlipsContractFactory.deploy(LinkInterface.linkAddress);
+  await CoinFlipsContract.deployed();
+  console.log("\n\nCOIN FLIPS CONTRACT DEPLOYED TO: ", CoinFlipsContract.address);
  
 
   /* // WORK ON THIS LATER  ---> MANUALLY SEND LINK FOR NOW.
