@@ -5,10 +5,20 @@ import { _CoinFlip_abi } from '../interfaces/CoinFlip_Interface';
 import "./CoinFlipViewer.css";
 
 declare let window: any;
-export default class CoinFlipViewer extends React.Component {
+
+interface GameInfoInterface {
+    creatorAddress: string;
+    buyInPrice: string;
+}
+
+interface Props {
+    GameInfo?: GameInfoInterface;
+}
+export default class CoinFlipViewer extends React.Component<Props>{
 
     state = {
-        coinFlipContractAddress: ""
+        coinFlipContractAddress: "",
+        gameInfo: this.props.GameInfo
     }
 
     async componentDidMount() {
@@ -22,6 +32,10 @@ export default class CoinFlipViewer extends React.Component {
             const signer = provider.getSigner();
             let contract = new ethers.Contract(contractAddress, _CoinFlip_abi, signer);
             console.log(contract)
+            const gameData = await contract.getGameInfo();
+            this.setState({
+                gameInfo: gameData
+            })
         }
     }
 
@@ -29,7 +43,14 @@ export default class CoinFlipViewer extends React.Component {
         return (
             <div className="CoinFlipViewer-Div-Main">
                 <MenuItems/>
-                {this.state.coinFlipContractAddress}        
+                {this.state.gameInfo ?
+                    <div>
+                    <h6>{this.state.gameInfo.creatorAddress}</h6>
+                    <h6>{parseInt(this.state.gameInfo.buyInPrice, 16)} eth buy</h6>
+                    </div>
+                :
+                "NOT GAMES"
+                }
             </div>
         )
     }

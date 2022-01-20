@@ -26,6 +26,12 @@ contract CoinFlip is VRFConsumerBase {
     fee = 0.1 * 10 ** 18;
   }
 
+  struct GameInfo {
+    address creatorAddress;
+    uint256 buyInPrice;
+  }
+
+
 
   address[] tickets;
 
@@ -51,6 +57,14 @@ contract CoinFlip is VRFConsumerBase {
 
   function getWinner() public view returns (address) {
     return winner; 
+  }
+
+  function getGameInfo() public view returns (GameInfo memory) {
+    GameInfo memory gameInfo = GameInfo({
+      creatorAddress: creatorAddress,
+      buyInPrice: BUY_IN_PRICE
+    });
+    return gameInfo;
   }
 
 }

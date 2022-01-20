@@ -22,7 +22,7 @@ import './MenuItems.css';
 //             <Link to="/host">📄 Host</Link>
 //         </div>
 
-const pages = [ '/', 'Raffles', 'Profile', 'Host'];
+const pages = [ '/', 'Raffles', 'coin-flips', 'Profile', 'Host'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const ResponsiveAppBar = () => {

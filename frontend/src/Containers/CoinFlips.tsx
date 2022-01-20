@@ -1,5 +1,6 @@
 import React from 'react';
 import CoinFlip from '../Components/CoinFlip';
+import MenuItems from '../Components/MenuItems';
 import { Link } from 'react-router-dom';
 import { ethers } from "ethers";
 import { CoinFlipAddress, _CoinFlips_abi } from "../interfaces/CoinFlips_Interface";
@@ -38,16 +39,17 @@ export default class CoinFlips extends React.Component {
     render() {
         return (
             <div className="CoinFlips-Container-Main">
-               Coin Flips Container 
-               {console.log("HELLO", this.state)}
-               {this.state.coinFlips.map((coinFlip: any) => {
-                   return (
-                    <Link to={`coin-flip/${coinFlip['contractAddress']}`}>
-                        <CoinFlip coinFlip={coinFlip}></CoinFlip>
-                    </Link>
-                   )
-               })}
-            </div>
+                <MenuItems/>
+                <h1>Coin Flips Container </h1>
+                {console.log("HELLO", this.state)}
+                {this.state.coinFlips.map((coinFlip: any) => {
+                    return (
+                        <Link to={`coin-flip/${coinFlip['contractAddress']}`}>
+                            <CoinFlip coinFlip={coinFlip}></CoinFlip>
+                        </Link>
+                    )
+                })}
+                </div>
         )
     }
 }
