@@ -9,7 +9,8 @@ export default class CoinFlip extends React.Component <Props>{
     render() {
         return (
             <div className="CoinFlip-Div-Main">
-                {this.props.coinFlip.contractAddress}
+                <h6> Creator: {this.props.coinFlip.creatorAddress}</h6>
+                <h6>Buy In Price: {this.props.coinFlip.buyInPrice} eth </h6>
             </div>
         )
     }

@@ -1,4 +1,4 @@
-export const CoinFlipAddress = "0xF0B02632b58a44Cf068893d8d9C3917939b4B0ef"
+export const CoinFlipAddress = "0x4BE1BF07DF7aDa81fA28b6a364e0de793783abcb"
 
 export const _CoinFlips_abi = 
 [
@@ -160,5 +160,9 @@ export const _CoinFlips_abi =
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "receive"
   }
 ]

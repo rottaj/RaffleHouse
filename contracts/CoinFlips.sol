@@ -20,6 +20,8 @@ contract CoinFlips is Ownable {
   }
   CoinFlip[] public coinFlips;
 
+  receive() external payable {}
+
   function addCoinFlip(address _contractAddress, uint256 _buyInPrice) public {
     require(msg.sender != address(0), "INVALID MSG.SENDER");
     require(_contractAddress != address(0), "INVALID CONTRACT ADDRESS");

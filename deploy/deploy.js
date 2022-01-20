@@ -14,7 +14,7 @@ const main = async() => {
   console.log("SIGNER", signer)
   console.log("LINK INTERFACE: ", abi);
   console.log("LINK ADDRESS: ", LinkInterface.linkAddress);
-  const ChainLinkContract = new ethers.Contract(LinkInterface.linkAddress, abi, signer);
+  //const ChainLinkContract = new ethers.Contract(LinkInterface.linkAddress, abi, signer); // add this later ?
   console.log("LINK CONTRACT", ChainLinkContract); 
   // INITIALIZE RAFFLES CONTRACT
   const rafflesContractFactory = await hre.ethers.getContractFactory("Raffles");

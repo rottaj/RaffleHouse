@@ -24,10 +24,17 @@ export default class CoinFlips extends React.Component {
             let coinFlipLength = await coinFlipContract.getCoinFlips();
             console.log("COINFLIPLENGTH", parseInt(coinFlipLength, 16))
             for (let i =0; i<=coinFlipLength-1; i++ ) {
-                let coinFlip = await coinFlipContract.getCoinFlipByIndex(i);
-                //const coinFlipInstance = await new ethers.Contract()
+                var tempCoinFlip:any  = {}
+                var coinFlip = await coinFlipContract.getCoinFlipByIndex(i);
+                console.log("COINFOOBET", coinFlip)
+                const coinFlipInstance = await new ethers.Contract(coinFlip.contractAddress, _CoinFlip_abi, signer);
+                const gameInfo = await coinFlipInstance.getGameInfo();
+                console.log("GAME INFOOO", gameInfo)
+                tempCoinFlip['contractAddress'] = coinFlip['contractAddress'];
+                tempCoinFlip['buyInPrice'] = parseInt(gameInfo['buyInPrice'], 16);
+                tempCoinFlip['creatorAddress'] = gameInfo['creatorAddress'];
                 this.setState({
-                    coinFlips: [...this.state.coinFlips, coinFlip]
+                    coinFlips: [...this.state.coinFlips, tempCoinFlip]
                 })
             }
         }
