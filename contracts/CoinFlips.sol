@@ -32,11 +32,11 @@ contract CoinFlips is Ownable {
     chainLink.transfer(_contractAddress, chainLinkFee);
   }
 
-  function getCoinFlips() public returns (uint256) {
+  function getCoinFlips() public view returns (uint256) {
     return coinFlips.length;
   }
 
-  function getCoinFlipByIndex(uint256 _index) public returns (CoinFlip memory) {
+  function getCoinFlipByIndex(uint256 _index) public view returns (CoinFlip memory) {
     return coinFlips[_index];
   }
 }

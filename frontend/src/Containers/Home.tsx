@@ -3,6 +3,7 @@ import EnterApp from "../Components/EnterApp";
 import RaffleCreator from "../Components/RaffleCreator";
 import MenuItems from "../Components/MenuItems";
 import Footer from "../Components/Footer";
+import CoinFlipCreator from '../Components/CoinFlipCreator';
 import SwiperCore, { Autoplay, EffectCoverflow, Pagination } from 'swiper';
 import { Link } from 'react-router-dom';
 import './Home.css';
@@ -10,12 +11,19 @@ import './Home.css';
 export default class Home extends React.Component {
 
     state = {
-        RaffleFormOpen: false
+        RaffleFormOpen: false,
+        CoinFlipFormOpen: false
       }
     
     handleRaffleForm = () => {
         this.setState({
           RaffleFormOpen: !this.state.RaffleFormOpen
+        })
+    }
+
+    handleCoinFlipForm = () => {
+        this.setState({
+            CoinFlipFormOpen: !this.state.CoinFlipFormOpen
         })
     }
 
@@ -35,9 +43,13 @@ export default class Home extends React.Component {
                     <div>
                         <button onClick={this.handleRaffleForm}>Create Raffle!</button>
                     </div>
+                    <div>
+                        <button onClick={this.handleCoinFlipForm}> Create Coin Flip </button>
+                    </div>
 
                 </div>
                 <RaffleCreator isOpen={this.state.RaffleFormOpen}/>
+                <CoinFlipCreator isOpen={this.state.CoinFlipFormOpen}/>
                 <Footer/>
             </div>
         )
