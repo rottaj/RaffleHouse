@@ -9,12 +9,12 @@ interface Props {
 }
 
 declare let window: any;
-export default class CoinFlipCreator extends React.Component <Props>{
+export default class CoinFlipCreator extends React.Component {
 
 
     handleSubmit = async (e: any) => {
-        console.log("HANDLE SUBMIT", e.target)
         e.preventDefault();
+        console.log("HANDLE SUBMIT", e.target)
         if (window.ethereum) {
             var accounts = await window.ethereum.send('eth_requestAccounts');
             var provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -26,8 +26,12 @@ export default class CoinFlipCreator extends React.Component <Props>{
             const contract = await CoinFlipFactory.deploy(parseInt(e.target[0].value)); // FIX THIS not parseInt
             await contract.deployed().then(async function (data) {
                 console.log(data);
-                const addCoinFlipsTxn = coinFlipsContract.addCoinFlip(contract.address, parseInt(e.target[0].value));
-                console.log("COINFLIPS TXN", addCoinFlipsTxn);
+                const depositTxn = contract.deposit(parseInt(e.target[0].value), {
+                    value: ethers.utils.parseEther(parseInt(e.target[0].value).toString())
+                }).then(async function () {
+                    const addCoinFlipsTxn = coinFlipsContract.addCoinFlip(contract.address, parseInt(e.target[0].value));
+                    console.log("COINFLIPS TXN", addCoinFlipsTxn);
+                })
             })
         }
     }

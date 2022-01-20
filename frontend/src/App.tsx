@@ -7,7 +7,7 @@ import Raffles from './Containers/Raffles'
 import CoinFlips from "./Containers/CoinFlips";
 import RaffleViewer from './Containers/RaffleViewer';
 import userProfile from "./Components/userProfile";
-import RaffleCreator from "./Components/RaffleCreator";
+import Host from "./Containers/Host";
 import CoinFlipViewer from "./Containers/CoinFlipViewer";
 
 export default class App extends React.Component {
@@ -18,7 +18,7 @@ export default class App extends React.Component {
         <Route exact path = "/raffles" component = {Raffles}/>
         <Route exact path="/coin-flips" component = {CoinFlips}/>
         <Route exact path = "/profile" component = {userProfile} />
-        <Route exact path = "/host" component = {RaffleCreator} />
+        <Route exact path = "/host" component = {Host} />
         <Route path = "/raffle/:contractAddress" component = {RaffleViewer}/>
         <Route path = "/coin-flip/:contractAddress" component = {CoinFlipViewer}/>
       </BrowserRouter>

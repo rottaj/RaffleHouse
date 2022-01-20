@@ -51,6 +51,13 @@ export default class CoinFlipViewer extends React.Component<Props>{
             const contract = new ethers.Contract(contractAddress, _CoinFlip_abi, signer);
             let depositTxn = await contract.deposit(parseInt(e.target[0].value), {
                 value: ethers.utils.parseEther(parseInt(e.target[0].value).toString())
+            }).then(async function () {
+                // JUST FOR TESTING
+                const getRandomNumber = await contract.getRandomNumber();
+            }).then(async function() {
+                // JUST FOR TESTING
+                const winner = await contract.getWinner();
+                console.log("WINNER ", winner)
             })
             console.log(depositTxn);
         }
@@ -63,8 +70,8 @@ export default class CoinFlipViewer extends React.Component<Props>{
                 <div className="CoinFlip-Game-Container">
                     {this.state.gameInfo ?
                         <div>
-                        <h6>{this.state.gameInfo.creatorAddress}</h6>
-                        <h6>{parseInt(this.state.gameInfo.buyInPrice, 16)} eth buy in</h6>
+                        <h6>Creator: {this.state.gameInfo.creatorAddress}</h6>
+                        <h6>Buy in Price: {parseInt(this.state.gameInfo.buyInPrice, 16)} eth</h6>
                         <form onSubmit={(e) => this.handleSubmit(e, this.state.coinFlipContractAddress)}>
                             <input value={parseInt(this.state.gameInfo.buyInPrice)}></input>
                             <button type="submit">Deposit</button>

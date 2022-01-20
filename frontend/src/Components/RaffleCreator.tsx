@@ -49,7 +49,7 @@ interface Token {
 
 
 declare let window: any;
-export default class RaffleCreator extends React.Component <Props>{
+export default class RaffleCreator extends React.Component{
     state = {
         tokens: [],
         RaffleFormOpen: false,
@@ -217,20 +217,7 @@ export default class RaffleCreator extends React.Component <Props>{
                         <NFTSelector tokens={this.state.tokens} ref={(tokenSelector) => this.tokenSelector = tokenSelector}/>
                         <button type="submit">Submit Proposal</button>
                     </form>
-                {/* <CoinFlipCreator/> */}
-
-                    <div className="PopUp-Form">
-                    <h3>Host a CoinFlip Game!</h3>
-                    <form className="CreateCoinFlip-Form" onSubmit={(e) => this.handleSubmit(e)}>
-                        Minimum Buy in:
-                        <input className="CoinFlipForm-Minimum-Buyin" defaultValue="0.5"></input>
-                        <br></br>
-                        <br></br>
-                        <button type="submit">Submit Proposal</button>
-                    </form>
-                    </div>
                 </div>
-                {/* } */}
             </div>
         )
     }
