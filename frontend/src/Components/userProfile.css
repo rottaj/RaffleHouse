@@ -1,0 +1,93 @@
+.title {
+    font-size: 35px;
+    text-decoration: underline;
+}
+
+.title2 {
+    font-size: 33px;
+    /* float: right; */
+    /* pading-right: 10px;
+    margin-top: -100px; */
+}
+
+.bioCard {
+    float: right;
+    margin-right: 24%;
+    padding-top: 10px;
+}
+
+.profileStats {
+    width: 300px;
+    height: 150px;
+    padding-top: 50px;
+    float: right;
+    text-align: center;
+    font-size: 25px;
+}
+
+.profileStatstoo {
+    margin-right: 3%;
+    padding-top: 50px;
+    float: right;
+    text-align: center;
+    font-size: 25px;
+}
+
+.userCard {
+    float: right;
+    margin-right: 15%;
+    margin-top: -5%;
+    /* margin-bottom: 20%; */
+}
+
+.username {
+    font-size: 45px;
+}
+
+.bioText {
+  border-radius: 25px;
+  border: 2px solid rgb(0, 0, 0);
+  background-color: rgb(255, 255, 255);
+  width: 50%;
+  height: 20%;
+  margin-right: -20%; 
+  padding-left: 5px;
+  margin-top: 50px;
+  float: right;
+}
+.profileArea {
+    padding-left: 5%;
+    padding-top: 2%;
+    /* height: 50%; */
+}
+
+.profileCard {
+    border-radius: 25px;
+    border: 2px solid rgb(0, 0, 0);
+    background-color: rgb(206, 206, 206);
+    width: 95%;
+    height: 1000px;
+    /* margin-left: 60px;  */
+    margin-top: 20px;
+  }
+
+  .profileAvi {
+    border-radius: 25px;
+    width: 250px;
+    height: 250px;
+    margin-left: 50px; 
+  }
+
+  .address {
+    font-size: 20px;
+    margin-left: 50px;
+  }
+
+  .profileNFTs {
+    border-radius: 25px;
+    border: 2px solid rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    width: 93%;
+    height: 60%;
+    margin-left: 50px; 
+  }
