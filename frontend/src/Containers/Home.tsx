@@ -2,6 +2,7 @@ import React from 'react';
 import EnterApp from "../Components/EnterApp";
 import RaffleCreator from "../Components/RaffleCreator";
 import MenuItems from "../Components/MenuItems";
+import Footer from "../Components/Footer";
 import SwiperCore, { Autoplay, EffectCoverflow, Pagination } from 'swiper';
 import { Link } from 'react-router-dom';
 import './Home.css';
@@ -40,6 +41,7 @@ export default class Home extends React.Component {
 
                 </div>
                 <RaffleCreator isOpen={this.state.RaffleFormOpen}/>
+                <Footer/>
             </div>
         )
     }

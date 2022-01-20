@@ -2,7 +2,8 @@ import React from 'react';
 import { ethers } from 'ethers';
 import { Link } from 'react-router-dom';
 import Home from '../Containers/Home'
-import "./Raffle.css"
+import "./Raffle.css";
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 interface Props {
     token: any;
@@ -23,11 +24,10 @@ export default class Raffle extends React.Component<Props> {
 
     render() {
         return (
-
-            <div className="Raffle-Div-Main" onClick={() => this.handleClick()}>
+            <SwiperSlide className="Raffle-Div-Main" onClick={() => this.handleClick()}>
                 {console.log("FOOBAR", this.props)}
                 <img className="Raffle-Img"src={this.props.token.tokenImage}></img>
-            </div>
+            </SwiperSlide>
         )
     }
 }

@@ -6,6 +6,7 @@ import Home  from './Containers/Home';
 import Raffles from './Containers/Raffles'
 import RaffleViewer from './Containers/RaffleViewer';
 import userProfile from "./Components/userProfile";
+import RaffleCreator from "./Components/RaffleCreator";
 
 
 export default class App extends React.Component {
@@ -15,6 +16,7 @@ export default class App extends React.Component {
         <Route exact path = "/" component = {Home} />
         <Route exact path = "/raffles" component = {Raffles}/>
         <Route exact path = "/profile" component = {userProfile} />
+        <Route exact path = "/host" component = {RaffleCreator} />
         <Route path = "/raffle/:contractAddress" component = {RaffleViewer}/>
       </BrowserRouter>
     )
