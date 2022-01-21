@@ -54,6 +54,7 @@ export default class CoinFlipViewer extends React.Component<Props>{
             }).then(async function () {
                 // JUST FOR TESTING
                 const getRandomNumber = await contract.getRandomNumber();
+                console.log("RANDOM NUMBER", getRandomNumber)
             }).then(async function() {
                 // JUST FOR TESTING
                 const winner = await contract.getWinner();

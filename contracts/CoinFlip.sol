@@ -33,14 +33,18 @@ contract CoinFlip is VRFConsumerBase {
 
 
 
-  address[] tickets;
+  address[2] players;
 
-  function deposit(uint256 _tickets) payable public {
+  function deposit() payable public {
     require(msg.sender != address(0), "INVALID ADDRESS");
     require(msg.value != 0, "INVALID ETHER"); // will update this later
     require(msg.value >= BUY_IN_PRICE, "INVALID BUY IN PRICE");
-    for (uint i=0; i<=_tickets; i++) {
-      tickets.push(msg.sender);
+    require(players[1] != address(0), "PLAYERS FULL"); // FIX THis
+    if (players.length == 0) {
+      players[0] = msg.sender;
+    } 
+    else if (players.length == 1) {
+      players[1] = msg.sender;
     }
   }
 
@@ -50,8 +54,8 @@ contract CoinFlip is VRFConsumerBase {
   }
 
   function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
-    uint256 valueBetween = (randomness % tickets.length) + 1;
-    winner = tickets[valueBetween];
+    uint256 valueBetween = (randomness % 2) + 1;
+    winner = players[valueBetween];
     emit WinnerPicked(requestId, valueBetween); // add winner instead of value?
   }
 
