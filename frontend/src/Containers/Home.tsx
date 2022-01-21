@@ -50,7 +50,7 @@ export default class Home extends React.Component {
                 </div>
                 {/* <RaffleCreator isOpen={this.state.RaffleFormOpen}/> */}
                 {/* <CoinFlipCreator isOpen={this.state.CoinFlipFormOpen}/> */}
-                <Footer/>
+                {/* <Footer/> */}
             </div>
         )
     }
