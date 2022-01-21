@@ -12,18 +12,13 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import { createTheme } from '@mui/material/styles';
 import logo from '../Raffle_House.png';
 import './MenuItems.css';
 
-//           <div className="test">
-//             <Link to="/">🏠 Home</Link>
-//             <Link to="/raffles">💰 Current Raffles</Link>
-//             <Link to="/profile">🖼 Profile</Link>
-//             <Link to="/host">📄 Host</Link>
-//         </div>
-
 const pages = [ 'raffles','coin-flips', 'profile', 'host'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -43,9 +38,9 @@ const ResponsiveAppBar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
+  
   return (
-    <AppBar position="static">
+    <AppBar position="static" style={{backgroundColor: "#0a1929", color: "default"}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
