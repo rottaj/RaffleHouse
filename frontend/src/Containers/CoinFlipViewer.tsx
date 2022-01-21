@@ -9,6 +9,8 @@ declare let window: any;
 
 interface GameInfoInterface {
     creatorAddress: string;
+    joineeAddress: string;
+    winner: string;
     buyInPrice: string;
 }
 
@@ -49,7 +51,7 @@ export default class CoinFlipViewer extends React.Component<Props>{
             var provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const contract = new ethers.Contract(contractAddress, _CoinFlip_abi, signer);
-            let depositTxn = await contract.deposit(parseInt(e.target[0].value), {
+            let depositTxn = await contract.deposit({
                 value: ethers.utils.parseEther(parseInt(e.target[0].value).toString())
             }).then(async function () {
                 // JUST FOR TESTING
@@ -71,12 +73,31 @@ export default class CoinFlipViewer extends React.Component<Props>{
                 <div className="CoinFlip-Game-Container">
                     {this.state.gameInfo ?
                         <div>
-                        <h6>Creator: {this.state.gameInfo.creatorAddress}</h6>
-                        <h6>Buy in Price: {parseInt(this.state.gameInfo.buyInPrice, 16)} eth</h6>
-                        <form onSubmit={(e) => this.handleSubmit(e, this.state.coinFlipContractAddress)}>
-                            <input value={parseInt(this.state.gameInfo.buyInPrice)}></input>
-                            <button type="submit">Deposit</button>
-                        </form>
+                            <h6>Winner: {this.state.gameInfo.winner}</h6>
+
+                            <div className="CoinFlip-Players-Container">
+
+
+                                <div className="CoinFlip-Players-Creator-Div">
+                                <h6>Creator: {this.state.gameInfo.creatorAddress}</h6>
+                                <h6>Buy in Price: {parseInt(this.state.gameInfo.buyInPrice, 16)} eth</h6>
+
+                                </div>
+                                {this.state.gameInfo.joineeAddress != "0x0000000000000000000000000000000000000000" ? 
+                                    <div className="CoinFlip-Players-Joinee-Div">
+                                    <h6>Joinee: {this.state.gameInfo.joineeAddress}</h6>
+                                    <h6></h6>
+                                    </div>
+                                :
+                                    <div className="CoinFlip-Players-Waiting-Div">
+                                        <h6>Waiting for player</h6>
+                                        <form onSubmit={(e) => this.handleSubmit(e, this.state.coinFlipContractAddress)}>
+                                            <input value={parseInt(this.state.gameInfo.buyInPrice)}></input>
+                                            <button type="submit">Deposit</button>
+                                        </form>
+                                    </div>
+                                }
+                            </div>
                         </div>
                     :
                     "GAME DOESN'T EXIST"

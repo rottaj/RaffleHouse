@@ -28,9 +28,10 @@ contract CoinFlip is VRFConsumerBase {
 
   struct GameInfo {
     address creatorAddress;
+    address joineeAddress;
+    address winner;
     uint256 buyInPrice;
   }
-
 
 
   address[2] players;
@@ -39,13 +40,20 @@ contract CoinFlip is VRFConsumerBase {
     require(msg.sender != address(0), "INVALID ADDRESS");
     require(msg.value != 0, "INVALID ETHER"); // will update this later
     require(msg.value >= BUY_IN_PRICE, "INVALID BUY IN PRICE");
-    require(players[1] != address(0), "PLAYERS FULL"); // FIX THis
-    if (players.length == 0) {
+    //require(players[1] != address(0), "PLAYERS FULL"); // FIX THis
+    if (players[0] == address(0)) {
       players[0] = msg.sender;
     } 
-    else if (players.length == 1) {
+    else if (players[1] == address(0)) {
       players[1] = msg.sender;
+      joineeAddress = payable(msg.sender);
+      getRandomNumber();
     }
+  }
+
+  function pickGameWinner() public {
+    require(players[1] != address(0), "CANT PICK GAME WINNER: NOT ENOUGH PLAYERS");
+    getRandomNumber();
   }
 
   function getRandomNumber() public returns (bytes32 requestId) {
@@ -54,7 +62,7 @@ contract CoinFlip is VRFConsumerBase {
   }
 
   function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
-    uint256 valueBetween = (randomness % 2) + 1;
+    uint256 valueBetween = (randomness % 2);
     winner = players[valueBetween];
     emit WinnerPicked(requestId, valueBetween); // add winner instead of value?
   }
@@ -66,6 +74,8 @@ contract CoinFlip is VRFConsumerBase {
   function getGameInfo() public view returns (GameInfo memory) {
     GameInfo memory gameInfo = GameInfo({
       creatorAddress: creatorAddress,
+      joineeAddress: joineeAddress,
+      winner: winner,
       buyInPrice: BUY_IN_PRICE
     });
     return gameInfo;

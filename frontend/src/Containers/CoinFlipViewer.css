@@ -1,7 +1,25 @@
 .CoinFlipViewer-Div-Main {
     text-align: center;
+    align-items: center;
 }
 
 .CoinFlip-Game-Container {
     margin-top: 10%;
+    text-align: center;
+}
+
+.CoinFlip-Players-Container {
+    display: flex;
+}
+
+.CoinFlip-Players-Creator-Div {
+    border: 1px solid black;
+}
+
+.CoinFlip-Players-Joinee-Div {
+    border: 1px solid black;
+}
+
+.CoinFlip-Players-Waiting-Div {
+    border: 1px solid black;
 }

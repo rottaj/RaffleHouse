@@ -33,6 +33,7 @@ export default class CoinFlips extends React.Component {
                 tempCoinFlip['contractAddress'] = coinFlip['contractAddress'];
                 tempCoinFlip['buyInPrice'] = parseInt(gameInfo['buyInPrice'], 16);
                 tempCoinFlip['creatorAddress'] = gameInfo['creatorAddress'];
+                tempCoinFlip['winner'] = gameInfo['winner'];
                 this.setState({
                     coinFlips: [...this.state.coinFlips, tempCoinFlip]
                 })
