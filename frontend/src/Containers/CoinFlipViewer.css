@@ -8,16 +8,26 @@
     text-align: center;
 }
 
+.CoinFlip-GameInfo-Div {
+    border: 1px solid black;
+    margin-left: 30%;
+    margin-right: 30%;
+    margin-bottom: 5%;
+}
+
 .CoinFlip-Players-Container {
     display: flex;
+    justify-content: center;
 }
 
 .CoinFlip-Players-Creator-Div {
     border: 1px solid black;
+    margin-right: 5%;
 }
 
 .CoinFlip-Players-Joinee-Div {
     border: 1px solid black;
+    margin-left: 5%;
 }
 
 .CoinFlip-Players-Waiting-Div {
