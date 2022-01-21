@@ -24,10 +24,10 @@ export default class Raffle extends React.Component<Props> {
 
     render() {
         return (
-            <SwiperSlide className="Raffle-Div-Main" onClick={() => this.handleClick()}>
+            <div className="Raffle-Div-Main" onClick={() => this.handleClick()}>
                 {console.log("FOOBAR", this.props)}
                 <img className="Raffle-Img"src={this.props.token.tokenImage}></img>
-            </SwiperSlide>
+            </div>
         )
     }
 }
