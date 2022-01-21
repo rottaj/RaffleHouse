@@ -3,4 +3,18 @@
     margin-left: 20%;
     margin-right: 20%;
     margin-top: 5%;
+    -moz-border-radius: 20px; /* or 50% */
+    border-radius: 20px; /* or 50% */
+}
+
+.CoinFlip-Creator-h6 {
+    padding: 0px;
+}
+
+.CoinFlip-Winner-h6 {
+    padding: 0px
+}
+
+.CoinFlip-BuyIn-h6 {
+    padding-top: -10px;
 }

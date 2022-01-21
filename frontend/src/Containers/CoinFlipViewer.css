@@ -13,23 +13,33 @@
     margin-left: 30%;
     margin-right: 30%;
     margin-bottom: 5%;
+    -moz-border-radius: 10px; /* or 50% */
+    border-radius: 10px; /* or 50% */
 }
 
 .CoinFlip-Players-Container {
     display: flex;
     justify-content: center;
+
 }
 
 .CoinFlip-Players-Creator-Div {
     border: 1px solid black;
     margin-right: 5%;
+    -moz-border-radius: 10px; /* or 50% */
+    border-radius: 10px; /* or 50% */
+
 }
 
 .CoinFlip-Players-Joinee-Div {
     border: 1px solid black;
     margin-left: 5%;
+    -moz-border-radius: 10px; /* or 50% */
+    border-radius: 10px; /* or 50% */
 }
 
 .CoinFlip-Players-Waiting-Div {
     border: 1px solid black;
+    -moz-border-radius: 10px; /* or 50% */
+    border-radius: 10px; /* or 50% */
 }
