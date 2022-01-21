@@ -5,7 +5,7 @@ import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 contract CoinFlip is VRFConsumerBase {
   address payable private creatorAddress;
   address payable private joineeAddress;
-  address public winner;
+  address payable public winner;
   uint256 internal fee;
   uint256 public BUY_IN_PRICE;
   bytes32 keyhash;
@@ -51,10 +51,6 @@ contract CoinFlip is VRFConsumerBase {
     }
   }
 
-  function pickGameWinner() public {
-    require(players[1] != address(0), "CANT PICK GAME WINNER: NOT ENOUGH PLAYERS");
-    getRandomNumber();
-  }
 
   function getRandomNumber() public returns (bytes32 requestId) {
     require(LINK.balanceOf(address(this)) >= fee, "NOT ENOUGH LINK");
@@ -63,8 +59,14 @@ contract CoinFlip is VRFConsumerBase {
 
   function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
     uint256 valueBetween = (randomness % 2);
-    winner = players[valueBetween];
+    winner = payable(players[valueBetween]);
+    withDraw();
     emit WinnerPicked(requestId, valueBetween); // add winner instead of value?
+  }
+
+  function withDraw() internal {
+    uint winnings= address(this).balance;
+    require(payable(winner).send(winnings), "FAILED TO SEND TO WINNER");
   }
 
   function getWinner() public view returns (address) {
