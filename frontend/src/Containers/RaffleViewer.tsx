@@ -8,6 +8,7 @@ import { _abi } from "../interfaces/Eyescream_Interface";
 import { _Raffle_abi } from '../interfaces/RaffleEscrow_Interface';
 import Button from '@mui/material/Button';
 import "./RaffleViewer.css";
+import Footer from '../Components/Footer';
 
 const ETHERSCAN_API_NFT_TXN = 'https://api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=';
 const ETHERSCAN_API_KEY = 'JPARDRW9CAVF9ZKISWVC3YYM6RP93JNQUC';
@@ -151,6 +152,7 @@ export default class RaffleViewer extends React.Component {
 
                     <PlayersList players={this.state.players}/>
                 </div>
+                <Footer/>
             </div>
         )
     }

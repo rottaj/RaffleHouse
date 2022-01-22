@@ -3,6 +3,8 @@ import RaffleCreator from "../Components/RaffleCreator";
 import CoinFlipCreator from '../Components/CoinFlipCreator';
 import MenuItems from "../Components/MenuItems";
 import "./Host.css";
+import Footer from '../Components/Footer';
+
 export default class Host extends React.Component {
     render() {
         return (
@@ -10,6 +12,7 @@ export default class Host extends React.Component {
                 <MenuItems/>
                 <RaffleCreator/>
                 <CoinFlipCreator/>
+                <Footer/>
             </div>
         )
     }

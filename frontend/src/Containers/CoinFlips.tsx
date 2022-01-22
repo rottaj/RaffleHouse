@@ -6,6 +6,7 @@ import { ethers } from "ethers";
 import { CoinFlipAddress, _CoinFlips_abi } from "../interfaces/CoinFlips_Interface";
 import { _CoinFlip_abi, _CoinFlip_bytecode } from "../interfaces/CoinFlip_Interface";
 import "./CoinFlips.css";
+import Footer from '../Components/Footer';
 
 
 declare let window: any;
@@ -101,6 +102,7 @@ export default class CoinFlips extends React.Component {
                             )
                         })}
                     </div>
+                    <Footer/>
                 </div>
         )
     }

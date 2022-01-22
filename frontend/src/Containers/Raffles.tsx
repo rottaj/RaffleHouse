@@ -9,6 +9,7 @@ import RaffleViewer from './RaffleViewer';
 import {BrowserRouter, Route} from 'react-router-dom';
 import './Raffles.css';
 import MenuItems from "../Components/MenuItems";
+import Footer from '../Components/Footer';
 
 declare let window: any;
 export default class Raffles extends React.Component {
@@ -69,6 +70,7 @@ export default class Raffles extends React.Component {
                         )
                     })}
                     </Grid>
+                <Footer/>
                 </div>
             </div>
         )

@@ -6,6 +6,7 @@ import "./CoinFlipViewer.css";
 import { WindowRounded } from '@mui/icons-material';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Footer from '../Components/Footer';
 
 declare let window: any;
 
@@ -109,6 +110,7 @@ export default class CoinFlipViewer extends React.Component<Props>{
                     "GAME DOESN'T EXIST"
                     }
                 </div>
+                <Footer/>
             </div>
         )
     }
