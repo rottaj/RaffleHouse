@@ -1,5 +1,4 @@
 import React from 'react';
-import EnterApp from "../Components/EnterApp";
 import RaffleCreator from "../Components/RaffleCreator";
 import MenuItems from "../Components/MenuItems";
 import Footer from "../Components/Footer";
@@ -35,7 +34,6 @@ export default class Home extends React.Component {
                     <h1 className="Header-Token-Lotto-h1">Raffle House!</h1>
                     <h3>Win big with the fastest growing crypto Raffle!</h3>
                     <h4>Fully decentralized and transparent, operated on the Ethereum blockchain.</h4>
-                    <EnterApp/>
                     <Link to="/raffles">
                         <button>Join Pool!</button>
                     </Link>

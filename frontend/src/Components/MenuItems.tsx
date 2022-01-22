@@ -13,6 +13,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { createTheme } from '@mui/material/styles';
+import EnterApp from "../Components/EnterApp";
 import logo from '../Raffle_House.png';
 import './MenuItems.css';
 
@@ -109,10 +110,12 @@ const ResponsiveAppBar = () => {
             ))}
           </Box>
 
+          <EnterApp/>
+          
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="A" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
