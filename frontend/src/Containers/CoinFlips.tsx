@@ -36,6 +36,7 @@ export default class CoinFlips extends React.Component {
                     tempCoinFlip['contractAddress'] = coinFlip['contractAddress'];
                     tempCoinFlip['buyInPrice'] = parseInt(gameInfo['buyInPrice']) / (10 ** 18);
                     tempCoinFlip['creatorAddress'] = gameInfo['creatorAddress'];
+                    tempCoinFlip['joineeAddress'] = gameInfo['joineeAddress'];
                     tempCoinFlip['winner'] = gameInfo['winner'];
                     this.setState({
                         currentCoinFlips: [...this.state.currentCoinFlips, tempCoinFlip]
@@ -45,6 +46,7 @@ export default class CoinFlips extends React.Component {
                     tempCoinFlip['contractAddress'] = coinFlip['contractAddress'];
                     tempCoinFlip['buyInPrice'] = parseInt(gameInfo['buyInPrice']) / (10 ** 18);
                     tempCoinFlip['creatorAddress'] = gameInfo['creatorAddress'];
+                    tempCoinFlip['joineeAddress'] = gameInfo['joineeAddress'];
                     tempCoinFlip['winner'] = gameInfo['winner'];
                     this.setState({
                         pastCoinFlips: [...this.state.pastCoinFlips, tempCoinFlip]
