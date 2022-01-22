@@ -23,13 +23,13 @@ export default class CoinFlipCreator extends React.Component {
             const coinFlipsContract = await new ethers.Contract(CoinFlipAddress, _CoinFlips_abi, signer)  // connect to Raffles Contract
             // DEPLOY CONTRACT
             const account = accounts.result[0];
-            const contract = await CoinFlipFactory.deploy(parseInt(e.target[0].value)); // FIX THIS not parseInt
+            const contract = await CoinFlipFactory.deploy(ethers.utils.parseEther(parseFloat(e.target[0].value).toFixed(1))); // FIX THIS not parseInt
             await contract.deployed().then(async function (data) {
                 console.log(data);
                 const depositTxn = contract.deposit({
-                    value: ethers.utils.parseEther(parseInt(e.target[0].value).toString())
+                    value: ethers.utils.parseEther(e.target[0].value.toString())
                 }).then(async function () {
-                    const addCoinFlipsTxn = coinFlipsContract.addCoinFlip(contract.address, parseInt(e.target[0].value));
+                    const addCoinFlipsTxn = coinFlipsContract.addCoinFlip(contract.address, ethers.utils.parseEther(parseFloat(e.target[0].value).toFixed(1)));
                     console.log("COINFLIPS TXN", addCoinFlipsTxn);
                 })
             })

@@ -31,7 +31,7 @@ export default class CoinFlips extends React.Component {
                 const gameInfo = await coinFlipInstance.getGameInfo();
                 console.log("GAME INFOOO", gameInfo)
                 tempCoinFlip['contractAddress'] = coinFlip['contractAddress'];
-                tempCoinFlip['buyInPrice'] = parseInt(gameInfo['buyInPrice'], 16);
+                tempCoinFlip['buyInPrice'] = parseInt(gameInfo['buyInPrice']) / (10 ** 18);
                 tempCoinFlip['creatorAddress'] = gameInfo['creatorAddress'];
                 tempCoinFlip['winner'] = gameInfo['winner'];
                 this.setState({
