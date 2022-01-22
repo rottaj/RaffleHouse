@@ -25,6 +25,12 @@
 
 .CoinFlips-Current-CoinFlips-h2 {
     margin-bottom: 2%;
+    color: rgb(255, 242, 145);
+    text-shadow: rgb(203, 176, 204) 3px 3px;
+    font-size: 40px;
+}
+
+.CoinFlips-Games-Container {
 }
 
 /* CURRENT COIN FLIPS */
@@ -39,6 +45,9 @@
 .CoinFlips-Creator-h3 {
     margin-left: 20%;
     margin-right: 5%;
+    color: rgb(255, 242, 145);
+    text-shadow: rgb(203, 176, 204) 3px 3px;
+    font-size: 20px;
 }
 
 .CoinFlips-Winner-h3 {
@@ -51,6 +60,9 @@
 .CoinFlips-BuyIn-h3 {
     margin-left: 56%;
     margin-right: 5%;
+    color: rgb(255, 242, 145);
+    text-shadow: rgb(203, 176, 204) 3px 3px;
+    font-size: 20px;
 }
 
 /* PAST COIN FLIPS */
@@ -82,4 +94,9 @@
 .PastCoinFlips-BuyIn-h3 {
     margin-left: 26%;
     margin-right: 5%;
+}
+.CoinFlips-Current-CoinFlips-h2 {
+    color: rgb(255, 242, 145);
+    text-shadow: rgb(203, 176, 204) 3px 3px;
+    font-size: 40px;
 }

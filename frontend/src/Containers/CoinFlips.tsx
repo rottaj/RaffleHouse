@@ -90,7 +90,7 @@ export default class CoinFlips extends React.Component {
                         </div>
                     </div>
                     */}
-                        <h2>Past Games</h2>
+                        <h2 className="CoinFlips-Current-CoinFlips-h2">Past Games</h2>
                         {this.state.currentCoinFlips.map((coinFlip: any) => {
                             return (
                                 <Link to={`coin-flip/${coinFlip['contractAddress']}`}>
