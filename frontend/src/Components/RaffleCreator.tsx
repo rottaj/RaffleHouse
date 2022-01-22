@@ -195,31 +195,18 @@ export default class RaffleCreator extends React.Component{
     render() {
         return (
             <div className="CreateRaffleForm-Main" >
-            <MenuItems/>
-
-            {/* <div>
-                <button onClick={this.handleRaffleForm}>Create Raffle!</button>
-            </div>
-            <div>
-                <button onClick={this.handleCoinFlipForm}> Create Coin Flip </button>
-            </div>
-
-                <RaffleCreator isOpen={this.state.RaffleFormOpen}/>
-                <CoinFlipCreator isOpen={this.state.CoinFlipFormOpen}/> */}
-
-
-                {/* {this.props.isOpen &&  */}
-                <div className="PopUp-Form">
-                    <h3>Create your Raffle!</h3>
-                    <h3> 1 Share(FUN) = 0.08 ETH</h3>
-                    <form className="CreateRaffle-Form" onSubmit={(e) => this.handleSubmit(e)}>
-                        Minimum Buy in:
-                        <input className="RaffleForm-Minimum-Buyin" defaultValue="0.08"></input>
-                        <br></br>
-                        <br></br>
-                        <NFTSelector tokens={this.state.tokens} ref={(tokenSelector) => this.tokenSelector = tokenSelector}/>
-                        <button type="submit">Submit Proposal</button>
-                    </form>
+                <div className="PopUpRaffle-Form">
+                    <h3 className="CreateRaffle-h3">Create your Raffle!</h3>
+                    <div className="CreateRaffle-Form-Container">
+                        <h3 className="Minimum-BuyIn-h3">Minimum Buy in: </h3>
+                        <form className="CreateRaffle-Form" onSubmit={(e) => this.handleSubmit(e)}>
+                            <input className="RaffleForm-Minimum-Buyin" defaultValue="0.08"></input>
+                            <br></br>
+                            <br></br>
+                            <button type="submit">Create Raffle</button>
+                        </form>
+                    </div>
+                    <NFTSelector tokens={this.state.tokens} ref={(tokenSelector) => this.tokenSelector = tokenSelector}/>
                 </div>
             </div>
         )

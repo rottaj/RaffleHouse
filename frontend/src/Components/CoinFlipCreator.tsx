@@ -38,19 +38,19 @@ export default class CoinFlipCreator extends React.Component {
 
     render() {
         return (
-            <div className="Create-Coin-Flip-Main">
-                {/* {this.props.isOpen &&  */}
-                <div className="PopUp-Form">
-                    <h3>Host a CoinFlip Game!</h3>
-                    <form className="CreateCoinFlip-Form" onSubmit={(e) => this.handleSubmit(e)}>
-                        Minimum Buy in:
-                        <input className="CoinFlipForm-Minimum-Buyin" defaultValue="0.5"></input>
-                        <br></br>
-                        <br></br>
-                        <button type="submit">Submit Proposal</button>
-                    </form>
+            <div className="CreateCoinFlipForm-Main" >
+                <div className="PopUpCoinFlip-Form">
+                    <h3 className="CreateCoinFlip-h3">Host a CoinFlip Game!</h3>
+                    <div className="CreateCoinFlip-Form-Container">
+                        <h3 className="MinimumCoinFlip-BuyIn-h3">Minimum Buy in: </h3>
+                        <form className="CreateCoinFlip-Form" onSubmit={(e) => this.handleSubmit(e)}>
+                            <input className="CoinFlipForm-Minimum-Buyin" defaultValue="0.08"></input>
+                            <br></br>
+                            <br></br>
+                            <button type="submit">Create Game</button>
+                        </form>
+                    </div>
                 </div>
-                {/* } */}
             </div>
         )
     }

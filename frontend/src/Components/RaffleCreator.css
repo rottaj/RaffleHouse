@@ -3,12 +3,36 @@
     width: auto;
 }
 
-.PopUp-Form {
+.CreateRaffle-h3 {
+    padding-left: 1%;
+    color: rgb(255, 242, 145);
+    text-shadow: rgb(203, 176, 204) 3px 3px;
+    font-size: 40px;
+}
+
+.Minimum-BuyIn-h3 {
+    padding-left: 1%;
+    color: rgb(255, 242, 145);
+    text-shadow: rgb(203, 176, 204) 3px 3px;
+    font-size: 40px; 
+}
+
+.CreateRaffle-Form {
+    padding-left: 5%;
+}
+
+.CreateRaffle-Form-Container {
+    display: flex;
+}
+
+.PopUpRaffle-Form {
     /*position: fixed; */
+    padding-left: 4px;
     height: 100%;
     width: 70%;
     margin-top: 5%;
     margin-left: 10%;
-    background-color: grey;
+
+    background: rgb(80, 80, 138);
     overflow-y: scroll;
 }

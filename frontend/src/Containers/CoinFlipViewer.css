@@ -1,6 +1,7 @@
 .CoinFlipViewer-Div-Main {
     text-align: center;
     align-items: center;
+    background: rgb(50, 50, 128);
 }
 
 .CoinFlip-Game-Container {
@@ -9,6 +10,7 @@
 }
 
 .CoinFlip-GameInfo-Div {
+    background: rgb(80, 80, 138);
     border: 1px solid black;
     margin-left: 30%;
     margin-right: 30%;
@@ -25,6 +27,7 @@
 
 .CoinFlip-Players-Creator-Div {
     border: 1px solid black;
+    background: rgb(80, 80, 138);
     margin-right: 5%;
     -moz-border-radius: 10px; /* or 50% */
     border-radius: 10px; /* or 50% */
@@ -33,6 +36,7 @@
 
 .CoinFlip-Players-Joinee-Div {
     border: 1px solid black;
+    background: rgb(80, 80, 138);
     margin-left: 5%;
     -moz-border-radius: 10px; /* or 50% */
     border-radius: 10px; /* or 50% */
