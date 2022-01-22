@@ -1,14 +1,21 @@
+/*
 .Deposit-Container-Main {
     height: auto;
     width: auto;
 }
-
+*/
+/*
 .Deposit-PopUp-Form {
-    /*position: fixed; */
     height: 100%;
     width: 70%;
     margin-top: 5%;
     margin-left: 10%;
     background-color: grey;
     overflow-y: scroll;
+}
+*/
+.Deposit-To-Win-h3 {
+    color: rgb(255, 242, 145);
+    text-shadow: rgb(203, 176, 204) 3px 3px;
+    font-size: 20px;
 }
