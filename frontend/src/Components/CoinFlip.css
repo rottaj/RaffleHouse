@@ -6,16 +6,26 @@
     margin-top: 1%;
     -moz-border-radius: 20px; /* or 50% */
     border-radius: 20px; /* or 50% */
+    display: flex;
 }
 
 .CoinFlip-Creator-h6 {
-    padding: 0px;
+    margin-left: 5%;
+    margin-right: 5%;
 }
 
 .CoinFlip-Winner-h6 {
-    padding: 0px
+    margin-left: 10%;
+    margin-right: 5%;
 }
 
+.CoinFlip-Waiting-h6 {
+    margin-left: 20%;
+    margin-right: 13%;
+}
+
+
 .CoinFlip-BuyIn-h6 {
-    padding-top: -10px;
+    margin-left: 12%;
+    margin-right: 5%;
 }

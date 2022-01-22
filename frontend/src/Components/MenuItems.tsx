@@ -17,7 +17,7 @@ import EnterApp from "../Components/EnterApp";
 import logo from '../Raffle_House.png';
 import './MenuItems.css';
 
-const pages = [ 'raffles','coin-flips', 'profile', 'host'];
+const pages = [ 'raffles','coin-flips', 'host'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 

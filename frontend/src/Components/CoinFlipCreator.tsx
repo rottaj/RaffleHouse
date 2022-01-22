@@ -2,6 +2,8 @@ import React from 'react';
 import { ethers, ContractFactory } from 'ethers';
 import { _CoinFlip_abi, _CoinFlip_bytecode } from "../interfaces/CoinFlip_Interface";
 import { CoinFlipAddress, _CoinFlips_abi } from '../interfaces/CoinFlips_Interface';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import "./CoinFlipCreator.css";
 
 interface Props {
@@ -38,19 +40,19 @@ export default class CoinFlipCreator extends React.Component {
 
     render() {
         return (
-            <div className="Create-Coin-Flip-Main">
-                {/* {this.props.isOpen &&  */}
-                <div className="PopUp-Form">
-                    <h3>Host a CoinFlip Game!</h3>
-                    <form className="CreateCoinFlip-Form" onSubmit={(e) => this.handleSubmit(e)}>
-                        Minimum Buy in:
-                        <input className="CoinFlipForm-Minimum-Buyin" defaultValue="0.5"></input>
-                        <br></br>
-                        <br></br>
-                        <button type="submit">Submit Proposal</button>
-                    </form>
+            <div className="CreateCoinFlipForm-Main" >
+                <div className="PopUpCoinFlip-Form">
+                    <h3 className="CreateCoinFlip-h3">Host a CoinFlip Game!</h3>
+                    <div className="CreateCoinFlip-Form-Container">
+                        <h3 className="MinimumCoinFlip-BuyIn-h3">Minimum Buy in: </h3>
+                        <form className="CreateCoinFlip-Form" onSubmit={(e) => this.handleSubmit(e)}>
+                            <TextField className="CoinFlipForm-Minimum-Buyin" defaultValue="0.08" id="filled-basic" label="Deposit" variant="filled"></TextField>
+                            <Button variant="contained" type="submit" style={{maxHeight: '55px'}}>
+                                Create Game
+                            </Button>
+                        </form>
+                    </div>
                 </div>
-                {/* } */}
             </div>
         )
     }

@@ -12,7 +12,8 @@ declare let window: any;
 export default class CoinFlips extends React.Component {
 
     state = {
-        coinFlips: []
+        currentCoinFlips: [],
+        pastCoinFlips: []
     }
   
     getCoinFlips = async () => {
@@ -29,14 +30,26 @@ export default class CoinFlips extends React.Component {
                 console.log("COINFOOBET", coinFlip)
                 const coinFlipInstance = await new ethers.Contract(coinFlip.contractAddress, _CoinFlip_abi, signer);
                 const gameInfo = await coinFlipInstance.getGameInfo();
-                console.log("GAME INFOOO", gameInfo)
-                tempCoinFlip['contractAddress'] = coinFlip['contractAddress'];
-                tempCoinFlip['buyInPrice'] = parseInt(gameInfo['buyInPrice']) / (10 ** 18);
-                tempCoinFlip['creatorAddress'] = gameInfo['creatorAddress'];
-                tempCoinFlip['winner'] = gameInfo['winner'];
-                this.setState({
-                    coinFlips: [...this.state.coinFlips, tempCoinFlip]
-                })
+                console.log("HELLO FOOBAR", gameInfo.winner)
+                if (gameInfo.winner != "0x0000000000000000000000000000000000000000") {
+                    console.log("GAME INFOOO", gameInfo)
+                    tempCoinFlip['contractAddress'] = coinFlip['contractAddress'];
+                    tempCoinFlip['buyInPrice'] = parseInt(gameInfo['buyInPrice']) / (10 ** 18);
+                    tempCoinFlip['creatorAddress'] = gameInfo['creatorAddress'];
+                    tempCoinFlip['winner'] = gameInfo['winner'];
+                    this.setState({
+                        currentCoinFlips: [...this.state.currentCoinFlips, tempCoinFlip]
+                    })
+                }else {
+                    console.log("GAME INFOOO", gameInfo)
+                    tempCoinFlip['contractAddress'] = coinFlip['contractAddress'];
+                    tempCoinFlip['buyInPrice'] = parseInt(gameInfo['buyInPrice']) / (10 ** 18);
+                    tempCoinFlip['creatorAddress'] = gameInfo['creatorAddress'];
+                    tempCoinFlip['winner'] = gameInfo['winner'];
+                    this.setState({
+                        pastCoinFlips: [...this.state.pastCoinFlips, tempCoinFlip]
+                    })
+                }
             }
         }
     }
@@ -50,15 +63,42 @@ export default class CoinFlips extends React.Component {
         return (
             <div className="CoinFlips-Container-Main">
                 <MenuItems/>
-                <h1 className="CoinFlips-Container-Title-h1">Coin Flips Container </h1>
+                <h1 className="CoinFlips-Container-Title-h1">Coin Flips</h1>
                 {console.log("HELLO", this.state)}
-                {this.state.coinFlips.map((coinFlip: any) => {
-                    return (
-                        <Link to={`coin-flip/${coinFlip['contractAddress']}`}>
-                            <CoinFlip coinFlip={coinFlip}></CoinFlip>
-                        </Link>
-                    )
-                })}
+                <div className="CoinFlips-Games-Container">
+                    <div className="CurrentCoinFlips-Container">
+
+                        <h2 className="CoinFlips-Current-CoinFlips-h2">Current Coin Flips</h2>
+                        <div className="CoinFlips-Games-Header">
+                            <h3 className="CoinFlips-Creator-h3">Creator</h3>
+                            <h3 className="CoinFlips-BuyIn-h3">Buy in Price</h3>
+                        </div>
+                        {this.state.pastCoinFlips.map((coinFlip: any) => {
+                            return (
+                                <Link to={`coin-flip/${coinFlip['contractAddress']}`}>
+                                    <CoinFlip coinFlip={coinFlip}></CoinFlip>
+                                </Link>
+                            )
+                        })}
+                    </div>
+                    {/* // Work on this
+                    <div className="PastCoinFlips-Container">
+                        <div className="PastCoinFlips-Games-Header">
+                            <h3 className="PastCoinFlips-Creator-h3">Creator</h3>
+                            <h3 className="PastCoinFlips-Winner-h3">Winner</h3>
+                            <h3 className="PastCoinFlips-BuyIn-h3">Buy in Price</h3>
+                        </div>
+                    </div>
+                    */}
+                        <h2 className="CoinFlips-Current-CoinFlips-h2">Past Games</h2>
+                        {this.state.currentCoinFlips.map((coinFlip: any) => {
+                            return (
+                                <Link to={`coin-flip/${coinFlip['contractAddress']}`}>
+                                    <CoinFlip coinFlip={coinFlip}></CoinFlip>
+                                </Link>
+                            )
+                        })}
+                    </div>
                 </div>
         )
     }

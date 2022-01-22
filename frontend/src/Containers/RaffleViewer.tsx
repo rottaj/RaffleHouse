@@ -4,11 +4,10 @@ import Deposit from "../Components/Deposit";
 import PlayersList from "../Components/PlayersList";
 import WinnerBox from "../Components/WinnerBox";
 import { ethers } from 'ethers';
-import { Link } from 'react-router-dom';
 import { _abi } from "../interfaces/Eyescream_Interface";
 import { _Raffle_abi } from '../interfaces/RaffleEscrow_Interface';
+import Button from '@mui/material/Button';
 import "./RaffleViewer.css";
-import { readSync } from 'node:fs';
 
 const ETHERSCAN_API_NFT_TXN = 'https://api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=';
 const ETHERSCAN_API_KEY = 'JPARDRW9CAVF9ZKISWVC3YYM6RP93JNQUC';
@@ -28,7 +27,8 @@ export default class RaffleViewer extends React.Component {
         isDepositOpen: false,
         raffleContractAddress: "",
         raffleBalance: 0,
-        players: []
+        players: [],
+        gameInfo: []
     }
 
     fetchNFTs = async (contractAddress: any) => {
@@ -125,6 +125,10 @@ export default class RaffleViewer extends React.Component {
         var provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         let contract = new ethers.Contract(contractAddress, _Raffle_abi, signer);
+        const gameInfo = await contract.getGameInfo()
+        this.setState({
+            gameInfo: gameInfo
+        })
         const tickets = await contract.getTickets();
         const uniqueAddresses = this.getUniqueAddresses(tickets);
         this.getTickets(uniqueAddresses, tickets);
@@ -135,11 +139,13 @@ export default class RaffleViewer extends React.Component {
         return (
             <div className="RaffleViewer-Div-Main">
                 <MenuItems/>
-                <WinnerBox/>
+                <WinnerBox winner={this.state.gameInfo.winner}/>
                 <div className="RaffleViewer-Viewer-Container">
                     <div className="Token-Image-Div">
                         <img className="Token-Image"src={this.state.tokenMetaData.image}></img>
-                        <button onClick={this.handleDepositClicked}>Deposit</button>
+                        <Button onClick={this.handleDepositClicked} variant="contained" type="submit" style={{maxHeight: '55px'}}>
+                            Deposit
+                        </Button>
                         <Deposit tokenMetaData={this.state.tokenMetaData} isDepositOpen={this.state.isDepositOpen} raffleContractAddress={this.state.raffleContractAddress}/>
                     </div>
 

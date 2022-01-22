@@ -1,14 +1,41 @@
-.Create-Coin-Flip-Main {
+.CreateCoinFlipForm-Main {
     height: auto;
     width: auto;
 }
 
-.PopUp-Form {
+.CreateCoinFlip-h3 {
+    padding-left: 1%;
+    color: rgb(255, 242, 145);
+    text-shadow: rgb(203, 176, 204) 3px 3px;
+    font-size: 40px;
+}
+
+.MinimumCoinFlip-BuyIn-h3 {
+    padding-left: 1%;
+    color: rgb(255, 242, 145);
+    text-shadow: rgb(203, 176, 204) 3px 3px;
+    font-size: 40px; 
+}
+
+.CreateCoinFlip-Form {
+    margin-top: 3%;
+    padding-left: 5%;
+    display: flex;
+}
+
+.CreateCoinFlip-Form-Container {
+    display: flex;
+}
+
+.PopUpCoinFlip-Form {
     /*position: fixed; */
+    padding-left: 4px;
     height: 100%;
     width: 70%;
     margin-top: 5%;
     margin-left: 10%;
-    background-color: grey;
+    -moz-border-radius: 20px; /* or 50% */
+    border-radius: 20px; /* or 50% */
+    background: rgb(80, 80, 138);
     overflow-y: scroll;
 }

@@ -4,11 +4,9 @@ import { ethers, ContractFactory } from 'ethers';
 import { _abi } from '../interfaces/Eyescream_Interface';
 import { _Raffle_abi, _Raffle_bytecode } from "../interfaces/RaffleEscrow_Interface";
 import { RafflesAddress, _abi_raffles } from '../interfaces/Raffles_Interface';
-import MenuItems from "../Components/MenuItems";
-import CoinFlipCreator from '../Components/CoinFlipCreator';
-import { ChainLinkTokenAddress, VRFCoordinatorAddress, KeyHash, ChainLinkFee } from '../interfaces/ChainLink_interface';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import "./RaffleCreator.css";
-import { timeStamp } from 'console';
 require('dotenv').config();
 const ETHERSCAN_NFT_TXN = process.env.ETHERSCAN_API_NFT_TXN;
 // 
@@ -195,31 +193,18 @@ export default class RaffleCreator extends React.Component{
     render() {
         return (
             <div className="CreateRaffleForm-Main" >
-            <MenuItems/>
-
-            {/* <div>
-                <button onClick={this.handleRaffleForm}>Create Raffle!</button>
-            </div>
-            <div>
-                <button onClick={this.handleCoinFlipForm}> Create Coin Flip </button>
-            </div>
-
-                <RaffleCreator isOpen={this.state.RaffleFormOpen}/>
-                <CoinFlipCreator isOpen={this.state.CoinFlipFormOpen}/> */}
-
-
-                {/* {this.props.isOpen &&  */}
-                <div className="PopUp-Form">
-                    <h3>Create your Raffle!</h3>
-                    <h3> 1 Share(FUN) = 0.08 ETH</h3>
-                    <form className="CreateRaffle-Form" onSubmit={(e) => this.handleSubmit(e)}>
-                        Minimum Buy in:
-                        <input className="RaffleForm-Minimum-Buyin" defaultValue="0.08"></input>
-                        <br></br>
-                        <br></br>
-                        <NFTSelector tokens={this.state.tokens} ref={(tokenSelector) => this.tokenSelector = tokenSelector}/>
-                        <button type="submit">Submit Proposal</button>
-                    </form>
+                <div className="PopUpRaffle-Form">
+                    <h3 className="CreateRaffle-h3">Create your Raffle!</h3>
+                    <div className="CreateRaffle-Form-Container">
+                        <h3 className="Minimum-BuyIn-h3">Minimum Buy in: </h3>
+                        <form className="CreateRaffle-Form" onSubmit={(e) => this.handleSubmit(e)}>
+                            <TextField className="RaffleForm-Minimum-Buyin" defaultValue="0.08" id="filled-basic" label="Deposit" variant="filled"></TextField>
+                            <Button variant="contained" type="submit" style={{maxHeight: '55px'}}>
+                                Create Raffle
+                            </Button>
+                        </form>
+                    </div>
+                    <NFTSelector tokens={this.state.tokens} ref={(tokenSelector) => this.tokenSelector = tokenSelector}/>
                 </div>
             </div>
         )

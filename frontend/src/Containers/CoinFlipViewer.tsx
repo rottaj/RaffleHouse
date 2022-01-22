@@ -4,6 +4,8 @@ import { ethers } from "ethers";
 import { _CoinFlip_abi } from '../interfaces/CoinFlip_Interface';
 import "./CoinFlipViewer.css";
 import { WindowRounded } from '@mui/icons-material';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 declare let window: any;
 
@@ -71,6 +73,8 @@ export default class CoinFlipViewer extends React.Component<Props>{
             <div className="CoinFlipViewer-Div-Main">
                 <MenuItems/>
                 <div className="CoinFlip-Game-Container">
+
+                    <h1 className="Coinflip-Main-Title">COIN FLIP</h1>
                     {this.state.gameInfo ?
                         <div>
                             <div className="CoinFlip-GameInfo-Div">
@@ -94,8 +98,8 @@ export default class CoinFlipViewer extends React.Component<Props>{
                                     <div className="CoinFlip-Players-Waiting-Div">
                                         <h6>Waiting for player</h6>
                                         <form onSubmit={(e) => this.handleSubmit(e, this.state.coinFlipContractAddress)}>
-                                            <input value={parseInt(this.state.gameInfo.buyInPrice) / (10 ** 18)}></input>
-                                            <button type="submit">Deposit</button>
+                                            <TextField value={parseInt(this.state.gameInfo.buyInPrice) / (10 ** 18)}></TextField>
+                                            <Button type="submit">Deposit</Button>
                                         </form>
                                     </div>
                                 }
