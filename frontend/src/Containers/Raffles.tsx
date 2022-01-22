@@ -42,7 +42,7 @@ export default class Raffles extends React.Component {
             <div className="Raffles-container-main">
                 <MenuItems/>
                 <div className="Raffles-title-container">
-                    <h2>Current Raffles</h2>
+                    <h1 className="Raffles-Title-h1">Current Raffles</h1>
                 </div> 
                 <div className="Raffles-Viewer-Main">
                     <Grid container spacing={2}>

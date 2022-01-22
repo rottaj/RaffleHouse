@@ -1,7 +1,17 @@
+.Raffles-container-main {
+    background: rgb(50, 50, 128);
+}
+
+.Raffles-Title-h1 {
+    color: rgb(255, 242, 145);
+    text-shadow: rgb(203, 176, 204) 3px 3px;
+    font-size: 40px;
+}
+
 .Raffles-title-container {
     padding-top: 7%;
     padding-left: 18%;
-    font-family: "Courier New, Monospace"
+    font-family: "Courier New, Monospace";
 }
 
 .Raffles-Viewer-Main {
@@ -10,43 +20,5 @@
 }
 
 .Raffle-Div-Main-Container {
-
 }
 
-.currentRafflesTitle {
-    font-size: 30px;
-    padding-left: 5%;
-}
-
-.spacing {
-    padding-top: 15px;
-}
-
-.currentRafflesCard {
-    border-radius: 25px;
-    border: 2px solid rgb(0, 0, 0);
-    background-color: rgb(206, 206, 206);
-    width: 90%;
-    height: 390px;
-    margin-left: 5%;
-    margin-top: 10px;
-  }
-  
-  .swiper-slide {
-    height: auto;
-    text-align: center;
-    font-size: 25px;
-    /* Center slide text vertically */
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    -webkit-justify-content: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    -webkit-align-items: center;
-    align-items: center;
-  }

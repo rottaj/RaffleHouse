@@ -50,7 +50,7 @@ export default class CoinFlips extends React.Component {
         return (
             <div className="CoinFlips-Container-Main">
                 <MenuItems/>
-                <h1>Coin Flips Container </h1>
+                <h1 className="CoinFlips-Container-Title-h1">Coin Flips Container </h1>
                 {console.log("HELLO", this.state)}
                 {this.state.coinFlips.map((coinFlip: any) => {
                     return (
