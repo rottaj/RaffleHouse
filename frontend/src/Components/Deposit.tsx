@@ -1,6 +1,8 @@
 import React from 'react';
 import { ethers } from 'ethers';
 import { _Raffle_abi } from "../interfaces/RaffleEscrow_Interface";
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 interface Props {
     isDepositOpen: boolean;
@@ -40,8 +42,10 @@ export default class Deposit extends React.Component <Props>{
                 <div className="Deposit-PopUp-Form">
                     <h3>Deposit to win {this.props.tokenMetaData.tokenName} #{this.props.tokenMetaData.tokenID}!</h3>
                     <form className="Deposit-Form" onSubmit={(e) => this.handleSubmit(e)}>
-                        <input defaultValue="0.08"></input>
-                        <button type="submit" >Submit Deposit</button>
+                            <TextField defaultValue="0.08" id="filled-basic" label="Deposit" variant="filled"></TextField>
+                            <Button variant="contained" type="submit" style={{maxHeight: '55px'}}>
+                                Submit Deposit
+                            </Button>
                     </form>
                 </div>
                 }

@@ -30,7 +30,10 @@
 
 .CreateRaffle-Form-Container {
     display: flex;
+}
 
+.CreateRaffle-Form {
+    margin-top: 3%;
 }
 
 .PopUpRaffle-Form {

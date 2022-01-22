@@ -46,8 +46,10 @@ export default class CoinFlipCreator extends React.Component {
                     <div className="CreateCoinFlip-Form-Container">
                         <h3 className="MinimumCoinFlip-BuyIn-h3">Minimum Buy in: </h3>
                         <form className="CreateCoinFlip-Form" onSubmit={(e) => this.handleSubmit(e)}>
-                            <TextField className="CoinFlipForm-Minimum-Buyin" defaultValue="0.08" id="filled-basic" label="Filled" variant="filled"></TextField>
-                            <Button variant="contained" type="submit">Create Game</Button>
+                            <TextField className="CoinFlipForm-Minimum-Buyin" defaultValue="0.08" id="filled-basic" label="Deposit" variant="filled"></TextField>
+                            <Button variant="contained" type="submit" style={{maxHeight: '55px'}}>
+                                Create Game
+                            </Button>
                         </form>
                     </div>
                 </div>

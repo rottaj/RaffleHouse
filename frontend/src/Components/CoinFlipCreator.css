@@ -18,6 +18,7 @@
 }
 
 .CreateCoinFlip-Form {
+    margin-top: 3%;
     padding-left: 5%;
     display: flex;
 }

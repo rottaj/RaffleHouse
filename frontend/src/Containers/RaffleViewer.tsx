@@ -4,11 +4,10 @@ import Deposit from "../Components/Deposit";
 import PlayersList from "../Components/PlayersList";
 import WinnerBox from "../Components/WinnerBox";
 import { ethers } from 'ethers';
-import { Link } from 'react-router-dom';
 import { _abi } from "../interfaces/Eyescream_Interface";
 import { _Raffle_abi } from '../interfaces/RaffleEscrow_Interface';
+import Button from '@mui/material/Button';
 import "./RaffleViewer.css";
-import { readSync } from 'node:fs';
 
 const ETHERSCAN_API_NFT_TXN = 'https://api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=';
 const ETHERSCAN_API_KEY = 'JPARDRW9CAVF9ZKISWVC3YYM6RP93JNQUC';
@@ -144,7 +143,9 @@ export default class RaffleViewer extends React.Component {
                 <div className="RaffleViewer-Viewer-Container">
                     <div className="Token-Image-Div">
                         <img className="Token-Image"src={this.state.tokenMetaData.image}></img>
-                        <button onClick={this.handleDepositClicked}>Deposit</button>
+                        <Button onClick={this.handleDepositClicked} variant="contained" type="submit" style={{maxHeight: '55px'}}>
+                            Deposit
+                        </Button>
                         <Deposit tokenMetaData={this.state.tokenMetaData} isDepositOpen={this.state.isDepositOpen} raffleContractAddress={this.state.raffleContractAddress}/>
                     </div>
 
