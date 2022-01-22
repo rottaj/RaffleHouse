@@ -1,6 +1,7 @@
 .CreateRaffleForm-Main {
     height: auto;
     width: auto;
+
 }
 
 .CreateRaffle-h3 {
@@ -20,10 +21,12 @@
 .CreateRaffle-Form {
     padding-left: 5%;
     display: flex;
+
 }
 
 .CreateRaffle-Form-Container {
     display: flex;
+
 }
 
 .PopUpRaffle-Form {
@@ -33,7 +36,8 @@
     width: 70%;
     margin-top: 5%;
     margin-left: 10%;
-
+    -moz-border-radius: 20px; /* or 50% */
+    border-radius: 20px; /* or 50% */
     background: rgb(80, 80, 138);
     overflow-y: scroll;
 }
