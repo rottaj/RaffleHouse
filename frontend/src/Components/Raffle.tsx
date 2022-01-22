@@ -2,6 +2,7 @@ import React from 'react';
 import { ethers } from 'ethers';
 import { Link } from 'react-router-dom';
 import Home from '../Containers/Home'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import "./Raffle.css";
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -27,8 +28,15 @@ export default class Raffle extends React.Component<Props> {
             <div className="Raffle-Div-Main" onClick={() => this.handleClick()}>
                 {console.log("FOOBAR", this.props)}
                 <img className="Raffle-Img"src={this.props.token.tokenImage}></img>
-                <h3>{this.props.token.collectionName + " #" + this.props.token.tokenID}</h3>
-                <h3>BUY IN PRICE: {this.props.token.buyInPrice}</h3>
+                <div className="Raffle-Div-Info">
+                    <div className="Raffle-Collection-Div">
+                        <h3>{this.props.token.collectionName}</h3> 
+                        <h3> {" "} #</h3>
+                        <h3>{this.props.token.tokenID}</h3>
+                        <CheckCircleIcon className="Verified-Icon"/>
+                    </div>
+                    <h3>BUY IN PRICE: {this.props.token.buyInPrice}</h3>
+                </div>
             </div>
         )
     }
