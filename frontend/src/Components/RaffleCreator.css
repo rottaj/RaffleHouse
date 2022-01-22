@@ -18,6 +18,10 @@
     font-size: 40px; 
 }
 
+.RaffleForm-Create-Button {
+
+}
+
 .CreateRaffle-Form {
     padding-left: 5%;
     display: flex;
