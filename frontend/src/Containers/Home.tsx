@@ -29,12 +29,13 @@ export default class Home extends React.Component {
     render() {
         return (
             <div className="main-container">
-            <MenuItems/>
-                <div className="home-title-container">
-                    <div className="sign">
-                    <span className="fast-flicker">Raffle House</span>
+                <MenuItems/>
+                    <div className="home-title-container">
+                        <div className="sign">
+                        <span className="fast-flicker">Raffle House</span>
+                        </div>
                     </div>
-                </div>
+                <Footer/>
             </div>
         )
     }
