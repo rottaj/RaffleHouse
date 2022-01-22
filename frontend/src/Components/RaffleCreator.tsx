@@ -135,6 +135,7 @@ export default class RaffleCreator extends React.Component{
                     if (String(tokens[i].contractAddress) == '0x8f44a8b9059b2bc914c893eed250a2e1097ee187') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
                         let contract = new ethers.Contract(tokens[i].contractAddress, _abi, signer)
                         let metaData = await contract.tokenURI(parseInt(tokens[i].tokenID))
+                        console.log("METADATA", metaData)
                         fetch(metaData).then(res => {return res.json()}).then(data => {
                             tokens[i]['image'] = data.image
                             this.setState({
@@ -170,9 +171,11 @@ export default class RaffleCreator extends React.Component{
             const account = accounts.result[0];
             const selectedToken = this.tokenSelector.state.selectedToken; // maybe remove?
 
-            const contract = await raffleFactory.deploy(account, 
+            const contract = await raffleFactory.deploy(
                                                         parseInt(e.target[0].value),
                                                         selectedToken.image, 
+                                                        selectedToken.tokenName,
+                                                        selectedToken.tokenID
                                                         //ChainLinkTokenAddress, 
                                                         //VRFCoordinatorAddress, 
                                                         //KeyHash,
@@ -184,7 +187,7 @@ export default class RaffleCreator extends React.Component{
                 const sendingTxn = await collectionContract.transferFrom(account, contract.address, selectedToken.tokenID);
             }).then(async function (dataTwo) {
                 console.log(dataTwo);
-                const addRaffleTxn = rafflesContract.addRaffle(selectedToken.image, contract.address)
+                const addRaffleTxn = rafflesContract.addRaffle(selectedToken.image, contract.address, selectedToken.tokenName, selectedToken.tokenID)
             })
         }
     }

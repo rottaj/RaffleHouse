@@ -17,6 +17,8 @@ contract Raffles is Ownable {
     address creatorAddress;
     address contractAddress;
     string tokenImage;
+    string collectionName;
+    uint256 tokenID;
     uint256 minTime;
   }
 
@@ -24,12 +26,14 @@ contract Raffles is Ownable {
 
   receive() external payable {}
 
-  function addRaffle(string memory _tokenImage, address _contractAddress) public {
+  function addRaffle(string memory _tokenImage, address _contractAddress, string memory _collectionName, uint256 _tokenID) public {
     require(msg.sender != address(0), "INVALID ADDRESS");
     Raffle memory raffle = Raffle ({
       creatorAddress: msg.sender,
       contractAddress: _contractAddress,
       tokenImage: _tokenImage,
+      collectionName: _collectionName,
+      tokenID: _tokenID,
       minTime: block.timestamp // for testing.
     });
 

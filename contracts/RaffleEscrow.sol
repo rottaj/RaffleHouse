@@ -9,8 +9,10 @@ contract RaffleEscrow is VRFConsumerBase {
   //uint256 private timeLimit;
   address payable private creatorAddress;
   bool private allowWithdraw = false; 
-  uint256 public MIN_DEPOSIT;
+  uint256 public BUY_IN_PRICE;
   string public tokenURI;
+  string public collectionName;
+  uint256 public tokenID;
   address public winner;
   uint256 internal fee;
   bytes32 keyhash;
@@ -19,9 +21,11 @@ contract RaffleEscrow is VRFConsumerBase {
 
   event WinnerPicked(bytes32 indexed requestId, uint256 indexed result);
 
-  constructor(address payable _creatorAddress,
-              uint256 _minDeposit,
-              string memory _tokenURI
+  constructor(
+              uint256 _buyInPrice,
+              string memory _tokenURI,
+              string memory _collectionName,
+              uint256 _tokenID
               )
               //address _vrfCoordinator,
               //address _link,
@@ -32,11 +36,22 @@ contract RaffleEscrow is VRFConsumerBase {
         0x01BE23585060835E02B77ef475b0Cc51aA1e0709
       ) public
   {
-    creatorAddress = _creatorAddress;
-    MIN_DEPOSIT = _minDeposit;
+    creatorAddress = payable(msg.sender);
+    BUY_IN_PRICE = _buyInPrice;
     tokenURI = _tokenURI;
+    collectionName = _collectionName;
+    tokenID = _tokenID;
     keyhash = 0x2ed0feb3e7fd2022120aa84fab1945545a9f2ffc9076fd6156fa96eaff4c1311;
     fee = 0.1 * 10 ** 18;
+  }
+
+  struct GameInfo {
+    address creatorAddress;
+    uint256 buyInPrice;
+    address winner;
+    string tokenURI;
+    string collectionName;
+    uint256 tokenID;
   }
 
   address[] tickets;
@@ -46,13 +61,14 @@ contract RaffleEscrow is VRFConsumerBase {
   function deposit(uint256 _tickets) payable public {
     require(msg.value != 0, "DEPOSIT: INVALID FUNDS"); // Will update this later
     require(msg.sender != address(0), "DEPOSIT: INVALID ADDRESS");
-    uint256 amount = msg.value;
     _userDeposits[msg.sender] += msg.value;
     for (uint i=0; i<=_tickets; i++) {
       tickets.push(msg.sender);
     }
 
   }
+
+
 
   function getRandomNumber() public returns (bytes32 requestId) {
     require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK");         
@@ -69,6 +85,7 @@ contract RaffleEscrow is VRFConsumerBase {
     require(allowWithdraw == true, "WITHDRAW: NOT ALLOWED TO WITHDRAW");
     creatorAddress.send(address(this).balance);  
   }
+
 
   /*
   function processProposal() private {
@@ -94,6 +111,18 @@ contract RaffleEscrow is VRFConsumerBase {
   
   function getWinner() public view returns (address) {
     return winner;
+  }
+
+  function getGameInfo() public view returns (GameInfo memory) {
+    GameInfo memory gameInfo = GameInfo({
+      creatorAddress: creatorAddress,
+      buyInPrice: BUY_IN_PRICE,
+      winner: winner,
+      tokenURI: tokenURI,
+      collectionName: collectionName,
+      tokenID: tokenID
+    });
+    return gameInfo;
   }
 
 }

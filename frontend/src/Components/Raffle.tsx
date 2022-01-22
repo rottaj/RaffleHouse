@@ -27,6 +27,8 @@ export default class Raffle extends React.Component<Props> {
             <div className="Raffle-Div-Main" onClick={() => this.handleClick()}>
                 {console.log("FOOBAR", this.props)}
                 <img className="Raffle-Img"src={this.props.token.tokenImage}></img>
+                <h3>{this.props.token.collectionName + " #" + this.props.token.tokenID}</h3>
+                <h3>BUY IN PRICE: {this.props.token.buyInPrice}</h3>
             </div>
         )
     }
