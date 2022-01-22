@@ -35,7 +35,7 @@ export default class Raffle extends React.Component<Props> {
                         <h3>{this.props.token.tokenID}</h3>
                         <CheckCircleIcon className="Verified-Icon"/>
                     </div>
-                    <h3>BUY IN PRICE: {this.props.token.buyInPrice}</h3>
+                    <h5>BUY IN PRICE: {this.props.token.buyInPrice} eth</h5>
                 </div>
             </div>
         )

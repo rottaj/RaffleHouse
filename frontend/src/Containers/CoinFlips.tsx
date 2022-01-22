@@ -52,13 +52,20 @@ export default class CoinFlips extends React.Component {
                 <MenuItems/>
                 <h1 className="CoinFlips-Container-Title-h1">Coin Flips Container </h1>
                 {console.log("HELLO", this.state)}
-                {this.state.coinFlips.map((coinFlip: any) => {
-                    return (
-                        <Link to={`coin-flip/${coinFlip['contractAddress']}`}>
-                            <CoinFlip coinFlip={coinFlip}></CoinFlip>
-                        </Link>
-                    )
-                })}
+                <div className="CoinFlips-Games-Container">
+                    <div className="CoinFlips-Games-Header">
+                        <h3 className="CoinFlip-Creator-h3">Creator</h3>
+                        <h3 className="CoinFlip-Winner-h3">Winner</h3>
+                        <h3 className="CoinFlip-BuyIn-h3">Buy in Price</h3>
+                    </div>
+                    {this.state.coinFlips.map((coinFlip: any) => {
+                        return (
+                            <Link to={`coin-flip/${coinFlip['contractAddress']}`}>
+                                <CoinFlip coinFlip={coinFlip}></CoinFlip>
+                            </Link>
+                        )
+                    })}
+                </div>
                 </div>
         )
     }

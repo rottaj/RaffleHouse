@@ -4,5 +4,37 @@
 }
 
 .CoinFlips-Container-Title-h1 {
-    color: yellow;
+    color: rgb(255, 242, 145);
+    text-shadow: rgb(203, 176, 204) 3px 3px;
+    font-size: 40px;
+}
+
+.CoinFlips-Games-Header{
+    margin-left: 20%;
+    margin-right: 20%;
+    display: flex;
+}
+
+.CoinFlips-Games-Container {
+    /*
+    border: 1px solid black;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 5%; 
+    */
+}
+
+.CoinFlip-Creator-h3 {
+    margin-left: 20%;
+    margin-right: 5%;
+}
+
+.CoinFlip-Winner-h3 {
+    margin-left: 20%;
+    margin-right: 5%;
+}
+
+.CoinFlip-BuyIn-h3 {
+    margin-left: 26%;
+    margin-right: 5%;
 }
