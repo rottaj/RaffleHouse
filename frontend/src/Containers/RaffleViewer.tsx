@@ -28,7 +28,8 @@ export default class RaffleViewer extends React.Component {
         isDepositOpen: false,
         raffleContractAddress: "",
         raffleBalance: 0,
-        players: []
+        players: [],
+        gameInfo: []
     }
 
     fetchNFTs = async (contractAddress: any) => {
@@ -125,6 +126,10 @@ export default class RaffleViewer extends React.Component {
         var provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         let contract = new ethers.Contract(contractAddress, _Raffle_abi, signer);
+        const gameInfo = await contract.getGameInfo()
+        this.setState({
+            gameInfo: gameInfo
+        })
         const tickets = await contract.getTickets();
         const uniqueAddresses = this.getUniqueAddresses(tickets);
         this.getTickets(uniqueAddresses, tickets);
@@ -135,7 +140,7 @@ export default class RaffleViewer extends React.Component {
         return (
             <div className="RaffleViewer-Div-Main">
                 <MenuItems/>
-                <WinnerBox/>
+                <WinnerBox winner={this.state.gameInfo.winner}/>
                 <div className="RaffleViewer-Viewer-Container">
                     <div className="Token-Image-Div">
                         <img className="Token-Image"src={this.state.tokenMetaData.image}></img>
