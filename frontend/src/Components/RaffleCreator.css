@@ -19,6 +19,7 @@
 
 .CreateRaffle-Form {
     padding-left: 5%;
+    display: flex;
 }
 
 .CreateRaffle-Form-Container {

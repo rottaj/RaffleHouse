@@ -2,6 +2,8 @@ import React from 'react';
 import { ethers, ContractFactory } from 'ethers';
 import { _CoinFlip_abi, _CoinFlip_bytecode } from "../interfaces/CoinFlip_Interface";
 import { CoinFlipAddress, _CoinFlips_abi } from '../interfaces/CoinFlips_Interface';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import "./CoinFlipCreator.css";
 
 interface Props {
@@ -44,10 +46,8 @@ export default class CoinFlipCreator extends React.Component {
                     <div className="CreateCoinFlip-Form-Container">
                         <h3 className="MinimumCoinFlip-BuyIn-h3">Minimum Buy in: </h3>
                         <form className="CreateCoinFlip-Form" onSubmit={(e) => this.handleSubmit(e)}>
-                            <input className="CoinFlipForm-Minimum-Buyin" defaultValue="0.08"></input>
-                            <br></br>
-                            <br></br>
-                            <button type="submit">Create Game</button>
+                            <TextField className="CoinFlipForm-Minimum-Buyin" defaultValue="0.08"></TextField>
+                            <Button type="submit">Create Game</Button>
                         </form>
                     </div>
                 </div>

@@ -4,11 +4,9 @@ import { ethers, ContractFactory } from 'ethers';
 import { _abi } from '../interfaces/Eyescream_Interface';
 import { _Raffle_abi, _Raffle_bytecode } from "../interfaces/RaffleEscrow_Interface";
 import { RafflesAddress, _abi_raffles } from '../interfaces/Raffles_Interface';
-import MenuItems from "../Components/MenuItems";
-import CoinFlipCreator from '../Components/CoinFlipCreator';
-import { ChainLinkTokenAddress, VRFCoordinatorAddress, KeyHash, ChainLinkFee } from '../interfaces/ChainLink_interface';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import "./RaffleCreator.css";
-import { timeStamp } from 'console';
 require('dotenv').config();
 const ETHERSCAN_NFT_TXN = process.env.ETHERSCAN_API_NFT_TXN;
 // 
@@ -200,10 +198,8 @@ export default class RaffleCreator extends React.Component{
                     <div className="CreateRaffle-Form-Container">
                         <h3 className="Minimum-BuyIn-h3">Minimum Buy in: </h3>
                         <form className="CreateRaffle-Form" onSubmit={(e) => this.handleSubmit(e)}>
-                            <input className="RaffleForm-Minimum-Buyin" defaultValue="0.08"></input>
-                            <br></br>
-                            <br></br>
-                            <button type="submit">Create Raffle</button>
+                            <TextField className="RaffleForm-Minimum-Buyin" defaultValue="0.08"></TextField>
+                            <Button type="submit">Create Raffle</Button>
                         </form>
                     </div>
                     <NFTSelector tokens={this.state.tokens} ref={(tokenSelector) => this.tokenSelector = tokenSelector}/>

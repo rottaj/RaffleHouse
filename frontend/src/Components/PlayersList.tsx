@@ -17,7 +17,6 @@ export default class PlayersList extends React.Component <Props>{
     render() {
         return (
             <div className="PlayersList-Main-Container">
-                Players List
                 <div className="PlayersList-Box-Header">
                     <h4 className="PlayersList-Player-Header">Player</h4>
                     <h4 className="PlayersList-Tickets-Header">Tickets</h4>

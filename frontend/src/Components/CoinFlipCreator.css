@@ -19,6 +19,7 @@
 
 .CreateCoinFlip-Form {
     padding-left: 5%;
+    display: flex;
 }
 
 .CreateCoinFlip-Form-Container {

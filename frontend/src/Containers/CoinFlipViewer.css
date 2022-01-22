@@ -4,6 +4,8 @@
     background: rgb(50, 50, 128);
 }
 
+.CoinFlip-Main-Title
+
 .CoinFlip-Game-Container {
     margin-top: 10%;
     text-align: center;
@@ -44,6 +46,7 @@
 
 .CoinFlip-Players-Waiting-Div {
     border: 1px solid black;
+    background: rgb(80, 80, 138);
     -moz-border-radius: 10px; /* or 50% */
     border-radius: 10px; /* or 50% */
 }
