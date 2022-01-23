@@ -18,7 +18,7 @@ import logo from '../Raffle_House.png';
 import './MenuItems.css';
 
 const pages = [ 'raffles','coin-flips', 'host'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Dashboard'];
 
 
 const ResponsiveAppBar = (props: any) => {
