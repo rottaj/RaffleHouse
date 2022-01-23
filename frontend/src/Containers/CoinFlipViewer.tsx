@@ -7,6 +7,7 @@ import { WindowRounded } from '@mui/icons-material';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Footer from '../Components/Footer';
+import { connectContractToSigner } from '@usedapp/core';
 
 declare let window: any;
 
@@ -54,7 +55,7 @@ export default class CoinFlipViewer extends React.Component<Props>{
 
     handleSubmit = async (e: any, contractAddress: any) => {
         e.preventDefault();
-        console.log("handle submit ")
+        console.log("handle submit ");
         console.log("TESTING", e.target[0].value)
         if (window.ethereum) {
             var provider = new ethers.providers.Web3Provider(window.ethereum);

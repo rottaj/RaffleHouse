@@ -147,6 +147,7 @@ export default class RaffleViewer extends React.Component {
             <div className="RaffleViewer-Div-Main">
                 <MenuItems account={this.state.account}/>
                 <WinnerBox winner={this.state.gameInfo.winner}/>
+                {console.log("GAME INNFO", this.state.gameInfo)}
                 <div className="RaffleViewer-Viewer-Container">
                     <div className="Token-Image-Div">
                         <img className="Token-Image"src={this.state.tokenMetaData.image}></img>
