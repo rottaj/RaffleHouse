@@ -25,8 +25,10 @@ export default class CoinFlipViewer extends React.Component<Props>{
     state = {
         coinFlipContractAddress: "",
         gameInfo: this.props.GameInfo,
-        account: ""
+        account: "",
     }
+
+
 
     async componentDidMount() {
         if (window.ethereum){ 
@@ -107,8 +109,10 @@ export default class CoinFlipViewer extends React.Component<Props>{
                                             <Button type="submit">Deposit</Button>
                                         </form>
                                     </div>
+
                                 }
                             </div>
+
                         </div>
                     :
                     "GAME DOESN'T EXIST"

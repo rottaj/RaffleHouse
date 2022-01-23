@@ -30,7 +30,7 @@ export default class Raffle extends React.Component<Props> {
                 <img className="Raffle-Img"src={this.props.token.tokenImage}></img>
                 <div className="Raffle-Div-Info">
                     <div className="Raffle-Collection-Div">
-                        <h3>{this.props.token.collectionName}</h3> 
+                        <h3 className="Raffle-CollionName-h3">{this.props.token.collectionName}</h3> 
                         <h3> {" "} #</h3>
                         <h3>{this.props.token.tokenID}</h3>
                         <CheckCircleIcon className="Verified-Icon"/>
