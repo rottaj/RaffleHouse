@@ -14,8 +14,18 @@ export default class CoinFlips extends React.Component {
 
     state = {
         currentCoinFlips: [],
-        pastCoinFlips: []
+        pastCoinFlips: [],
+        account: ""
     }
+
+    async componentDidMount() {
+        this.getCoinFlips();
+        if(window.ethereum) {
+            var accounts = await window.ethereum.send('eth_requestAccounts');
+            const account = accounts.result[0];
+            this.setState({account: account});
+        }
+    }  
   
     getCoinFlips = async () => {
         if (window.ethereum) {
@@ -56,16 +66,12 @@ export default class CoinFlips extends React.Component {
             }
         }
     }
-
-    componentDidMount() {
-        this.getCoinFlips();
-    }
  
 
     render() {
         return (
             <div className="CoinFlips-Container-Main">
-                <MenuItems/>
+                <MenuItems account={this.state.account}/>
                 <h1 className="CoinFlips-Container-Title-h1">Coin Flips</h1>
                 {console.log("HELLO", this.state)}
                 <div className="CoinFlips-Games-Container">

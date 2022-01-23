@@ -24,7 +24,8 @@ export default class CoinFlipViewer extends React.Component<Props>{
 
     state = {
         coinFlipContractAddress: "",
-        gameInfo: this.props.GameInfo
+        gameInfo: this.props.GameInfo,
+        account: ""
     }
 
     async componentDidMount() {
@@ -33,6 +34,9 @@ export default class CoinFlipViewer extends React.Component<Props>{
             this.setState({
                 coinFlipContractAddress: contractAddress
             })
+            var accounts = await window.ethereum.send('eth_requestAccounts');
+            const account = accounts.result[0];
+            this.setState({account: account});
             console.log(contractAddress);
             var provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
@@ -72,7 +76,7 @@ export default class CoinFlipViewer extends React.Component<Props>{
     render() {
         return (
             <div className="CoinFlipViewer-Div-Main">
-                <MenuItems/>
+                <MenuItems account={this.state.account}/>
                 <div className="CoinFlip-Game-Container">
 
                     <h1 className="Coinflip-Main-Title">COIN FLIP</h1>

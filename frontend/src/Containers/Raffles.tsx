@@ -15,8 +15,18 @@ declare let window: any;
 export default class Raffles extends React.Component {
 
     state = {
-        raffles: []
+        raffles: [],
+        account: ""
     }
+
+    async componentDidMount() {
+        this.getRaffles()
+        if(window.ethereum) {
+            var accounts = await window.ethereum.send('eth_requestAccounts');
+            const account = accounts.result[0];
+            this.setState({account: account});
+        }
+    }  
 
     getRaffles = async () => {
         if (window.ethereum) {
@@ -44,15 +54,11 @@ export default class Raffles extends React.Component {
         }
     }
 
-    componentDidMount() {
-        this.getRaffles()
-    }
-
 
     render() {
         return (
             <div className="Raffles-container-main">
-                <MenuItems/>
+                <MenuItems account={this.state.account}/>
                 <div className="Raffles-title-container">
                     <h1 className="Raffles-Title-h1">Current Raffles</h1>
                 </div> 

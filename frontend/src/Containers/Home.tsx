@@ -14,7 +14,7 @@ export default class Home extends React.Component {
         RaffleFormOpen: false,
         CoinFlipFormOpen: false,
         account: ""
-      }
+    }
 
     async componentDidMount() {
         if(window.ethereum) {
