@@ -10,7 +10,8 @@ import {BrowserRouter, Route} from 'react-router-dom';
 import './Raffles.css';
 import MenuItems from "../Components/MenuItems";
 import Footer from '../Components/Footer';
-import Messages from "../Components/Messages"
+import Messages from "../Components/Messages";
+import Header from "./Header";
 
 declare let window: any;
 export default class Raffles extends React.Component {
@@ -68,6 +69,7 @@ export default class Raffles extends React.Component {
     render() {
         return (
             <div className="Raffles-container-main">
+                <Header/>
                 <MenuItems account={this.state.account}/>
                 <Messages/>
                 <div className="Raffles-title-container">
