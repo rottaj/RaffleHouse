@@ -42,7 +42,7 @@ export default class Raffles extends React.Component {
                 let raffle = await rafflesContract.getRaffleByIndex(i);
                 const raffleInstance = await new ethers.Contract(raffle.contractAddress, _Raffle_abi, signer);
                 const gameInfo = await raffleInstance.getGameInfo();
-                console.log("GAME INFO", gameInfo)
+                console.log("GAME INFO", gameInfo.winner, gameInfo)
                 tempRaffle['contractAddress'] = raffle['contractAddress'];
                 tempRaffle['tokenImage'] = raffle['tokenImage'];
                 tempRaffle['creatorAddress'] = gameInfo['creatorAddress'];
@@ -50,7 +50,7 @@ export default class Raffles extends React.Component {
                 tempRaffle['winner'] = gameInfo['winner'];
                 tempRaffle['collectionName'] = gameInfo['collectionName'];
                 tempRaffle['tokenID'] = parseInt(gameInfo['tokenID'], 16);
-                if (gameInfo.winner != "0x0000000000000000000000000000000000000000") {
+                if (gameInfo.winner == "0x0000000000000000000000000000000000000000") {
                     this.setState({
                         currentRaffles: [...this.state.currentRaffles, tempRaffle]
                     })
