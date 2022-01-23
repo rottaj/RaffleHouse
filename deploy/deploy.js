@@ -25,6 +25,14 @@ const main = async() => {
   const CoinFlipsContract = await coinFlipsContractFactory.deploy(LinkInterface.linkAddress);
   await CoinFlipsContract.deployed();
   console.log("\n\nCOIN FLIPS CONTRACT DEPLOYED TO: ", CoinFlipsContract.address);
+
+  const messagesContractFactory = await hre.ethers.getContractFactory("Messages");
+  const MessagesContract = await messagesContractFactory.deploy();
+  await MessagesContract.deployed();
+  console.log("\n\nMESSAGES CONTRACT DEPLOYED TO: ", MessagesContract.address);
+ 
+
+
  
 
   /* // WORK ON THIS LATER  ---> MANUALLY SEND LINK FOR NOW.

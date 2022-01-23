@@ -1,6 +1,7 @@
 import React from 'react';
 import CoinFlip from '../Components/CoinFlip';
 import MenuItems from '../Components/MenuItems';
+import Messages from "../Components/Messages";
 import { Link } from 'react-router-dom';
 import { ethers } from "ethers";
 import { CoinFlipAddress, _CoinFlips_abi } from "../interfaces/CoinFlips_Interface";
@@ -61,6 +62,7 @@ export default class CoinFlips extends React.Component {
         return (
             <div className="CoinFlips-Container-Main">
                 <MenuItems account={this.state.account}/>
+                <Messages/>
                 <h1 className="CoinFlips-Container-Title-h1">Coin Flips</h1>
                 <div className="CoinFlips-Games-Container">
                     <div className="CurrentCoinFlips-Container">

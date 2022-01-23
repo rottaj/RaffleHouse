@@ -2,6 +2,7 @@ import React from 'react';
 import RaffleCreator from "../Components/RaffleCreator";
 import CoinFlipCreator from '../Components/CoinFlipCreator';
 import MenuItems from "../Components/MenuItems";
+import Messages from "../Components/Messages";
 import "./Host.css";
 import Footer from '../Components/Footer';
 
@@ -25,6 +26,7 @@ export default class Host extends React.Component {
         return (
             <div className="Host-Container-Main-Div">
                 <MenuItems account={this.state.account}/>
+                <Messages/>
                 <RaffleCreator/>
                 <CoinFlipCreator/>
                 <Footer/>
