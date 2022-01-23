@@ -25,7 +25,7 @@ export default class EnterApp extends React.Component <Props> {
             <div>
                 {console.log(this.props.account, "testtest")}
                 {this.props.account != "" ?
-                  <h3>{this.props.account}</h3>
+                  <h3>{this.props.account.substring(0, 6) + "..." + this.props.account.substring(36, 40)}</h3>
                 :
                   <button onClick={this.connectWallet}> Connect Wallet </button>
                 }
