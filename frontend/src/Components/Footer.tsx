@@ -32,7 +32,7 @@ export default class Footer extends React.Component {
                     <Container>
                     <Typography variant="body1" color="white" textAlign="center">
                         © 2022 Raffle House, Inc
-                        <TwitterIcon sx={{float: "right"}}/>
+                        <TwitterIcon sx={{float: "right"}}><a href="https://twitter.com/0xahawk"/></TwitterIcon>
                     </Typography>
                     </Container>
                 </Box>
