@@ -5,6 +5,8 @@ import MenuItems from "../Components/MenuItems";
 import "./Host.css";
 import Footer from '../Components/Footer';
 
+
+declare let window: any;
 export default class Host extends React.Component {
 
     state = {
