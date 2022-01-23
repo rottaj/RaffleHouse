@@ -1,9 +1,12 @@
 import React from 'react';
 import { ethers } from 'ethers';
 
+interface Props{
+    account: string;
+}
 
 declare let window: any;
-export default class EnterApp extends React.Component {
+export default class EnterApp extends React.Component <Props> {
 
 
     connectWallet = async () => {
@@ -20,7 +23,12 @@ export default class EnterApp extends React.Component {
     render() {
         return (
             <div>
-                <button onClick={this.connectWallet}> Connect Wallet </button>
+                {console.log(this.props.account, "testtest")}
+                {this.props.account != "" ?
+                  <h3>{this.props.account}</h3>
+                :
+                  <button onClick={this.connectWallet}> Connect Wallet </button>
+                }
             </div>
         )
     }

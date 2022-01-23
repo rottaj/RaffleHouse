@@ -21,7 +21,7 @@ const pages = [ 'raffles','coin-flips', 'host'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
-const ResponsiveAppBar = () => {
+const ResponsiveAppBar = (props) => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -110,7 +110,7 @@ const ResponsiveAppBar = () => {
             ))}
           </Box>
 
-          <EnterApp/>
+          <EnterApp account={props.account}/>
           
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
