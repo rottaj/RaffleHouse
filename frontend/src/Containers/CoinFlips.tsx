@@ -65,7 +65,6 @@ export default class CoinFlips extends React.Component {
                 <Header/>
                 <MenuItems account={this.state.account}/>
                 <Messages/>
-                <h1 className="CoinFlips-Container-Title-h1">Coin Flips</h1>
                 <div className="CoinFlips-Games-Container">
                     <div className="CurrentCoinFlips-Container">
 
