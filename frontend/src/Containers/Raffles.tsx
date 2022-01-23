@@ -15,7 +15,8 @@ declare let window: any;
 export default class Raffles extends React.Component {
 
     state = {
-        raffles: [],
+        currentRaffles: [],
+        pastRaffles: [],
         account: ""
     }
 
@@ -41,15 +42,23 @@ export default class Raffles extends React.Component {
                 let raffle = await rafflesContract.getRaffleByIndex(i);
                 const raffleInstance = await new ethers.Contract(raffle.contractAddress, _Raffle_abi, signer);
                 const gameInfo = await raffleInstance.getGameInfo();
+                console.log("GAME INFO", gameInfo)
                 tempRaffle['contractAddress'] = raffle['contractAddress'];
                 tempRaffle['tokenImage'] = raffle['tokenImage'];
                 tempRaffle['creatorAddress'] = gameInfo['creatorAddress'];
                 tempRaffle['buyInPrice'] = parseInt(gameInfo['buyInPrice'], 16);
+                tempRaffle['winner'] = gameInfo['winner'];
                 tempRaffle['collectionName'] = gameInfo['collectionName'];
                 tempRaffle['tokenID'] = parseInt(gameInfo['tokenID'], 16);
-                this.setState({
-                    raffles: [...this.state.raffles, tempRaffle]
-                })
+                if (gameInfo.winner != "0x0000000000000000000000000000000000000000") {
+                    this.setState({
+                        currentRaffles: [...this.state.currentRaffles, tempRaffle]
+                    })
+                }else {
+                    this.setState({
+                        pastRaffles: [...this.state.pastRaffles, tempRaffle]
+                    })
+                }
             }
         }
     }
@@ -64,20 +73,40 @@ export default class Raffles extends React.Component {
                 </div> 
                 <div className="Raffles-Viewer-Main">
                     <Grid container spacing={2}>
-                    {this.state.raffles.map(raffle => {
-                        return (
-                            <Link to={`raffle/${raffle['contractAddress']}`}>
-                                <div className="Raffle-Div-Main-Container">
-                                    <Grid item xs={8}>
-                                        <Raffle token={raffle}/>
-                                    </Grid>
-                                </div>
-                            </Link>
-                        )
-                    })}
+                        {this.state.currentRaffles.map(raffle => {
+                            return (
+                                <Link to={`raffle/${raffle['contractAddress']}`}>
+                                    <div className="Raffle-Div-Main-Container">
+                                        <Grid item xs={8}>
+                                            <Raffle token={raffle}/>
+                                        </Grid>
+                                    </div>
+                                </Link>
+                            )
+                        })}
                     </Grid>
-                <Footer/>
+
+
                 </div>
+                <div className="PastRaffles-Viewer-Main">
+                    <div className="PastRaffles-title-container">
+                        <h1 className="PastRaffles-Title-h1">Past Raffles</h1>
+                    </div> 
+                    <Grid className="PastRaffles-Grid-Container" container spacing={2}>
+                        {this.state.pastRaffles.map(raffle => {
+                            return (
+                                <Link to={`raffle/${raffle['contractAddress']}`}>
+                                    <div className="PastRaffle-Div-Main-Container">
+                                        <Grid className="PastRaffle-Grid-Item" item xs={8}>
+                                            <Raffle token={raffle}/>
+                                        </Grid>
+                                    </div>
+                                </Link>
+                            )
+                        })}
+                    </Grid>
+                </div>
+                <Footer/>
             </div>
         )
     }

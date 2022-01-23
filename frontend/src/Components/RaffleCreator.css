@@ -48,3 +48,7 @@
     background: rgb(80, 80, 138);
     overflow-y: scroll;
 }
+
+.RaffleForm-Minimum-Buyin {
+    padding-top: 30px;
+}

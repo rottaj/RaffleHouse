@@ -24,7 +24,9 @@ export default class Deposit extends React.Component <Props>{
             console.log("TESTING DEPOSIT>> TICKETS", (parseInt((parseFloat(e.target[0].value) / 0.01).toString())))
             const depositTxn = await raffleContract.deposit(parseInt((parseFloat(e.target[0].value) / 0.01).toString()), {
                 value: ethers.utils.parseEther(e.target[0].value)
-            }).then(async (data: any) => {
+            })
+            /* // REMOVED -- UPDATED RAFFLEESCROW
+            .then(async (data: any) => {
                 console.log(data)
                 //console.log(depositTxn);
                 const randomTxn = await raffleContract.getRandomNumber();
@@ -32,6 +34,7 @@ export default class Deposit extends React.Component <Props>{
                 const winner = await raffleContract.getWinner();
                 console.log("WINNNNER", winner)
             })
+            */
             //console.log("RANDOM NUMBER: ", randomNumber);
         }
     }

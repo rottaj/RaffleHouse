@@ -31,34 +31,23 @@ export default class CoinFlips extends React.Component {
         if (window.ethereum) {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
-            console.log("SIGNER", signer)
             const coinFlipContract = await new ethers.Contract(CoinFlipAddress, _CoinFlips_abi, signer);
             let coinFlipLength = await coinFlipContract.getCoinFlips();
-            console.log("COINFLIPLENGTH", parseInt(coinFlipLength, 16))
             for (let i =0; i<=coinFlipLength-1; i++ ) {
                 var tempCoinFlip:any  = {}
                 var coinFlip = await coinFlipContract.getCoinFlipByIndex(i);
-                console.log("COINFOOBET", coinFlip)
                 const coinFlipInstance = await new ethers.Contract(coinFlip.contractAddress, _CoinFlip_abi, signer);
                 const gameInfo = await coinFlipInstance.getGameInfo();
-                console.log("HELLO FOOBAR", gameInfo.winner)
+                tempCoinFlip['contractAddress'] = coinFlip['contractAddress'];
+                tempCoinFlip['buyInPrice'] = parseInt(gameInfo['buyInPrice']) / (10 ** 18);
+                tempCoinFlip['creatorAddress'] = gameInfo['creatorAddress'];
+                tempCoinFlip['joineeAddress'] = gameInfo['joineeAddress'];
+                tempCoinFlip['winner'] = gameInfo['winner'];
                 if (gameInfo.winner != "0x0000000000000000000000000000000000000000") {
-                    console.log("GAME INFOOO", gameInfo)
-                    tempCoinFlip['contractAddress'] = coinFlip['contractAddress'];
-                    tempCoinFlip['buyInPrice'] = parseInt(gameInfo['buyInPrice']) / (10 ** 18);
-                    tempCoinFlip['creatorAddress'] = gameInfo['creatorAddress'];
-                    tempCoinFlip['joineeAddress'] = gameInfo['joineeAddress'];
-                    tempCoinFlip['winner'] = gameInfo['winner'];
                     this.setState({
                         currentCoinFlips: [...this.state.currentCoinFlips, tempCoinFlip]
                     })
                 }else {
-                    console.log("GAME INFOOO", gameInfo)
-                    tempCoinFlip['contractAddress'] = coinFlip['contractAddress'];
-                    tempCoinFlip['buyInPrice'] = parseInt(gameInfo['buyInPrice']) / (10 ** 18);
-                    tempCoinFlip['creatorAddress'] = gameInfo['creatorAddress'];
-                    tempCoinFlip['joineeAddress'] = gameInfo['joineeAddress'];
-                    tempCoinFlip['winner'] = gameInfo['winner'];
                     this.setState({
                         pastCoinFlips: [...this.state.pastCoinFlips, tempCoinFlip]
                     })
@@ -73,7 +62,6 @@ export default class CoinFlips extends React.Component {
             <div className="CoinFlips-Container-Main">
                 <MenuItems account={this.state.account}/>
                 <h1 className="CoinFlips-Container-Title-h1">Coin Flips</h1>
-                {console.log("HELLO", this.state)}
                 <div className="CoinFlips-Games-Container">
                     <div className="CurrentCoinFlips-Container">
 

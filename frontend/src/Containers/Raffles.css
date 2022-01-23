@@ -22,3 +22,21 @@
 .Raffle-Div-Main-Container {
 }
 
+
+/* PAST RAFFLES */
+
+.PastRaffles-Viewer-Main {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+.PastRaffles-Title-h1 {
+    color: rgb(255, 242, 145);
+    text-shadow: rgb(203, 176, 204) 3px 3px;
+    font-size: 40px;
+}
+
+
+
+.PastRaffle-Div-Main-Container {
+
+}
