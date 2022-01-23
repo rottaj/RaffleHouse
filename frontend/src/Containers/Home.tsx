@@ -6,6 +6,8 @@ import CoinFlipCreator from '../Components/CoinFlipCreator';
 import { Link } from 'react-router-dom';
 import './Home.css';
 
+
+declare let window: any;
 export default class Home extends React.Component {
 
     state = {

@@ -21,7 +21,7 @@ const pages = [ 'raffles','coin-flips', 'host'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
-const ResponsiveAppBar = (props) => {
+const ResponsiveAppBar = (props: any) => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
