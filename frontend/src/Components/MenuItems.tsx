@@ -41,7 +41,7 @@ const ResponsiveAppBar = (props: any) => {
   };
   
   return (
-    <AppBar position="static" style={{backgroundColor: "#0d0b0b", color: "default"}}>
+    <AppBar position="static" style={{backgroundColor: "#0d0b0b", color: "default", opacity: '80%'}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography

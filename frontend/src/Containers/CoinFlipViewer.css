@@ -1,10 +1,21 @@
 .CoinFlipViewer-Div-Main {
     text-align: center;
     align-items: center;
-    background: rgb(50, 50, 128);
+    /*background: rgb(50, 50, 128);*/
 }
 
-.CoinFlip-Main-Title
+.Coinflip-Main-Title {
+    color: rgb(255, 242, 145);
+    text-shadow: rgb(203, 176, 204) 3px 3px;
+    font-size: 40px;
+}
+
+.CoinFlip-VS-h3 {
+    padding-right: 5%;
+    color: rgb(255, 242, 145);
+    text-shadow: rgb(203, 176, 204) 3px 3px;
+    font-size: 40px;
+}
 
 .CoinFlip-Game-Container {
     margin-top: 10%;
