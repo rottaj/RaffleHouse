@@ -9,13 +9,13 @@ contract RaffleEscrow is VRFConsumerBase {
   //uint256 private timeLimit;
   address payable private creatorAddress;
   bool private allowWithdraw = false; 
-  uint256 public BUY_IN_PRICE;
-  uint256 public MIN_TICKETS;
-  string public tokenURI;
-  string public collectionName;
-  uint256 public tokenID;
-  address public winner;
-  uint256 internal fee;
+  uint256 private BUY_IN_PRICE;
+  uint256 private MIN_TICKETS;
+  string private tokenURI;
+  string private collectionName;
+  uint256 private tokenID;
+  address private winner;
+  uint256 private fee;
   bytes32 keyhash;
 
   IERC721 collection;
@@ -85,12 +85,12 @@ contract RaffleEscrow is VRFConsumerBase {
     }
   }
 
-  function processRaffle() public readyForProcessing { // FOR TESTING --> MIN_TICKETS
+  function processRaffle() private readyForProcessing { // FOR TESTING --> MIN_TICKETS
     getRandomNumber();
   }
 
 
-  function getRandomNumber() public returns (bytes32 requestId) {
+  function getRandomNumber() private returns (bytes32 requestId) {
     require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK");         
     return requestRandomness(keyhash, fee);
   }
@@ -104,7 +104,7 @@ contract RaffleEscrow is VRFConsumerBase {
     emit WinnerPicked(requestId, valueBetween); // add winner instead of value?
   }
  
-  function withdrawEther() public {
+  function withdrawEther() private {
     //require(allowWithdraw == true, "WITHDRAW: NOT ALLOWED TO WITHDRAW"); // WILL ADD THIS LATER!
     creatorAddress.send(address(this).balance);  
   }

@@ -62,14 +62,6 @@ export default class CoinFlipViewer extends React.Component<Props>{
             const contract = new ethers.Contract(contractAddress, _CoinFlip_abi, signer);
             let depositTxn = await contract.deposit({
                 value: ethers.utils.parseEther(e.target[0].value).toString()
-            }).then(async function () {
-                // JUST FOR TESTING
-                const getRandomNumber = await contract.getRandomNumber();
-                console.log("RANDOM NUMBER", getRandomNumber)
-            }).then(async function() {
-                // JUST FOR TESTING
-                const winner = await contract.getWinner();
-                console.log("WINNER ", winner)
             })
             console.log(depositTxn);
         }
