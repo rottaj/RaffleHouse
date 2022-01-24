@@ -12,6 +12,7 @@
   
   a:link, a:visited, a:active
   {
+      font-family: "Courier New, Monospace";
       color: #000000;
       text-decoration: none;
   }

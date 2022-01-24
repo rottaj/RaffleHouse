@@ -10,12 +10,13 @@
 
 .Raffles-title-container {
     padding-top: 7%;
-    padding-left: 18%;
+    padding-left: 16%;
     font-family: "Courier New, Monospace";
 }
 
 .Raffles-Viewer-Main {
-    margin-left: 10%;
+    width: 75;
+    margin-left: 16%;
     margin-right: 10%;
 }
 
@@ -26,7 +27,8 @@
 /* PAST RAFFLES */
 
 .PastRaffles-Viewer-Main {
-    margin-left: 10%;
+    width: 75%;
+    margin-left: 16%;
     margin-right: 10%;
 }
 .PastRaffles-Title-h1 {
