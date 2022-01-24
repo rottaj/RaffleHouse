@@ -4,6 +4,7 @@
 
 .PlayersList-Box-Header {
     display: flex;
+    color: white;
 }
 
 .PlayersList-Address-Header {

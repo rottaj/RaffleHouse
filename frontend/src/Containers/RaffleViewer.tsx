@@ -1,15 +1,18 @@
+import { ethers } from 'ethers';
+import { _abi } from "../interfaces/Eyescream_Interface";
+import { _Raffle_abi } from '../interfaces/RaffleEscrow_Interface';
 import React from 'react';
 import MenuItems from '../Components/MenuItems';
 import Deposit from "../Components/Deposit";
 import PlayersList from "../Components/PlayersList";
 import WinnerBox from "../Components/WinnerBox";
-import { ethers } from 'ethers';
-import { _abi } from "../interfaces/Eyescream_Interface";
-import { _Raffle_abi } from '../interfaces/RaffleEscrow_Interface';
+import Messages from "../Components/Messages";
 import Button from '@mui/material/Button';
-import "./RaffleViewer.css";
+import Header from './Header';
 import Footer from '../Components/Footer';
 
+
+import "./RaffleViewer.css";
 const ETHERSCAN_API_NFT_TXN = 'https://api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=';
 const ETHERSCAN_API_KEY = 'JPARDRW9CAVF9ZKISWVC3YYM6RP93JNQUC';
 
@@ -145,7 +148,9 @@ export default class RaffleViewer extends React.Component {
     render() {
         return (
             <div className="RaffleViewer-Div-Main">
+                <Header/>
                 <MenuItems account={this.state.account}/>
+                <Messages/>
                 <WinnerBox winner={this.state.gameInfo.winner}/>
                 {console.log("GAME INNFO", this.state.gameInfo)}
                 <div className="RaffleViewer-Viewer-Container">

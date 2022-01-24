@@ -2,13 +2,12 @@ import React from 'react';
 import MenuItems from "../Components/MenuItems";
 import { ethers } from "ethers";
 import { _CoinFlip_abi } from '../interfaces/CoinFlip_Interface';
-import "./CoinFlipViewer.css";
-import { WindowRounded } from '@mui/icons-material';
 import TextField from '@mui/material/TextField';
+import Messages from "../Components/Messages";
 import Button from '@mui/material/Button';
 import Footer from '../Components/Footer';
-import { connectContractToSigner } from '@usedapp/core';
-
+import Header from "./Header";
+import "./CoinFlipViewer.css";
 declare let window: any;
 
 interface GameInfoInterface {
@@ -79,7 +78,9 @@ export default class CoinFlipViewer extends React.Component<Props>{
     render() {
         return (
             <div className="CoinFlipViewer-Div-Main">
+                <Header/>
                 <MenuItems account={this.state.account}/>
+                <Messages/>
                 <div className="CoinFlip-Game-Container">
 
                     <h1 className="Coinflip-Main-Title">COIN FLIP</h1>
