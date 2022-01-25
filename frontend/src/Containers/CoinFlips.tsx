@@ -21,6 +21,7 @@ export default class CoinFlips extends React.Component {
     }
 
     async componentDidMount() {
+        document.title = "Coin Flips - Raffle House"
         this.getCoinFlips();
         if(window.ethereum) {
             var accounts = await window.ethereum.send('eth_requestAccounts');

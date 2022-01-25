@@ -16,6 +16,7 @@ export default class Host extends React.Component {
     }
 
     async componentDidMount() {
+        document.title = "Host - Raffle House"
         if(window.ethereum) {
             var accounts = await window.ethereum.send('eth_requestAccounts');
             const account = accounts.result[0];

@@ -18,6 +18,8 @@ export default class Home extends React.Component {
 
     async componentDidMount() {
         if(window.ethereum) {
+
+            document.title = "Welcome to Raffle House"
             var accounts = await window.ethereum.send('eth_requestAccounts');
             const account = accounts.result[0];
             this.setState({account: account});

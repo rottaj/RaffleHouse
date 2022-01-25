@@ -23,6 +23,7 @@ export default class Raffles extends React.Component {
     }
 
     async componentDidMount() {
+        document.title = "Raffles - Raffle House"
         this.getRaffles()
         if(window.ethereum) {
             var accounts = await window.ethereum.send('eth_requestAccounts');
