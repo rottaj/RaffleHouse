@@ -70,7 +70,7 @@ export default class Raffles extends React.Component {
     render() {
         return (
             <div className="Raffles-container-main">
-                <Header/>
+                {/* <Header/> */}
                 <MenuItems account={this.state.account}/>
                 <Messages/>
                 <div className="Raffles-title-container">

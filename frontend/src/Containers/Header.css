@@ -10,8 +10,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 50%;
-    height: 50%;
+    width: 30%;
+    height: 30%;
     background-image: radial-gradient(
       ellipse 50% 35% at 50% 50%,
       #6b1839,
@@ -20,10 +20,10 @@
     transform: translate(-50%, -50%);
     letter-spacing: 2;
     left: 50%;
-    top: 10%;
+    top: 55%;
     font-family: 'Greatest Richmond Alternate Thr', sans-serif;
     text-transform: uppercase;
-    font-size: 6em;
+    font-size: 4em;
     /*color: #ffe6ff; */
     color: #6b1839;
     text-shadow: none;

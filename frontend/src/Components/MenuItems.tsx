@@ -15,6 +15,7 @@ import MenuItem from '@mui/material/MenuItem';
 import EnterApp from "../Components/EnterApp";
 import logo from '../Raffle_House.png';
 import './MenuItems.css';
+import Header from "../Containers/Header";
 
 const pages = [ 'raffles','coin-flips', 'host'];
 const settings = ['Profile', 'Logout'];
@@ -107,6 +108,10 @@ const ResponsiveAppBar = (props: any) => {
                 {/* <a href={page} style={{color: "white"}}>{page}</a> */}
               </Button>
             ))}
+          </Box>
+            
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            <Header/>
           </Box>
 
           <EnterApp account={props.account}/>

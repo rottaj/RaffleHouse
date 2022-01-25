@@ -70,7 +70,7 @@ export default class CoinFlipViewer extends React.Component<Props>{
     render() {
         return (
             <div className="CoinFlipViewer-Div-Main">
-                <Header/>
+                {/* <Header/> */}
                 <MenuItems account={this.state.account}/>
                 <Messages/>
                 <div className="CoinFlip-Game-Container">

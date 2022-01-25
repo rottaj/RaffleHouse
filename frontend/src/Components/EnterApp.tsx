@@ -23,7 +23,7 @@ export default class EnterApp extends React.Component <Props> {
     render() {
         return (
             <div>
-                {console.log(this.props.account, "testtest")}
+                {/* {console.log(this.props.account, "testtest")} */}
                 {this.props.account !== "" ?
                   <h3>{this.props.account.substring(0, 6) + "..." + this.props.account.substring(36, 40)}</h3>
                     //need to add if string.length > 38 then substring *protection for ens case

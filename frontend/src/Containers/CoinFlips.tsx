@@ -63,7 +63,7 @@ export default class CoinFlips extends React.Component {
     render() {
         return (
             <div className="CoinFlips-Container-Main">
-                <Header/>
+                {/* <Header/> */}
                 <MenuItems account={this.state.account}/>
                 <Messages/>
                 <div className="CoinFlips-Games-Container">

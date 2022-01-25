@@ -27,7 +27,7 @@ export default class Host extends React.Component {
     render() {
         return (
             <div className="Host-Container-Main-Div">
-                <Header/>
+                {/* <Header/> */}
                 <MenuItems account={this.state.account}/>
                 <Messages/>
                 <RaffleCreator/>

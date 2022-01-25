@@ -148,7 +148,7 @@ export default class RaffleViewer extends React.Component {
     render() {
         return (
             <div className="RaffleViewer-Div-Main">
-                <Header/>
+                {/* <Header/> */}
                 <MenuItems account={this.state.account}/>
                 <Messages/>
                 <WinnerBox winner={this.state.gameInfo.winner}/>

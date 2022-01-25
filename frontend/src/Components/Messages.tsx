@@ -32,10 +32,8 @@ export default class Messages extends React.Component {
                         messages: [...this.state.messages, message]
                     })
             }
-            // console.log(typeOf,message.messager);
         }
     }
-
 
     async componentDidMount() {
         if(window.ethereum) {
@@ -58,8 +56,8 @@ export default class Messages extends React.Component {
                 {this.state.messages.map((message: any) => {
                     return (
                         <div className="Messages-Message-Div">
-                            <h6>{message.messager === this.state.myAddress ? 
-                                    "Me" + ": " 
+                            <h6>{message.messager === this.state.myAddress[this.state.myAddress.length - 1] ? 
+                                "You" + ": " 
                                 : message.messager.substring(0, 6) + "..." + message.messager.substring(36, 40) + ": "} 
                             </h6>
                             <h6>{message.message}</h6>
