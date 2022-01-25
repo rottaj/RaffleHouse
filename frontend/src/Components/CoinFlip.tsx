@@ -15,7 +15,7 @@ export default class CoinFlip extends React.Component <Props>{
                 :
                     <div>
                     {this.props.coinFlip.joineeAddress !== "0x0000000000000000000000000000000000000000" ? 
-                        <h6 className="CoinFlip-Waiting-h6">Game In Progress</h6>
+                        <h6 className="CoinFlip-Waiting-h6"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></h6>
                     :
                         <h6 className="CoinFlip-Waiting-h6">Waiting for player</h6>
                     }
