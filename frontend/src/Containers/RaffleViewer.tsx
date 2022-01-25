@@ -39,7 +39,7 @@ export default class RaffleViewer extends React.Component {
     fetchNFTs = async (contractAddress: any) => {
         if (window.ethereum) {
             var provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
+            // const signer = provider.getSigner();
             // var url = ETHERSCAN_API_ABI + token.address + ABI_KEY
             //var abi = fetch (url) // get verified contract abi
             // PERFORM FETCH ABI REQUEST ON VERIFIED CONTRACT
@@ -68,7 +68,7 @@ export default class RaffleViewer extends React.Component {
             // PERFORM FETCH ABI REQUEST ON VERIFIED CONTRACT
             //console.log(token.contractAddress, address)
             try {
-                if (String(token.contractAddress) == '0x8f44a8b9059b2bc914c893eed250a2e1097ee187') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
+                if (String(token.contractAddress) === '0x8f44a8b9059b2bc914c893eed250a2e1097ee187') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
                     let contract = new ethers.Contract(token.contractAddress, _abi, signer)
                     console.log(token.contractAddress)
                     let metaData = await contract.tokenURI(parseInt(token.tokenID))
@@ -101,7 +101,7 @@ export default class RaffleViewer extends React.Component {
         console.log(tickets)
         for (let i=0; i<=uniqueAddresses.length; i++ ) {
             let ticketNumber = this.getOccurances(tickets, uniqueAddresses[i])
-            if (uniqueAddresses[i] != undefined) {
+            if (uniqueAddresses[i] !== undefined) {
                 console.log("TESTING GET_TICKETS", uniqueAddresses[i], ticketNumber, (ticketNumber * 0.01).toFixed(2))
                 let player = {address: uniqueAddresses[i], tickets: ticketNumber, totalEth: (ticketNumber * 0.01).toFixed(2), chance: ((ticketNumber / tickets.length) * 100).toFixed(2)}
                 this.setState({

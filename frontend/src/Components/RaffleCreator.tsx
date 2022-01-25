@@ -70,7 +70,7 @@ export default class RaffleCreator extends React.Component{
 
     filterTokenTxns = (token: any) => {
         for (let i=0; i<=this.state.tokens.length; i++ ) {
-            if (this.state.tokens[i] == token) {
+            if (this.state.tokens[i] === token) {
 
             }
         }
@@ -97,8 +97,8 @@ export default class RaffleCreator extends React.Component{
                     if (tokens.length > 0) {
                         try {
                             //let x: any = tokens.find(token => token['tokenID'] !== data.result[i]['tokenID'])
-                            let index = tokens.findIndex(temp => temp['tokenID'] == data.result[i]['tokenID']);
-                            if (index == -1) {
+                            let index = tokens.findIndex(temp => temp['tokenID'] === data.result[i]['tokenID']);
+                            if (index === -1) {
                                 tokens.push(data.result[i])
                             } else {
                                 tokens.splice(index, 1)
@@ -130,7 +130,7 @@ export default class RaffleCreator extends React.Component{
             //console.log(token.contractAddress, address)
             for (let i=0; i<=tokens.length; i++ ) {
                 try {
-                    if (String(tokens[i].contractAddress) == '0x8f44a8b9059b2bc914c893eed250a2e1097ee187') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
+                    if (String(tokens[i].contractAddress) === '0x8f44a8b9059b2bc914c893eed250a2e1097ee187') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
                         let contract = new ethers.Contract(tokens[i].contractAddress, _abi, signer)
                         let metaData = await contract.tokenURI(parseInt(tokens[i].tokenID))
                         console.log("METADATA", metaData)

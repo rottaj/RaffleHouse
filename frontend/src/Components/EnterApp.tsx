@@ -24,9 +24,9 @@ export default class EnterApp extends React.Component <Props> {
         return (
             <div>
                 {console.log(this.props.account, "testtest")}
-                {this.props.account != "" ?
+                {this.props.account !== "" ?
                   <h3>{this.props.account.substring(0, 6) + "..." + this.props.account.substring(36, 40)}</h3>
-                    //need to add if string.length > 38 then substring
+                    //need to add if string.length > 38 then substring *protection for ens case
                   :
                   <button onClick={this.connectWallet}> Connect Wallet </button>
                 }

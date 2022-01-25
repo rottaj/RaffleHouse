@@ -79,11 +79,11 @@ export default class CoinFlipViewer extends React.Component<Props>{
                     {this.state.gameInfo ?
                         <div>
                             <div className="CoinFlip-GameInfo-Div">
-                                {this.state.gameInfo.winner != "0x0000000000000000000000000000000000000000" ?
+                                {this.state.gameInfo.winner !== "0x0000000000000000000000000000000000000000" ?
                                     <h6>Winner: {this.state.gameInfo.winner}</h6>
                                 :
                                     <div>
-                                        {this.state.gameInfo.joineeAddress != "0x0000000000000000000000000000000000000000" ?
+                                        {this.state.gameInfo.joineeAddress !== "0x0000000000000000000000000000000000000000" ?
                                             <h6>Selecting Winner</h6> 
                                         :
                                             <h6>Waiting for player</h6>
@@ -100,7 +100,7 @@ export default class CoinFlipViewer extends React.Component<Props>{
                                 </div>
 
                                 <h3 className="CoinFlip-VS-h3">VS</h3>
-                                {this.state.gameInfo.joineeAddress != "0x0000000000000000000000000000000000000000" ? 
+                                {this.state.gameInfo.joineeAddress !== "0x0000000000000000000000000000000000000000" ? 
                                     <div className="CoinFlip-Players-Joinee-Div">
                                     <h6>Joinee: {this.state.gameInfo.joineeAddress}</h6>
                                     <h6></h6>

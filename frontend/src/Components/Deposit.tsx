@@ -46,7 +46,7 @@ export default class Deposit extends React.Component <Props>{
                 <div className="Deposit-PopUp-Form">
                     <h3 className="Deposit-To-Win-h3">Deposit to win {this.props.tokenMetaData.tokenName} #{this.props.tokenMetaData.tokenID}!</h3>
                     <form className="Deposit-Form" onSubmit={(e) => this.handleSubmit(e)}>
-                            <TextField defaultValue="0.08" id="filled-basic" label="Deposit" variant="filled"></TextField>
+                            <TextField defaultValue="0.08" id="filled-basic" label="Deposit" variant="outlined" sx={{input: { color:'white'}}}></TextField>
                             <Button variant="contained" type="submit" style={{maxHeight: '55px'}}>
                                 Submit Deposit
                             </Button>

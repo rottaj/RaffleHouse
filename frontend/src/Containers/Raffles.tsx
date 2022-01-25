@@ -52,7 +52,7 @@ export default class Raffles extends React.Component {
                 tempRaffle['winner'] = gameInfo['winner'];
                 tempRaffle['collectionName'] = gameInfo['collectionName'];
                 tempRaffle['tokenID'] = parseInt(gameInfo['tokenID'], 16);
-                if (gameInfo.winner == "0x0000000000000000000000000000000000000000") {
+                if (gameInfo.winner === "0x0000000000000000000000000000000000000000") {
                     this.setState({
                         currentRaffles: [...this.state.currentRaffles, tempRaffle]
                     })

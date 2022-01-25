@@ -9,7 +9,7 @@ export default class WinnerBox extends React.Component <Props> {
         return (
             <div className="WinnerBox-Main-Div">
                 <h3 className="Title-Raffle-Winner">Round Winner:</h3>
-                {this.props.winner != "0x0000000000000000000000000000000000000000" ?
+                {this.props.winner !== "0x0000000000000000000000000000000000000000" ?
                     <h3>{this.props.winner}</h3>
                 :
                     <h3>Winner not picked</h3>

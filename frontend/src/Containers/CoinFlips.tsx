@@ -45,7 +45,7 @@ export default class CoinFlips extends React.Component {
                 tempCoinFlip['creatorAddress'] = gameInfo['creatorAddress'];
                 tempCoinFlip['joineeAddress'] = gameInfo['joineeAddress'];
                 tempCoinFlip['winner'] = gameInfo['winner'];
-                if (gameInfo.winner != "0x0000000000000000000000000000000000000000") {
+                if (gameInfo.winner !== "0x0000000000000000000000000000000000000000") {
                     this.setState({
                         currentCoinFlips: [...this.state.currentCoinFlips, tempCoinFlip]
                     })

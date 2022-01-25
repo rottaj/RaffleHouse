@@ -12,7 +12,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { createTheme } from '@mui/material/styles';
 import EnterApp from "../Components/EnterApp";
 import logo from '../Raffle_House.png';
 import './MenuItems.css';

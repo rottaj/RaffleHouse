@@ -10,7 +10,8 @@ declare let window: any;
 export default class Messages extends React.Component {
 
     state = {
-        messages: []
+        messages: [],
+        myAddress: ""
     }
 
     
@@ -18,6 +19,8 @@ export default class Messages extends React.Component {
         if (window.ethereum) {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
+            const myAddress = await signer.getAddress();
+            this.setState({myAddress: [this.state.myAddress, myAddress]})
             const messagesContract = await new ethers.Contract(MessagesAddress, _Messages_abi, signer);
             let messagesLength = await messagesContract.getMessages();
             for (let i =0; i<=messagesLength-1; i++ ) {
@@ -29,6 +32,7 @@ export default class Messages extends React.Component {
                         messages: [...this.state.messages, message]
                     })
             }
+            // console.log(typeOf,message.messager);
         }
     }
 
@@ -46,7 +50,7 @@ export default class Messages extends React.Component {
         const messagesContract = await new ethers.Contract(MessagesAddress, _Messages_abi, signer)  // connect to Raffles Contract
         const messageTxn = messagesContract.createMessage(e.target[0].value)
     }
-
+    
     render() {
         return (
             <div className="Messages-Main-Div-Container">
@@ -54,7 +58,10 @@ export default class Messages extends React.Component {
                 {this.state.messages.map((message: any) => {
                     return (
                         <div className="Messages-Message-Div">
-                            <h6>{message.messager.substring(0, 10) + ": "} </h6>
+                            <h6>{message.messager === this.state.myAddress ? 
+                                    "Me" + ": " 
+                                : message.messager.substring(0, 6) + "..." + message.messager.substring(36, 40) + ": "} 
+                            </h6>
                             <h6>{message.message}</h6>
                         </div>
                     )
