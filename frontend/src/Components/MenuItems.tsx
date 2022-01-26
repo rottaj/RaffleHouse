@@ -17,7 +17,7 @@ import logo from '../Raffle_House.png';
 import './MenuItems.css';
 import Header from "../Containers/Header";
 
-const pages = [ 'raffles','coin-flips', 'host'];
+const pages = [ 'raffles', 'high-rollers', 'coin-flips', 'host'];
 const settings = ['Profile', 'Logout'];
 
 

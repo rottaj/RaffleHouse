@@ -1,0 +1,17 @@
+.HighRollers-Div-Main {
+    text-align: center;
+}
+
+.HighRollers-Current-Game-h3 {
+    color: rgb(255, 242, 145);
+    text-shadow: rgb(203, 176, 204) 3px 3px;
+    font-size: 40px;
+}
+
+.HighRollers-GameInfo-Container {
+    width: 50%;
+    height: 50%;
+    min-height: 300px;
+    margin-left: 25%;
+    border: 1px solid blue;
+}
