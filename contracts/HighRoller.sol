@@ -8,9 +8,19 @@ import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 contract HighRoller { // add VRF
 
     uint private timeLimit = 15 minutes;
+    uint private startTime = block.timestamp;
 
-    function getGameInfo() public returns (uint) {
-        return timeLimit;
+    struct GameInfo {
+        uint timeLimit;
+        uint startTime;
+    }
+
+    function getGameInfo() public view returns (GameInfo memory) {
+        GameInfo memory gameInfo = GameInfo({
+            timeLimit: timeLimit,
+            startTime: startTime
+        });
+        return gameInfo;
     }
 
 }

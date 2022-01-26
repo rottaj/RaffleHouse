@@ -3,6 +3,7 @@ pragma solidity ^0.8.11;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./HighRoller.sol";
 
 contract HighRollers is Ownable{
     uint256 private chainLinkFee = 0.1 * 1e18;
@@ -12,23 +13,32 @@ contract HighRollers is Ownable{
         chainLink = IERC20(_chainLinkContractAddress);
     }
 
-    struct HighRoller {
+    struct HighRollerGame {
         address contractAddress;
         uint timeLimit;
+        uint startTime;
     }
 
-    HighRoller[] public  pastGames;
+    HighRollerGame[] public  pastGames;
     
-    HighRoller public currentHighRollerGame;
+    HighRollerGame public currentHighRollerGame;
 
     receive() external payable {}
+
+    function processCurrentGame() public { 
+        if (currentHighRollerGame.timeLimit + currentHighRollerGame.startTime >= block.timestamp) { 
+            HighRoller newGame = new HighRoller(); // Automatically creates new game every 15 minutes
+            createNewHighRollerGame(address(newGame));
+        }
+    }
 
     function createNewHighRollerGame(address _contractAddress) public {
         addCurrentGameToPastGames(); // add current game to past games
 
-        currentHighRollerGame = HighRoller({ // create new game
+        currentHighRollerGame = HighRollerGame({ // create new game
             contractAddress: _contractAddress,
-            timeLimit: timeLimit
+            timeLimit: timeLimit,
+            startTime: block.timestamp
         });
         chainLink.transfer(_contractAddress, chainLinkFee);
     }
