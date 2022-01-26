@@ -216,7 +216,7 @@ export default class HighRollers extends React.Component {
                     <h3 className="HighRollers-Current-Game-Address-h3">No Game</h3>
                 }
                 <div className="HighRollers-GameInfo-Container">
-                    <HighRollerDeposits contractAddress={this.state.currentGame.contractAddress}/>
+                    <HighRollerDeposits tokens={this.state.gameTokens}/>
                 </div>
 
                 <Button onClick={() => this.handleDeposit() }variant="contained" type="submit" style={{maxHeight: '55px'}}>

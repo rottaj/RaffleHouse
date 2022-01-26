@@ -1,16 +1,12 @@
 import { ethers } from "ethers";
 import React from 'react';
-
+import NFT from "./NFT";
 interface Props {
-    contractAddress: string
+    tokens: any
 }
 
 declare let window: any;
 export default class HighRollerDeposits extends React.Component <Props>{
-
-    state = {
-        depositedTokens: []
-    }
 
     async componentDidMount() {
         if (window.ethereum) {
@@ -22,7 +18,7 @@ export default class HighRollerDeposits extends React.Component <Props>{
     render() {
         return (
             <div className="HighRollerDeposits-Main-Div">
-
+                {this.props.tokens.map((token:any) => {return (<div className="NFT-Div-Container" ><NFT token={String(token.image)}></NFT></div>)})}
             </div>
         )
     }
