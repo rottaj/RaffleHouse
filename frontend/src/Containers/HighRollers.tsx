@@ -122,10 +122,18 @@ export default class HighRollers extends React.Component {
                         console.log("METADATA", metaData)
                         fetch(metaData).then(res => {return res.json()}).then(data => {
                             tokens[i]['image'] = data.image
-                            this.setState({
-                                //tokens: this.state.tokens.filter(tempToken => tempToken['tokenID'] !== tokens[i].tokenID)
-                                [stateName]: ["...this.state." + stateName, tokens[i]]
-                            })
+                            if (stateName === "userTokens") {
+                                this.setState({
+                                    //tokens: this.state.tokens.filter(tempToken => tempToken['tokenID'] !== tokens[i].tokenID)
+                                    userTokens: [...this.state.userTokens, tokens[i]]
+                                })
+                            } 
+                            else if (stateName === "gameTokens") {
+                                this.setState({
+                                    //tokens: this.state.tokens.filter(tempToken => tempToken['tokenID'] !== tokens[i].tokenID)
+                                    gameTokens: [...this.state.gameTokens, tokens[i]]
+                                })
+                            }
                         })
                     }
                 }
