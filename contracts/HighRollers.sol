@@ -11,6 +11,12 @@ contract HighRollers is Ownable{
     IERC20 chainLink;
     constructor(address _chainLinkContractAddress) {
         chainLink = IERC20(_chainLinkContractAddress);
+        HighRoller startingGame = new HighRoller();
+        currentHighRollerGame = HighRollerGame({ // INITIALIZE STARTING GAME
+            contractAddress: address(startingGame),
+            timeLimit: timeLimit,
+            startTime: block.timestamp
+        });
     }
 
     struct HighRollerGame {
@@ -45,6 +51,12 @@ contract HighRollers is Ownable{
 
     function addCurrentGameToPastGames() public {
         pastGames.push(currentHighRollerGame);
+    }
+
+    // VIEW FUNCTIONS
+
+    function getCurrentGame() public view returns (HighRollerGame memory) {
+        return currentHighRollerGame;
     }
 
 }

@@ -26,10 +26,20 @@ const main = async() => {
   await CoinFlipsContract.deployed();
   console.log("\n\nCOIN FLIPS CONTRACT DEPLOYED TO: ", CoinFlipsContract.address);
 
+
+  const highRollersContractFactory = await hre.ethers.getContractFactory("HighRollers");
+  const HighRollersContract = await highRollersContractFactory.deploy(LinkInterface.linkAddress);
+  await HighRollersContract.deployed();
+  console.log("\n\nHIGH ROLLERS CONTRACT DEPLOYED TO: ", HighRollersContract.address);
+ 
+
   const messagesContractFactory = await hre.ethers.getContractFactory("Messages");
   const MessagesContract = await messagesContractFactory.deploy();
   await MessagesContract.deployed();
   console.log("\n\nMESSAGES CONTRACT DEPLOYED TO: ", MessagesContract.address);
+
+
+
  
 
 

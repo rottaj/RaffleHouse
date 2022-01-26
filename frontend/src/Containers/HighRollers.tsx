@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import { _abi } from '../interfaces/Eyescream_Interface';
+import { HighRollersAddress, _HighRollers_abi } from "../interfaces/HighRollers_Interface";
 import React from 'react';
 import MenuItems from "../Components/MenuItems";
 import Messages from "../Components/Messages";
@@ -36,6 +37,12 @@ interface Token {
     transactionIndex: number;
 }
 
+interface CurrentGame {
+    contractAddress: string,
+    startTime: string,
+    timeLimit: string 
+}
+
 
 
 declare let window: any;
@@ -45,6 +52,7 @@ export default class HighRollers extends React.Component {
 
     state = {
         tokens: [],
+        currentGame: {contractAddress: "", startTime: "", timeLimit: ""},
         account: ""
     }
 
@@ -140,6 +148,16 @@ export default class HighRollers extends React.Component {
             var accounts = await window.ethereum.send('eth_requestAccounts');
             const account = accounts.result[0];
             this.setState({account: account});
+            var provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+            const HighRollersContract = new ethers.Contract(HighRollersAddress, _HighRollers_abi, signer);
+            const currentHighRollerGame: any = await HighRollersContract.getCurrentGame();
+            console.log("CURRENT HIGH ROLLERS GAME", currentHighRollerGame);
+            // REFACTOR THIS
+            var currentGame: CurrentGame = {contractAddress: currentHighRollerGame['contractAddress'], startTime: currentHighRollerGame.startTime, timeLimit: currentHighRollerGame.timeLimit}
+            this.setState({
+                currentGame: currentGame
+            })
         }
     }  
 
@@ -149,6 +167,14 @@ export default class HighRollers extends React.Component {
                 <MenuItems account={this.state.account}/>
                 <Messages/>
                 <h3 className="HighRollers-Current-Game-h3">Current Game</h3>
+                {this.state.currentGame.contractAddress ?
+                    <div>
+                        <h3 className="HighRollers-Current-Game-Address-h3">Contract Address: {this.state.currentGame.contractAddress}</h3>
+                        <h3 className="HighRollers-Current-Game-TimeLeft-h3"> Time Left: {parseInt(this.state.currentGame.startTime)}</h3>
+                    </div>
+                :
+                    <h3 className="HighRollers-Current-Game-Address-h3">No Game</h3>
+                }
                 <div className="HighRollers-GameInfo-Container">
 
                 </div>
