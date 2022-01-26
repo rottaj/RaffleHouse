@@ -5,6 +5,7 @@ import React from 'react';
 import MenuItems from "../Components/MenuItems";
 import Messages from "../Components/Messages";
 import NFTSelector from "../Components/NFTSelector";
+import HighRollerDeposits from "../Components/HighRollerDeposits";
 import Button from '@mui/material/Button';
 import "./HighRollers.css";
 
@@ -51,14 +52,17 @@ export default class HighRollers extends React.Component {
     tokenSelector: any = React.createRef() 
 
     state = {
-        tokens: [],
+        userTokens: [],
+        gameTokens: [],
         currentGame: {contractAddress: "", startTime: "", timeLimit: ""},
-        account: ""
+        account: "",
+        minutesLeft: "",
+        secondsLeft: ""
     }
 
+    // HANDLE USER TOKENS
 
-
-    fetchNFTs = async () => {
+    fetchNFTs = async (address: string, stateName: string) => {
         if (window.ethereum) {
             var provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
@@ -68,7 +72,7 @@ export default class HighRollers extends React.Component {
             //console.log(token.contractAddress, address)
             var accounts = await window.ethereum.send('eth_requestAccounts');
             console.log(accounts.result[0])
-            var url = ETHERSCAN_API_NFT_TXN + accounts.result[0] + '&startblock=0&endblock=999999999&sort=asc&apikey=' + ETHERSCAN_API_KEY
+            var url = ETHERSCAN_API_NFT_TXN + address + '&startblock=0&endblock=999999999&sort=asc&apikey=' + ETHERSCAN_API_KEY
             fetch(url).then(res => {
                 return res.json();
             })
@@ -95,14 +99,14 @@ export default class HighRollers extends React.Component {
                     }
                 }
                 console.log("TOKENS", tokens)
-                this.getMetaData(tokens)
+                this.getMetaData(tokens, stateName)
             })
             
 
         }
     }
 
-    getMetaData = async (tokens: any) => {
+    getMetaData = async (tokens: any, stateName: string) => {
         if (window.ethereum) {
             var provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
@@ -120,7 +124,7 @@ export default class HighRollers extends React.Component {
                             tokens[i]['image'] = data.image
                             this.setState({
                                 //tokens: this.state.tokens.filter(tempToken => tempToken['tokenID'] !== tokens[i].tokenID)
-                                tokens: [...this.state.tokens, tokens[i]]
+                                [stateName]: ["...this.state." + stateName, tokens[i]]
                             })
                         })
                     }
@@ -133,20 +137,52 @@ export default class HighRollers extends React.Component {
         }
     }
 
-    handleSubmit = () => {
+    // END OF HANDLING USER TOKENS
+    // START OF DEPOSITS
+
+    handleDeposit = async () => {
         console.log("handle submit")
-        console.log(this.tokenSelector.state.selectedToken)
+        var provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        var accounts = await window.ethereum.send('eth_requestAccounts');
+        const account = accounts.result[0];
+        let selectedToken = this.tokenSelector.state.selectedToken;
+        const collectionContract = await new ethers.Contract(selectedToken.contractAddress, _abi, signer);
+        const sendingTxn = await collectionContract.transferFrom(account, this.state.currentGame.contractAddress, selectedToken.tokenID);
     }
 
+    // END OF DEPOSITS
 
+
+    // START OF GAME INFO
+    getCountDown = () => {
+        let dateString: any = this.state.currentGame.startTime + this.state.currentGame.timeLimit;
+        var now = new Date().getTime();
+        var countDownDate = new Date(dateString).getTime();
+        let distance = dateString - now;
+        //console.log("NOW", now)
+        //console.log("DATE STRING", dateString)
+        //console.log("COUNTDOWN DATE", countDownDate)
+
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        //console.log("MINUTES", minutes, "SECONDS", seconds)
+        this.setState({
+            minutesLeft: minutes,
+            secondsLeft: seconds
+        })
+    }
+
+    // END OF GAME INFO
 
 
     async componentDidMount() {
         document.title = "High Rollers - Raffle House"
         if(window.ethereum) {
-            this.fetchNFTs();
             var accounts = await window.ethereum.send('eth_requestAccounts');
             const account = accounts.result[0];
+            this.fetchNFTs(account, "userTokens"); // FETCHES USER NFTS
+
             this.setState({account: account});
             var provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
@@ -158,6 +194,10 @@ export default class HighRollers extends React.Component {
             this.setState({
                 currentGame: currentGame
             })
+            this.fetchNFTs(currentGame.contractAddress, "gameTokens");
+            setInterval(() => {
+                this.getCountDown();
+            }, 1000)
         }
     }  
 
@@ -170,19 +210,19 @@ export default class HighRollers extends React.Component {
                 {this.state.currentGame.contractAddress ?
                     <div>
                         <h3 className="HighRollers-Current-Game-Address-h3">Contract Address: {this.state.currentGame.contractAddress}</h3>
-                        <h3 className="HighRollers-Current-Game-TimeLeft-h3"> Time Left: {parseInt(this.state.currentGame.startTime)}</h3>
+                        <h3 className="HighRollers-Current-Game-TimeLeft-h3"> Minutes: {this.state.minutesLeft} Seconds: {this.state.secondsLeft}</h3>
                     </div>
                 :
                     <h3 className="HighRollers-Current-Game-Address-h3">No Game</h3>
                 }
                 <div className="HighRollers-GameInfo-Container">
-
+                    <HighRollerDeposits contractAddress={this.state.currentGame.contractAddress}/>
                 </div>
 
-                <Button onClick={() => this.handleSubmit() }variant="contained" type="submit" style={{maxHeight: '55px'}}>
+                <Button onClick={() => this.handleDeposit() }variant="contained" type="submit" style={{maxHeight: '55px'}}>
                     Deposit 
                 </Button>
-                <NFTSelector tokens={this.state.tokens}  ref={(tokenSelector) => this.tokenSelector = tokenSelector}/>
+                <NFTSelector tokens={this.state.userTokens}  ref={(tokenSelector) => this.tokenSelector = tokenSelector}/>
             </div>
         )
     }
