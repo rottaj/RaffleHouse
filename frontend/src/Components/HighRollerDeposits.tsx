@@ -6,7 +6,8 @@ interface Props {
 }
 
 
-const OPENSEA_CONTRACT_URL = "https://api.opensea.io/api/v1/asset_contract/";
+const OPENSEA_CONTRACT_URL = "https://testnets-api.opensea.io/api/v1/asset_contract/";
+const OPENSEA_ASSET_URL = "https://testnets-api.opensea.io/api/v1/asset/" // ContractAddress + '/' + id
 
 declare let window: any;
 export default class HighRollerDeposits extends React.Component <Props>{
@@ -15,6 +16,7 @@ export default class HighRollerDeposits extends React.Component <Props>{
         if (window.ethereum) {
             var provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner()
+            console.log(this.props.tokens)
             this.getOpenSeaData(this.props.tokens[0])
         }
     }
@@ -22,8 +24,10 @@ export default class HighRollerDeposits extends React.Component <Props>{
     getOpenSeaData = async(token: any) => {
         if (token !== undefined) {
             console.log(token)
-            let url = OPENSEA_CONTRACT_URL + token.contractAddress
-            console.log(url)
+            console.log("HELLLOOOOOOOO!")
+            //let url = OPENSEA_CONTRACT_URL + token.contractAddress
+            let url = OPENSEA_ASSET_URL + token.contractAddress + '/' + token.tokenID
+            console.log("OPENSEA URL", url)
             fetch(url).then(res => {
                 return res.json();
             }).then((data) => {

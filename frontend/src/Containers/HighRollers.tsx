@@ -119,7 +119,7 @@ export default class HighRollers extends React.Component {
                     if (String(tokens[i].contractAddress) === '0x8f44a8b9059b2bc914c893eed250a2e1097ee187') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
                         let contract = new ethers.Contract(tokens[i].contractAddress, _abi, signer)
                         let metaData = await contract.tokenURI(parseInt(tokens[i].tokenID))
-                        console.log("METADATA", metaData)
+                        //console.log("METADATA", metaData)
                         fetch(metaData).then(res => {return res.json()}).then(data => {
                             tokens[i]['image'] = data.image
                             if (stateName === "userTokens") {
