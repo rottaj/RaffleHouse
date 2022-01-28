@@ -1,6 +1,24 @@
 const _HighRoller_abi = 
  [
-   {
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_tickets",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_accountAddress",
+          "type": "address"
+        }
+      ],
+      "name": "deposit",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "name": "getGameInfo",
       "outputs": [
@@ -48,7 +66,7 @@ const _HighRoller_abi =
       "stateMutability": "nonpayable",
       "type": "function"
     }
-]
+  ]
 
 module.exports = {
     _HighRoller_abi

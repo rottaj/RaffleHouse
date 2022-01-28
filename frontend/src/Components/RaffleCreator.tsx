@@ -77,14 +77,14 @@ export default class RaffleCreator extends React.Component{
             // PERFORM FETCH ABI REQUEST ON VERIFIED CONTRACT
             //console.log(token.contractAddress, address)
             var accounts = await window.ethereum.send('eth_requestAccounts');
-            console.log(accounts.result[0])
+
             var url = ETHERSCAN_API_NFT_TXN + accounts.result[0] + '&startblock=0&endblock=999999999&sort=asc&apikey=' + ETHERSCAN_API_KEY
             fetch(url).then(res => {
                 return res.json();
             })
             .then(data => {
                 var tokens: Token[] = []
-
+                //console.log("TOKENS TESTING FOOBAR", data.result)
                 for (let i=0; i<=data.result.length; i++ ) {
                     if (tokens.length > 0) {
                         try {
@@ -120,8 +120,10 @@ export default class RaffleCreator extends React.Component{
             // PERFORM FETCH ABI REQUEST ON VERIFIED CONTRACT
             //console.log(token.contractAddress, address)
             for (let i=0; i<=tokens.length; i++ ) {
-                try {
-                    if (String(tokens[i].contractAddress) === '0x8f44a8b9059b2bc914c893eed250a2e1097ee187') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
+                //try {
+                if(tokens[i]) {
+                    console.log("TESTING TOKEN METADATA", tokens[i], tokens.length)
+                    //if (String(tokens[i].contractAddress) === '0x8f44a8b9059b2bc914c893eed250a2e1097ee187') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
                         let contract = new ethers.Contract(tokens[i].contractAddress, _abi, signer)
                         let metaData = await contract.tokenURI(parseInt(tokens[i].tokenID))
                         console.log("METADATA", metaData)
@@ -132,11 +134,12 @@ export default class RaffleCreator extends React.Component{
                                 tokens: [...this.state.tokens, tokens[i]]
                             })
                         })
-                    }
+                    //}
                 }
-                catch(err) {
-                    console.log(err)
-                }
+                //}
+                //catch(err) {
+                    //console.log(err)
+                //}
             }
 
         }
@@ -183,6 +186,7 @@ export default class RaffleCreator extends React.Component{
         return (
             <div className="CreateRaffleForm-Main" >
                 <div className="PopUpRaffle-Form">
+                    {console.log("TESTING STATE FOOBAR", this.state.tokens)}
                     <h3 className="CreateRaffle-h3">Create your Raffle!</h3>
                     <NFTSelector tokens={this.state.tokens} ref={(tokenSelector) => this.tokenSelector = tokenSelector}/>
                     <div className="CreateRaffle-Form-Container">

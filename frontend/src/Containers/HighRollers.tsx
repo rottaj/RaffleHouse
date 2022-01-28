@@ -115,8 +115,9 @@ export default class HighRollers extends React.Component {
             // PERFORM FETCH ABI REQUEST ON VERIFIED CONTRACT
             //console.log(token.contractAddress, address)
             for (let i=0; i<=tokens.length; i++ ) {
-                try {
-                    if (String(tokens[i].contractAddress) === '0x8f44a8b9059b2bc914c893eed250a2e1097ee187') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
+                //try {
+                if (tokens[i]) {
+                    //if (String(tokens[i].contractAddress) === '0x8f44a8b9059b2bc914c893eed250a2e1097ee187') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
                         let contract = new ethers.Contract(tokens[i].contractAddress, _abi, signer)
                         let metaData = await contract.tokenURI(parseInt(tokens[i].tokenID))
                         //console.log("METADATA", metaData)
@@ -135,11 +136,12 @@ export default class HighRollers extends React.Component {
                                 })
                             }
                         })
-                    }
+                    //}
                 }
-                catch(err) {
-                    console.log(err)
-                }
+                //}
+                //catch(err) {
+                    //console.log(err)
+                //}
             }
 
         }
@@ -156,7 +158,18 @@ export default class HighRollers extends React.Component {
         const account = accounts.result[0];
         let selectedToken = this.tokenSelector.state.selectedToken;
         const collectionContract = await new ethers.Contract(selectedToken.contractAddress, _abi, signer);
-        const sendingTxn = await collectionContract.transferFrom(account, this.state.currentGame.contractAddress, selectedToken.tokenID);
+        const sendingTxn = await collectionContract.transferFrom(account, this.state.currentGame.contractAddress, selectedToken.tokenID).then(() => {
+            const requestParameters = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tickets: 'This will be tickets (price from opensea api', playerAddress: account }) // CREATE REQUEST BODY
+            };
+            fetch('http://127.0.0.1:8080/submit-tickets-high-rollers', requestParameters).then(res => { // FETCH TO HIGHROLLER API
+                return res.json()
+            }).then(data => {
+                console.log(data)
+            })
+        });
     }
 
     // END OF DEPOSITS

@@ -17,6 +17,16 @@ contract HighRoller { // add VRF
         address winner;
     }
 
+    address[] tickets;
+
+    function deposit(uint256 _tickets, address _accountAddress) public {
+        require(msg.sender != address(0), "DEPOSIT: INVALID ADDRESS");
+        //_userDeposits[_accountAddress] += _tickets; // If MIN_TICKETS !! REACHED --> REFUND
+        for (uint i=0; i<=_tickets; i++) {
+            tickets.push(_accountAddress);
+        }
+    }
+
     function withDrawNFT(address _collectionAddress, uint256 _tokenID) public {
         IERC721 collection = IERC721(_collectionAddress);
         collection.transferFrom(address(this), winner, _tokenID); // Sends ERC721 Token to Winner

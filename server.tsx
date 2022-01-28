@@ -1,17 +1,27 @@
-const https = require('https');
-const request = require('request');
+// THIS IS THE MAIN WALLET / API FOR HIGH ROLLERS GAME.
+// WALLET REQUIRES ETH & LINK TO OPERATE W/ CONTRACTS.
+// EDIT PHRASE IN .ENV TO CHANGE WALLET ADDRESS.
+
 const ethers = require('ethers');
 const HighRollers_Interface = require("./interfaces/HighRollers_Interface");
 const HighRoller_Interface = require("./interfaces/HighRoller_Interface");
+const request = require('request');
+const cors = require('cors');
+var app = require('express')();
+var http = require('http').createServer(app);
 require('dotenv').config();
 
 
+
+// GLOBAL VARIABLES
 const RINKEBY_URL = process.env.RINKEBY_URL;
 const PHRASE = process.env.PHRASE;
 
 const ETHERSCAN_API_NFT_TXN = 'https://api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=';
 const ETHERSCAN_API_KEY = 'FS4Q2NK8JQJ7DPD73R3G1S1T948RPY3JSI';
 
+var provider = new ethers.providers.JsonRpcProvider(process.env.RINKEBY_URL);
+const signer = new ethers.Wallet(PHRASE, provider);
 
 /*
 const pool = new Pool({
@@ -20,12 +30,21 @@ const pool = new Pool({
   port: 5432,
 });
 */
+// START OF API ROUTES
+
+http.listen(8080, () => {
+  console.log("Listening on port 8080");
+})
+
+app.post('/submit-tickets-high-rollers', function (req, res) { // Create submit tickets route.
+  console.log("SUBMIT HIGH ROLLERS", req);
+  submitTickets(5, req.playerAddress); // testing w/ 5 tickets until I build opensea api connect
+})
+
+// END OF API ROUTES
 
 
-var provider = new ethers.providers.JsonRpcProvider(process.env.RINKEBY_URL);
-const signer = new ethers.Wallet(PHRASE, provider);
-console.log("PROVIDER", provider)
-
+// START OF HELPER FUNCTIONS
 async function fetchNFTs(address) { // GET CURRENT NFT'S IN CONTRACT
   var url = ETHERSCAN_API_NFT_TXN + address + '&startblock=0&endblock=999999999&sort=asc&apikey=' + ETHERSCAN_API_KEY
   var tokens = {}
@@ -41,9 +60,16 @@ async function getContract() { // GET CURRENT GAME CONTRACT { GAME INFO }
   const currentHighRollerGame = await HighRollersContract.getCurrentGame();
   return currentHighRollerGame
 }
+// END OF HELPER FUNCTIONS
 
-// MAIN  FUNCTIONS
-
+// START MAIN  FUNCTIONS
+async function submitTickets(ticketCount, playerAddress) { // Call when user deposits NFT --> Grab value from opensea api --> Push ticket count to Tickets[]
+    getContract().then(async function(currentGame) {
+      const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
+      const submitTicketTxn = currentGameContract.deposit(ticketCount, playerAddress);
+      console.log(`SUBMITTED PLAYER ${playerAddress} TICKETS. \n TXN: `, submitTicketTxn)
+    })
+}
 
 
 async function withDrawToWinner() { // Call when winner game is over --> Withdraws all ERC721 tokens in current game to winner address.
@@ -63,7 +89,9 @@ async function withDrawToWinner() { // Call when winner game is over --> Withdra
     })
   });
 }
+// END OF MAIN FUNCTIONS
 
-withDrawToWinner();
+// BUILD INTERVAL FUNCTIONS TO CHECK TIME LIMIT
+//withDrawToWinner();
 
 
