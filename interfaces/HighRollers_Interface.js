@@ -1,6 +1,6 @@
-export const HighRollersAddress = "0xaF108963649b90c38aAB6C3f9C598e92F1Bc45bE"
+const HighRollersAddress = "0xaF108963649b90c38aAB6C3f9C598e92F1Bc45bE"
 
-export const _HighRollers_abi = 
+const _HighRollers_abi = 
 [
     {
       "inputs": [
@@ -179,3 +179,8 @@ export const _HighRollers_abi =
       "type": "receive"
     }
   ]
+
+module.exports = {
+  HighRollersAddress,
+  _HighRollers_abi
+}
