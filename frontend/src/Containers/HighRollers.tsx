@@ -12,6 +12,8 @@ import "./HighRollers.css";
 
 
 const ETHERSCAN_API_NFT_TXN = 'https://api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=';
+const ETHERSCAN_API_ABI = 'https://api.etherscan.io/api?module=contract&action=getabi&address='
+//&apikey=YourApiKeyToken
 const ETHERSCAN_API_KEY = 'FS4Q2NK8JQJ7DPD73R3G1S1T948RPY3JSI';
 
 
@@ -81,18 +83,21 @@ export default class HighRollers extends React.Component {
 
                 for (let i=0; i<=data.result.length; i++ ) {
                     if (tokens.length > 0) {
-                        try {
+                        //try {
+                        if (data.result[i]) {
+                            console.log(data.result[i])
                             //let x: any = tokens.find(token => token['tokenID'] !== data.result[i]['tokenID'])
-                            let index = tokens.findIndex(temp => temp['tokenID'] === data.result[i]['tokenID']);
+                            let index = tokens.findIndex(temp => (temp['tokenID'] === data.result[i]['tokenID']) && (temp['contractAddress'] === data.result[i]['contractAddress']));
                             if (index === -1) {
                                 tokens.push(data.result[i])
                             } else {
                                 tokens.splice(index, 1)
                             }
-                        } 
-                        catch(err) {
-                            console.log(err)
                         }
+                        //} 
+                        //catch(err) {
+                            //console.log(err)
+                        //}
                     }
                     else {
                         tokens.push(data.result[i])
@@ -115,7 +120,6 @@ export default class HighRollers extends React.Component {
             // PERFORM FETCH ABI REQUEST ON VERIFIED CONTRACT
             //console.log(token.contractAddress, address)
             for (let i=0; i<=tokens.length; i++ ) {
-                //try {
                 if (tokens[i]) {
                     //if (String(tokens[i].contractAddress) === '0x8f44a8b9059b2bc914c893eed250a2e1097ee187') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
                         let contract = new ethers.Contract(tokens[i].contractAddress, _abi, signer)
@@ -135,13 +139,9 @@ export default class HighRollers extends React.Component {
                                     gameTokens: [...this.state.gameTokens, tokens[i]]
                                 })
                             }
-                        })
+                        }).catch((err) => console.log(err))
                     //}
                 }
-                //}
-                //catch(err) {
-                    //console.log(err)
-                //}
             }
 
         }

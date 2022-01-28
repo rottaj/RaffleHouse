@@ -88,7 +88,7 @@ export default class RaffleCreator extends React.Component{
                 for (let i=0; i<=data.result.length; i++ ) {
                     if (tokens.length > 0) {
                         try {
-                            let index = tokens.findIndex(temp => temp['tokenID'] === data.result[i]['tokenID']);
+                            let index = tokens.findIndex(temp => (temp['tokenID'] === data.result[i]['tokenID']) && (temp['contractAddress'] === data.result[i]['contractAddress']));
                             if (index === -1) {
                                 tokens.push(data.result[i])
                             } else {
@@ -133,7 +133,7 @@ export default class RaffleCreator extends React.Component{
                                 //tokens: this.state.tokens.filter(tempToken => tempToken['tokenID'] !== tokens[i].tokenID)
                                 tokens: [...this.state.tokens, tokens[i]]
                             })
-                        })
+                        }).catch((err) => console.log(err))
                     //}
                 }
                 //}
