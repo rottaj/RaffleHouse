@@ -84,7 +84,7 @@ async function withDrawToWinner() { // Call when winner game is over --> Withdra
     var url = ETHERSCAN_API_NFT_TXN + currentGame.contractAddress + '&startblock=0&endblock=999999999&sort=asc&apikey=' + ETHERSCAN_API_KEY
     const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
     const gameInfo = await currentGameContract.getGameInfo();
-    if (gameInfo.winner != undefined) {
+    if (gameInfo.winner != undefined || "0x0000000000000000000000000000000000000000") {
       console.log("GAME WINNER", gameInfo.winner);
       request(url, async function(error, response, body) {
         let json = JSON.parse(response.body);
@@ -107,14 +107,15 @@ async function processCurrentGame() {
   console.log("PROCESSING CURRENT GAME", currentGame);
   const processCurrentGameTxn = await HighRollerContract.processGame(); // CALL HIGHROLLER CONTRACT ( PROCESS GAME )
   processCurrentGameTxn.wait(); // Wait for txn to go through
-  console.log("SUCCESSFULLY PROCESSED CURRENT GAME");
   console.log("GAME INFO", gameInfo)
-  console.log("WINNER", gameInfo.winner);
   console.log("TICKETS", parseInt(gameInfo.tickets));
-  if (gameInfo.winner != undefined) {
+  if (gameInfo.winner !== "0x0000000000000000000000000000000000000000") {
+    console.log("Winner is picked!", gameInfo.winner)
+    await withDrawToWinner();
     const HighRollersProcessTxn = await HighRollersContract.processCurrentGame(gameInfo.winner);
     HighRollersProcessTxn.wait()
   } else {
+    console.log("No Winner", gameInfo.winner)
     const HighRollersProcessTxn = await HighRollersContract.processCurrentGame("0x0000000000000000000000000000000000000000");
     HighRollersProcessTxn.wait()
   }
@@ -128,11 +129,10 @@ setInterval(async function() { // Call Every minute
   const currentGame = await HighRollersContract.getCurrentGame();
   const HighRollerContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer);
   const gameInfo = await HighRollerContract.getGameInfo();
-  if (gameInfo.winner != undefined || "0x0000000000000000000000000000000000000000") {
-    processCurrentGame();
-  } else {
-    withDrawToWinner();
-  }
+
+  if (gameInfo.winner != undefined) {
+    await processCurrentGame();
+  } 
 }, 30000)
 //}, 180000)
 
