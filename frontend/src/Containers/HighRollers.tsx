@@ -43,7 +43,8 @@ interface Token {
 interface CurrentGame {
     contractAddress: string,
     startTime: string,
-    timeLimit: string 
+    endTime: string, 
+    winner: string
 }
 
 
@@ -56,7 +57,7 @@ export default class HighRollers extends React.Component {
     state = {
         userTokens: [],
         gameTokens: [],
-        currentGame: {contractAddress: "", startTime: "", timeLimit: ""},
+        currentGame: {contractAddress: "", startTime: "", endTime: "", winner: ""},
         account: "",
         minutesLeft: "",
         secondsLeft: ""
@@ -177,7 +178,7 @@ export default class HighRollers extends React.Component {
 
     // START OF GAME INFO
     getCountDown = () => {
-        let dateString: any = this.state.currentGame.startTime + this.state.currentGame.timeLimit;
+        let dateString: any = this.state.currentGame.endTime;
         var now = new Date().getTime();
         var countDownDate = new Date(dateString).getTime();
         let distance = dateString - now;
@@ -211,7 +212,7 @@ export default class HighRollers extends React.Component {
             const currentHighRollerGame: any = await HighRollersContract.getCurrentGame();
             console.log("CURRENT HIGH ROLLERS GAME", currentHighRollerGame);
             // REFACTOR THIS
-            var currentGame: CurrentGame = {contractAddress: currentHighRollerGame['contractAddress'], startTime: currentHighRollerGame.startTime, timeLimit: currentHighRollerGame.timeLimit}
+            var currentGame: CurrentGame = {contractAddress: currentHighRollerGame['contractAddress'], startTime: currentHighRollerGame.startTime, endTime: currentHighRollerGame.endTime, winner: currentHighRollerGame.winner}
             this.setState({
                 currentGame: currentGame
             })
@@ -231,6 +232,7 @@ export default class HighRollers extends React.Component {
                 {this.state.currentGame.contractAddress ?
                     <div>
                         <h3 className="HighRollers-Current-Game-Address-h3">Contract Address: {this.state.currentGame.contractAddress}</h3>
+                        <h3 className="HighRollers-Current-Game-Winner-Address-h3">Winner: {this.state.currentGame.winner}</h3>
                         <h3 className="HighRollers-Current-Game-TimeLeft-h3"> Minutes: {this.state.minutesLeft} Seconds: {this.state.secondsLeft}</h3>
                     </div>
                 :

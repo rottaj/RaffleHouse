@@ -7,11 +7,12 @@ const HighRollers_Interface = require("./interfaces/HighRollers_Interface");
 const HighRoller_Interface = require("./interfaces/HighRoller_Interface");
 const request = require('request');
 const cors = require('cors');
+var bodyParser = require('body-parser')
 var app = require('express')();
 var http = require('http').createServer(app);
 require('dotenv').config();
-
-
+app.use(cors());
+var jsonParser = bodyParser.json();
 
 // GLOBAL VARIABLES
 const RINKEBY_URL = process.env.RINKEBY_URL;
@@ -36,9 +37,10 @@ http.listen(8080, () => {
   console.log("Listening on port 8080");
 })
 
-app.post('/submit-tickets-high-rollers', function (req, res) { // Create submit tickets route.
-  console.log("SUBMIT HIGH ROLLERS", req);
-  submitTickets(5, req.playerAddress); // testing w/ 5 tickets until I build opensea api connect
+app.post('/submit-tickets-high-rollers', jsonParser, function (req, res) { // Create submit tickets route.
+  console.log("SUBMIT HIGH ROLLERS", req.body);
+  submitTickets(5, req.body.playerAddress); // testing w/ 5 tickets until I build opensea api connect
+  
 })
 
 // END OF API ROUTES
@@ -60,14 +62,17 @@ async function getContract() { // GET CURRENT GAME CONTRACT { GAME INFO }
   const currentHighRollerGame = await HighRollersContract.getCurrentGame();
   return currentHighRollerGame
 }
+
 // END OF HELPER FUNCTIONS
 
 // START MAIN  FUNCTIONS
 async function submitTickets(ticketCount, playerAddress) { // Call when user deposits NFT --> Grab value from opensea api --> Push ticket count to Tickets[]
     getContract().then(async function(currentGame) {
       const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
-      const submitTicketTxn = currentGameContract.deposit(ticketCount, playerAddress);
+      const submitTicketTxn = await currentGameContract.deposit(ticketCount, playerAddress);
+      submitTicketTxn.wait();
       console.log(`SUBMITTED PLAYER ${playerAddress} TICKETS. \n TXN: `, submitTicketTxn)
+      //const processGameTxn = currentGameContract.processGame(); // JUST FOR TESTING (WILL BE INTERVAL)
     })
 }
 
@@ -77,21 +82,48 @@ async function withDrawToWinner() { // Call when winner game is over --> Withdra
     console.log(currentGame)
     console.log(currentGame.contractAddress)
     var url = ETHERSCAN_API_NFT_TXN + currentGame.contractAddress + '&startblock=0&endblock=999999999&sort=asc&apikey=' + ETHERSCAN_API_KEY
-    console.log("TESTING", currentGame.contractAddress)
     const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
-    request(url, async function(error, response, body) {
-      let json = JSON.parse(response.body);
-      console.log(json.result)
-      for (let key in json.result) {
-        console.log(key, json.result[key])
-        await currentGameContract.withDrawNFT(json.result[key].contractAddress, json.result[key].tokenID)
-      }
-    })
+    const gameInfo = currentGameContract.getGameInfo();
+    if (gameInfo.winner != undefined) {
+      console.log("GAME WINNER", gameInfo.winner);
+      request(url, async function(error, response, body) {
+        let json = JSON.parse(response.body);
+        console.log(json.result)
+        for (let key in json.result) {
+          console.log("Sending NFT", key, json.result[key])
+          const withDrawNFTTxn = currentGameContract.withDrawNFT(json.result[key].contractAddress, json.result[key].tokenID)
+          withDrawNFTTxn.wait();
+        }
+      })
+    }
   });
+}
+
+async function processCurrentGame() {
+  const HighRollersContract = new ethers.Contract(HighRollers_Interface.HighRollersAddress, HighRollers_Interface._HighRollers_abi, signer);
+  const currentGame = await HighRollersContract.getCurrentGame();
+  const HighRollerContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer);
+  const gameInfo = HighRollerContract.getGameInfo();
+  console.log("PROCESSING CURRENT GAME", currentGame);
+  const processCurrentGameTxn = await HighRollerContract.processGame(); // CALL HIGHROLLER CONTRACT ( PROCESS GAME )
+  processCurrentGameTxn.wait(); // Wait for txn to go through
+  console.log("SUCCESSFULLY PROCESSED CURRENT GAME")
+  console.log(gameInfo.winner)
+  if (gameInfo.winner != undefined) {
+    const HighRollersProcessTxn = await HighRollersContract.processCurrentGame(gameInfo.winner);
+    HighRollersProcessTxn.wait()
+  } else {
+    const HighRollersProcessTxn = await HighRollersContract.processCurrentGame("0x0000000000000000000000000000000000000000");
+    HighRollersProcessTxn.wait()
+  }
 }
 // END OF MAIN FUNCTIONS
 
 // BUILD INTERVAL FUNCTIONS TO CHECK TIME LIMIT
-//withDrawToWinner();
-
+setInterval(function() { // Call Every minute
+  //withDrawToWinner();
+  processCurrentGame();
+  withDrawToWinner();
+}, 30000)
+//}, 180000)
 

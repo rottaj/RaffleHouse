@@ -5,19 +5,48 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 
 
-contract HighRoller { // add VRF
+contract HighRoller is VRFConsumerBase { // add VRF
 
-    uint private timeLimit = 15 minutes;
-    uint private startTime = block.timestamp;
+    uint private timeLimit = 3 minutes;
+    uint private startTime;
+    uint private endTime;
     address private winner;
+    bytes32 keyhash;
+    uint256 private fee;
+    State state;
+
+    event WinnerPicked(bytes32 indexed requestId, uint256 indexed result);
+
+    constructor()
+        VRFConsumerBase(
+            0xb3dCcb4Cf7a26f6cf6B120Cf5A73875B7BBc655B,
+            0x01BE23585060835E02B77ef475b0Cc51aA1e0709    
+        ) public
+    {
+        startTime = block.timestamp;
+        endTime = block.timestamp + timeLimit;
+        keyhash = 0x2ed0feb3e7fd2022120aa84fab1945545a9f2ffc9076fd6156fa96eaff4c1311;
+        fee = 0.1 * 10 ** 18;
+        state = State.STARTED;
+    }
 
     struct GameInfo {
-        uint timeLimit;
         uint startTime;
+        uint endTime;
         address winner;
     }
 
+    enum State {STARTED, PROCESSING, ENDED}
+
     address[] tickets;
+
+    receive() external payable {}
+
+    function processGame() public {
+        if ((endTime <= block.timestamp) && (state == State.STARTED)) { // REMOVED FOR TESTING ( WILL ADD BACK LATER )
+            getRandomNumber();
+        }
+    }
 
     function deposit(uint256 _tickets, address _accountAddress) public {
         require(msg.sender != address(0), "DEPOSIT: INVALID ADDRESS");
@@ -26,6 +55,21 @@ contract HighRoller { // add VRF
             tickets.push(_accountAddress);
         }
     }
+
+
+    function getRandomNumber() private returns (bytes32 requestId) {
+        require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK");         
+        state = State.PROCESSING;
+        return requestRandomness(keyhash, fee);
+    }
+
+    function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
+        uint256 valueBetween = (randomness % tickets.length) + 1;
+        winner = tickets[valueBetween];
+        state = State.ENDED;
+        emit WinnerPicked(requestId, valueBetween);
+    }
+
 
     function withDrawNFT(address _collectionAddress, uint256 _tokenID) public {
         IERC721 collection = IERC721(_collectionAddress);
@@ -36,8 +80,8 @@ contract HighRoller { // add VRF
 
     function getGameInfo() public view returns (GameInfo memory) {
         GameInfo memory gameInfo = GameInfo({
-            timeLimit: timeLimit,
             startTime: startTime,
+            endTime: endTime,
             winner: winner
         });
         return gameInfo;
