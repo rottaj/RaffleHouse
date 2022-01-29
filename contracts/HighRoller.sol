@@ -34,6 +34,7 @@ contract HighRoller is VRFConsumerBase { // add VRF
         uint startTime;
         uint endTime;
         address winner;
+        uint256 tickets;
     }
 
     enum State {STARTED, PROCESSING, ENDED}
@@ -82,7 +83,8 @@ contract HighRoller is VRFConsumerBase { // add VRF
         GameInfo memory gameInfo = GameInfo({
             startTime: startTime,
             endTime: endTime,
-            winner: winner
+            winner: winner,
+            tickets: tickets.length
         });
         return gameInfo;
     }

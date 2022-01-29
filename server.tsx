@@ -78,12 +78,12 @@ async function submitTickets(ticketCount, playerAddress) { // Call when user dep
 
 
 async function withDrawToWinner() { // Call when winner game is over --> Withdraws all ERC721 tokens in current game to winner address.
-  getContract().then(function(currentGame) {
+  getContract().then(async function(currentGame) {
     console.log(currentGame)
     console.log(currentGame.contractAddress)
     var url = ETHERSCAN_API_NFT_TXN + currentGame.contractAddress + '&startblock=0&endblock=999999999&sort=asc&apikey=' + ETHERSCAN_API_KEY
     const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
-    const gameInfo = currentGameContract.getGameInfo();
+    const gameInfo = await currentGameContract.getGameInfo();
     if (gameInfo.winner != undefined) {
       console.log("GAME WINNER", gameInfo.winner);
       request(url, async function(error, response, body) {
@@ -91,7 +91,7 @@ async function withDrawToWinner() { // Call when winner game is over --> Withdra
         console.log(json.result)
         for (let key in json.result) {
           console.log("Sending NFT", key, json.result[key])
-          const withDrawNFTTxn = currentGameContract.withDrawNFT(json.result[key].contractAddress, json.result[key].tokenID)
+          const withDrawNFTTxn = await currentGameContract.withDrawNFT(json.result[key].contractAddress, json.result[key].tokenID)
           withDrawNFTTxn.wait();
         }
       })
@@ -103,12 +103,14 @@ async function processCurrentGame() {
   const HighRollersContract = new ethers.Contract(HighRollers_Interface.HighRollersAddress, HighRollers_Interface._HighRollers_abi, signer);
   const currentGame = await HighRollersContract.getCurrentGame();
   const HighRollerContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer);
-  const gameInfo = HighRollerContract.getGameInfo();
+  const gameInfo = await HighRollerContract.getGameInfo();
   console.log("PROCESSING CURRENT GAME", currentGame);
   const processCurrentGameTxn = await HighRollerContract.processGame(); // CALL HIGHROLLER CONTRACT ( PROCESS GAME )
   processCurrentGameTxn.wait(); // Wait for txn to go through
-  console.log("SUCCESSFULLY PROCESSED CURRENT GAME")
-  console.log(gameInfo.winner)
+  console.log("SUCCESSFULLY PROCESSED CURRENT GAME");
+  console.log("GAME INFO", gameInfo)
+  console.log("WINNER", gameInfo.winner);
+  console.log("TICKETS", parseInt(gameInfo.tickets));
   if (gameInfo.winner != undefined) {
     const HighRollersProcessTxn = await HighRollersContract.processCurrentGame(gameInfo.winner);
     HighRollersProcessTxn.wait()

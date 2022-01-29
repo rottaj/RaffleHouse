@@ -62,6 +62,11 @@ const _HighRoller_abi =
             "internalType": "address",
             "name": "winner",
             "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tickets",
+            "type": "uint256"
           }
         ],
         "internalType": "struct HighRoller.GameInfo",
