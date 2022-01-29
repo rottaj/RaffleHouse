@@ -1,11 +1,12 @@
 pragma solidity ^0.8.11;
 
+
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 
 
-contract HighRoller is VRFConsumerBase { // add VRF
+contract HighRoller is VRFConsumerBase, Ownable { // add VRF
 
     uint private timeLimit = 3 minutes;
     uint private startTime;

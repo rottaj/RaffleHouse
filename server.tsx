@@ -122,10 +122,17 @@ async function processCurrentGame() {
 // END OF MAIN FUNCTIONS
 
 // BUILD INTERVAL FUNCTIONS TO CHECK TIME LIMIT
-setInterval(function() { // Call Every minute
+setInterval(async function() { // Call Every minute
   //withDrawToWinner();
-  processCurrentGame();
-  withDrawToWinner();
+  const HighRollersContract = new ethers.Contract(HighRollers_Interface.HighRollersAddress, HighRollers_Interface._HighRollers_abi, signer);
+  const currentGame = await HighRollersContract.getCurrentGame();
+  const HighRollerContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer);
+  const gameInfo = await HighRollerContract.getGameInfo();
+  if (gameInfo.winner) {
+    processCurrentGame();
+  } else {
+    withDrawToWinner();
+  }
 }, 30000)
 //}, 180000)
 

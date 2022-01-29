@@ -36,7 +36,7 @@ contract HighRollers is Ownable{
     receive() external payable {}
 
     function processCurrentGame(address _winner) public onlyOwner {  // will be called from API
-        if (currentHighRollerGame.endTime <= block.timestamp && _winner != address(0)) { 
+        if ((currentHighRollerGame.endTime <= block.timestamp) && (_winner != address(0))) { 
             HighRoller newGame = new HighRoller(); // Automatically creates new game every 15 minutes
             createNewHighRollerGame(payable(address(newGame)));
         }
