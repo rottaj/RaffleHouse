@@ -128,7 +128,7 @@ setInterval(async function() { // Call Every minute
   const currentGame = await HighRollersContract.getCurrentGame();
   const HighRollerContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer);
   const gameInfo = await HighRollerContract.getGameInfo();
-  if (gameInfo.winner) {
+  if (gameInfo.winner != undefined || "0x0000000000000000000000000000000000000000") {
     processCurrentGame();
   } else {
     withDrawToWinner();

@@ -80,7 +80,7 @@ contract HighRoller is VRFConsumerBase, Ownable { // add VRF
 
     // VIEW FUNCTIONS 
 
-    function getGameInfo() public view returns (GameInfo memory) {
+    function getGameInfo() view external returns (GameInfo memory) {
         GameInfo memory gameInfo = GameInfo({
             startTime: startTime,
             endTime: endTime,

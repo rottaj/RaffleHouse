@@ -63,7 +63,7 @@ contract HighRollers is Ownable{
 
     // VIEW FUNCTIONS
 
-    function getCurrentGame() public view returns (HighRollerGame memory) {
+    function getCurrentGame() view external returns (HighRollerGame memory) {
         return currentHighRollerGame;
     }
 
