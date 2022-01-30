@@ -83,9 +83,9 @@ async function withDrawToWinner() { // Call when winner game is over --> Withdra
     console.log(currentGame.contractAddress)
     var url = ETHERSCAN_API_NFT_TXN + currentGame.contractAddress + '&startblock=0&endblock=999999999&sort=asc&apikey=' + ETHERSCAN_API_KEY
     const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
-    const gameInfo = await currentGameContract.getGameInfo();
-    if (gameInfo.winner != undefined || "0x0000000000000000000000000000000000000000") {
-      console.log("GAME WINNER", gameInfo.winner);
+    //const gameInfo = await currentGameContract.getGameInfo();
+    if (currentGame.winner != "0x0000000000000000000000000000000000000000") {
+      console.log("GAME WINNER", currentGame.winner);
       request(url, async function(error, response, body) {
         let json = JSON.parse(response.body);
         console.log(json.result)
@@ -101,38 +101,31 @@ async function withDrawToWinner() { // Call when winner game is over --> Withdra
 
 async function processCurrentGame() {
   const HighRollersContract = new ethers.Contract(HighRollers_Interface.HighRollersAddress, HighRollers_Interface._HighRollers_abi, signer);
-  const currentGame = await HighRollersContract.getCurrentGame();
-  const HighRollerContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer);
-  const gameInfo = await HighRollerContract.getGameInfo();
-  console.log("PROCESSING CURRENT GAME", currentGame);
-  const processCurrentGameTxn = await HighRollerContract.processGame(); // CALL HIGHROLLER CONTRACT ( PROCESS GAME )
-  processCurrentGameTxn.wait(); // Wait for txn to go through
-  console.log("GAME INFO", gameInfo)
-  console.log("TICKETS", parseInt(gameInfo.tickets));
-  if (gameInfo.winner !== "0x0000000000000000000000000000000000000000") {
-    console.log("Winner is picked!", gameInfo.winner)
-    await withDrawToWinner();
-    const HighRollersProcessTxn = await HighRollersContract.processCurrentGame(gameInfo.winner);
-    HighRollersProcessTxn.wait()
-  } else {
-    console.log("No Winner", gameInfo.winner)
-    const HighRollersProcessTxn = await HighRollersContract.processCurrentGame("0x0000000000000000000000000000000000000000");
-    HighRollersProcessTxn.wait()
-  }
+
+  await HighRollersContract.getCurrentGame().then(async function(currentGame) {
+    console.log(currentGame)
+    console.log("TESTING FOOOBAR", currentGame.winner)
+    if (currentGame.winner != undefined) {
+      if (currentGame.winner == "0x0000000000000000000000000000000000000000") {
+        const HighRollersProcessTxn = await HighRollersContract.processCurrentGame();
+        HighRollersProcessTxn.wait()
+      }
+      else {
+        await withDrawToWinner();
+      }
+    }
+
+  });
+
+
 }
 // END OF MAIN FUNCTIONS
 
 // BUILD INTERVAL FUNCTIONS TO CHECK TIME LIMIT
 setInterval(async function() { // Call Every minute
-  //withDrawToWinner();
-  const HighRollersContract = new ethers.Contract(HighRollers_Interface.HighRollersAddress, HighRollers_Interface._HighRollers_abi, signer);
-  const currentGame = await HighRollersContract.getCurrentGame();
-  const HighRollerContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer);
-  const gameInfo = await HighRollerContract.getGameInfo();
-
-  if (gameInfo.winner != undefined) {
-    await processCurrentGame();
-  } 
+  await processCurrentGame().then(function(txn) {
+    console.log("PROCESSING GAME")
+  });
 }, 30000)
 //}, 180000)
 

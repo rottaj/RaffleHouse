@@ -78,6 +78,11 @@ contract HighRoller is VRFConsumerBase, Ownable { // add VRF
         collection.transferFrom(address(this), winner, _tokenID); // Sends ERC721 Token to Winner
     }
 
+    function resetGame() public { // Might need to refactor, could cost us lots of gas
+        startTime = block.timestamp;
+        endTime = block.timestamp + timeLimit;
+    }
+
     // VIEW FUNCTIONS 
 
     function getGameInfo() view external returns (GameInfo memory) {
@@ -88,6 +93,14 @@ contract HighRoller is VRFConsumerBase, Ownable { // add VRF
             tickets: tickets.length
         });
         return gameInfo;
+    }
+
+    function getTickets() view public returns (uint256) {
+        return tickets.length;
+    }
+
+    function getWinner() view public returns (address) {
+        return winner;
     }
 
 }

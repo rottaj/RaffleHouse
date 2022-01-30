@@ -15,11 +15,13 @@ contract HighRollers is Ownable{
 
     constructor(address _chainLinkContractAddress) {
         chainLink = IERC20(_chainLinkContractAddress);
-        HighRoller startingGame = new HighRoller();
+        currentHighRollerContract = new HighRoller();
         currentHighRollerGame = HighRollerGame({ // create starting game ( Will have to manually send eth & Link for now)
-            contractAddress: payable(address(startingGame)),
+            contractAddress: payable(address(currentHighRollerContract)),
             startTime: block.timestamp,
-            endTime: block.timestamp + timeLimit
+            endTime: block.timestamp + timeLimit,
+            winner: address(0), 
+            tickets: 0
         });
     }
 
@@ -27,18 +29,37 @@ contract HighRollers is Ownable{
         address payable contractAddress;
         uint startTime;
         uint endTime;
+        address winner;
+        uint256 tickets;
     }
 
     HighRollerGame[] public  pastGames;
-    
     HighRollerGame public currentHighRollerGame;
+
+    HighRoller public currentHighRollerContract;
 
     receive() external payable {}
 
-    function processCurrentGame(address _winner) public onlyOwner {  // will be called from API
-        if ((currentHighRollerGame.endTime <= block.timestamp) && (_winner != address(0))) { 
-            HighRoller newGame = new HighRoller(); // Automatically creates new game every 15 minutes
-            createNewHighRollerGame(payable(address(newGame)));
+    function processCurrentGame() public onlyOwner {  // will be called from API
+        uint256 tickets = currentHighRollerContract.getTickets();
+        address winner = currentHighRollerContract.getWinner();
+        if (tickets > currentHighRollerGame.tickets) {
+            currentHighRollerGame.tickets = tickets;
+        }
+        if (winner != address(0)) {
+            currentHighRollerGame.winner = winner;
+        }
+        if ( currentHighRollerGame.endTime <= block.timestamp && currentHighRollerGame.winner != address(0) ) {  // Winner picked, game over.. create new game.
+            currentHighRollerContract = new HighRoller(); // Automatically creates new game every ( n ) minutes
+            createNewHighRollerGame(payable(address(currentHighRollerContract)));
+        }
+        else if (currentHighRollerGame.endTime <= block.timestamp && currentHighRollerGame.tickets > 0 ) { // Get winner
+            currentHighRollerContract.processGame();
+        }
+        else if (currentHighRollerGame.endTime <= block.timestamp && currentHighRollerGame.tickets == 0) { // Reset Game ( No Tickets )
+            currentHighRollerContract.resetGame();
+            currentHighRollerGame.startTime = block.timestamp;
+            currentHighRollerGame.endTime = block.timestamp + timeLimit;
         }
     }
 
@@ -48,7 +69,9 @@ contract HighRollers is Ownable{
         currentHighRollerGame = HighRollerGame({ // create new game
             contractAddress: _contractAddress,
             startTime: block.timestamp,
-            endTime: block.timestamp + timeLimit
+            endTime: block.timestamp + timeLimit,
+            winner: address(0),
+            tickets: 0
         });
         chainLink.transfer(_contractAddress, chainLinkFee); // send Link to new game
         _contractAddress.transfer(ethFee); // send eth to new game (txn fees)
@@ -66,5 +89,6 @@ contract HighRollers is Ownable{
     function getCurrentGame() view external returns (HighRollerGame memory) {
         return currentHighRollerGame;
     }
+
 
 }

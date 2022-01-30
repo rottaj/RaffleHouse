@@ -1,4 +1,4 @@
-const HighRollersAddress = "0x5848162363E4B0FEE08664F764D6a84cb5A7eA02"
+const HighRollersAddress = "0xBf0cE0A23e3a5E4c9Cf147B4A11e88fE20D2950e"
 
 const _HighRollers_abi = 
 [
@@ -67,6 +67,19 @@ const _HighRollers_abi =
   },
   {
     "inputs": [],
+    "name": "currentHighRollerContract",
+    "outputs": [
+      {
+        "internalType": "contract HighRoller",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "currentHighRollerGame",
     "outputs": [
       {
@@ -82,6 +95,16 @@ const _HighRollers_abi =
       {
         "internalType": "uint256",
         "name": "endTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "winner",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tickets",
         "type": "uint256"
       }
     ],
@@ -107,6 +130,16 @@ const _HighRollers_abi =
           {
             "internalType": "uint256",
             "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "winner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tickets",
             "type": "uint256"
           }
         ],
@@ -155,19 +188,23 @@ const _HighRollers_abi =
         "internalType": "uint256",
         "name": "endTime",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "winner",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tickets",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_winner",
-        "type": "address"
-      }
-    ],
+    "inputs": [],
     "name": "processCurrentGame",
     "outputs": [],
     "stateMutability": "nonpayable",
