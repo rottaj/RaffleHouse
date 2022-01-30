@@ -159,18 +159,21 @@ export default class HighRollers extends React.Component {
         const account = accounts.result[0];
         let selectedToken = this.tokenSelector.state.selectedToken;
         const collectionContract = await new ethers.Contract(selectedToken.contractAddress, _abi, signer);
-        const sendingTxn = await collectionContract.transferFrom(account, this.state.currentGame.contractAddress, selectedToken.tokenID).then(() => {
+        const sendingTxn = await collectionContract.transferFrom(account, this.state.currentGame.contractAddress, selectedToken.tokenID);
+        sendingTxn.wait();
+        if (sendingTxn) {
             const requestParameters = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tickets: 'This will be tickets (price from opensea api', playerAddress: account }) // CREATE REQUEST BODY
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tickets: 'This will be tickets (price from opensea api', playerAddress: account }) // CREATE REQUEST BODY
             };
             fetch('http://127.0.0.1:8080/submit-tickets-high-rollers', requestParameters).then(res => { // FETCH TO HIGHROLLER API
                 return res.json()
             }).then(data => {
                 console.log(data)
             })
-        });
+        }
+
     }
 
     // END OF DEPOSITS
