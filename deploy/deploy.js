@@ -52,7 +52,8 @@ const main = async() => {
     console.log("SENT ETHER TO HIGHROLLERS")
   });
 
-  ChainLinkContract.transfer(HighRollersContract.address, ethers.utils.parseUnits("0.2"));
+  const chainLinkTxn_One = await ChainLinkContract.transfer(HighRollersContract.address, ethers.utils.parseUnits("0.2"));
+  //chainLinkTxn_One.wait();
 
 
   // SEND ETH & LINK TO FIRST GAME
@@ -71,7 +72,8 @@ const main = async() => {
     console.log("SENT ETHER TO STARTING GAME", startingGame.contractAddress)
   });
 
-  ChainLinkContract.transfer(startingGame.contractAddress, ethers.utils.parseUnits("0.1"));
+  const chainLinkTxn_Two = await ChainLinkContract.transfer(startingGame.contractAddress, ethers.utils.parseUnits("0.1"));
+  //chainLinkTxn_Two.wait();
   console.log("HIGH ROLLERS DEPLOYMENT FINISHED")
  
 
