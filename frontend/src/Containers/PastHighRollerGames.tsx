@@ -39,7 +39,7 @@ export default class PastHighRollerGames extends React.Component {
                     <div>
                         {this.state.pastGames.map( (game: any) => {
                             return (
-                                <HighRollerGame winner={game.winner} tickets={parseInt(game.tickets)} /> 
+                                <HighRollerGame winner={game.winner} tickets={parseInt(game.tickets)} contractAddress={game.contractAddress}/> 
                             )
                         })}
                     </div>
