@@ -1,4 +1,4 @@
-const HighRollersAddress = "0xBf0cE0A23e3a5E4c9Cf147B4A11e88fE20D2950e"
+const HighRollersAddress = "0x4aa0383049DbfE3d0D1F65231A961BDcD79f8216"
 
 const _HighRollers_abi = 
 [
@@ -146,6 +146,65 @@ const _HighRollers_abi =
         "internalType": "struct HighRollers.HighRollerGame",
         "name": "",
         "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getPastGameByIndex",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address payable",
+            "name": "contractAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "startTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "winner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tickets",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct HighRollers.HighRollerGame",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getPastGames",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",

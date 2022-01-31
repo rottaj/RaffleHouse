@@ -6,6 +6,7 @@ import MenuItems from "../Components/MenuItems";
 import Messages from "../Components/Messages";
 import NFTSelector from "../Components/NFTSelector";
 import HighRollerDeposits from "../Components/HighRollerDeposits";
+import PastHighRollerGames from "./PastHighRollerGames";
 import Button from '@mui/material/Button';
 import "./HighRollers.css";
 
@@ -74,7 +75,6 @@ export default class HighRollers extends React.Component {
             // PERFORM FETCH ABI REQUEST ON VERIFIED CONTRACT
             //console.log(token.contractAddress, address)
             var accounts = await window.ethereum.send('eth_requestAccounts');
-            console.log(accounts.result[0])
             var url = ETHERSCAN_API_NFT_TXN + address + '&startblock=0&endblock=999999999&sort=asc&apikey=' + ETHERSCAN_API_KEY
             fetch(url).then(res => {
                 return res.json();
@@ -86,7 +86,6 @@ export default class HighRollers extends React.Component {
                     if (tokens.length > 0) {
                         //try {
                         if (data.result[i]) {
-                            console.log(data.result[i])
                             //let x: any = tokens.find(token => token['tokenID'] !== data.result[i]['tokenID'])
                             let index = tokens.findIndex(temp => (temp['tokenID'] === data.result[i]['tokenID']) && (temp['contractAddress'] === data.result[i]['contractAddress']));
                             if (index === -1) {
@@ -104,7 +103,6 @@ export default class HighRollers extends React.Component {
                         tokens.push(data.result[i])
                     }
                 }
-                console.log("TOKENS", tokens)
                 this.getMetaData(tokens, stateName)
             })
             
@@ -152,7 +150,6 @@ export default class HighRollers extends React.Component {
     // START OF DEPOSITS
 
     handleDeposit = async () => {
-        console.log("handle submit")
         var provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         var accounts = await window.ethereum.send('eth_requestAccounts');
@@ -213,7 +210,6 @@ export default class HighRollers extends React.Component {
             const signer = provider.getSigner();
             const HighRollersContract = new ethers.Contract(HighRollersAddress, _HighRollers_abi, signer);
             const currentHighRollerGame: any = await HighRollersContract.getCurrentGame();
-            console.log("CURRENT HIGH ROLLERS GAME", currentHighRollerGame);
             // REFACTOR THIS
             var currentGame: CurrentGame = {contractAddress: currentHighRollerGame['contractAddress'], startTime: currentHighRollerGame.startTime, endTime: currentHighRollerGame.endTime, winner: currentHighRollerGame.winner}
             this.setState({
@@ -249,6 +245,7 @@ export default class HighRollers extends React.Component {
                     Deposit 
                 </Button>
                 <NFTSelector tokens={this.state.userTokens}  ref={(tokenSelector) => this.tokenSelector = tokenSelector}/>
+                <PastHighRollerGames/>
             </div>
         )
     }

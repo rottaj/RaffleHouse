@@ -86,6 +86,14 @@ contract HighRollers is Ownable{
 
     // VIEW FUNCTIONS
 
+    function getPastGames() view public returns (uint256) {
+        return pastGames.length;
+    }
+
+    function getPastGameByIndex(uint256 _index) view public returns (HighRollerGame memory) {
+        return pastGames[_index];
+    }
+
     function getCurrentGame() view external returns (HighRollerGame memory) {
         return currentHighRollerGame;
     }

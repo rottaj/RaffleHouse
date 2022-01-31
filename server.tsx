@@ -101,9 +101,13 @@ async function withDrawToWinner() { // Call when winner game is over --> Withdra
 
 async function processCurrentGame() {
   const HighRollersContract = new ethers.Contract(HighRollers_Interface.HighRollersAddress, HighRollers_Interface._HighRollers_abi, signer);
-
   await HighRollersContract.getCurrentGame().then(async function(currentGame) {
+
+    const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
+    const gameInfo = await currentGameContract.getGameInfo();
+    console.log("GAME INFO", gameInfo)
     console.log(currentGame)
+    console.log("TESTING GAME INF", gameInfo.winner)
     console.log("TESTING FOOOBAR", currentGame.winner)
     if (currentGame.winner != undefined) {
       if (currentGame.winner == "0x0000000000000000000000000000000000000000") {
