@@ -1,4 +1,4 @@
-export const HighRollersAddress = "0x19A0a2ca336c734Eb0FB4E6E0bBaC2F0d541C02F"
+export const HighRollersAddress = "0x313cc5bb6178D73b14B36f5d155f64829dF2DfF3"
 
 export const _HighRollers_abi = 
 [
@@ -44,13 +44,6 @@ export const _HighRollers_abi =
       ],
       "name": "OwnershipTransferred",
       "type": "event"
-    },
-    {
-      "inputs": [],
-      "name": "addCurrentGameToPastGames",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
     },
     {
       "inputs": [

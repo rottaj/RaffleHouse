@@ -90,9 +90,12 @@ async function withDrawToWinner() { // Call when winner game is over --> Withdra
         let json = JSON.parse(response.body);
         console.log(json.result)
         for (let key in json.result) {
-          console.log("Sending NFT", key, json.result[key])
-          const withDrawNFTTxn = await currentGameContract.withDrawNFT(json.result[key].contractAddress, json.result[key].tokenID)
-          withDrawNFTTxn.wait();
+          try { // Just for testing now
+            console.log("Sending NFT", key, json.result[key])
+            const withDrawNFTTxn = await currentGameContract.withDrawNFT(json.result[key].contractAddress, json.result[key].tokenID)
+            withDrawNFTTxn.wait();
+          } catch( err ) { console.log("Err", err )} // Just for now
+
         }
       })
     }

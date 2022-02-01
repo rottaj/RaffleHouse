@@ -81,14 +81,15 @@ contract HighRollers is Ownable{
         emit NewGameCreated(_contractAddress);
     }
 
-    function addCurrentGameToPastGames() public {
-        if (currentHighRollerGame.contractAddress != address(0)) { // check if struct is empty ( for initializing )
+    function addCurrentGameToPastGames() private {
+        if (currentHighRollerGame.contractAddress != address(0)) { // for initializing
             pastGames.push(currentHighRollerGame);
         }
     }
 
     function updateStatus() external {
         currentHighRollerGame.status = 1;
+        processCurrentGame();
     }
 
     // VIEW FUNCTIONS

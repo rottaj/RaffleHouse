@@ -41,7 +41,7 @@ contract HighRoller is VRFConsumerBase, Ownable { // add VRF
 
     enum State {STARTED, PROCESSING, PROCESSED}
 
-    address[] tickets;
+    address[] private tickets;
 
     receive() external payable {}
 
