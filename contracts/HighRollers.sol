@@ -21,7 +21,8 @@ contract HighRollers is Ownable{
             startTime: block.timestamp,
             endTime: block.timestamp + timeLimit,
             winner: address(0), 
-            tickets: 0
+            tickets: 0,
+            status: 0
         });
     }
 
@@ -31,6 +32,7 @@ contract HighRollers is Ownable{
         uint endTime;
         address winner;
         uint256 tickets;
+        uint8 status;
     }
 
     HighRollerGame[] public  pastGames;
@@ -49,7 +51,7 @@ contract HighRollers is Ownable{
         if (winner != address(0)) {
             currentHighRollerGame.winner = winner;
         }
-        if ( currentHighRollerGame.endTime <= block.timestamp && currentHighRollerGame.winner != address(0) ) {  // Winner picked, game over.. create new game.
+        if ( currentHighRollerGame.endTime <= block.timestamp && currentHighRollerGame.winner != address(0) && currentHighRollerGame.status == 1) {  // Winner picked, game over.. create new game.
             currentHighRollerContract = new HighRoller(); // Automatically creates new game every ( n ) minutes
             createNewHighRollerGame(payable(address(currentHighRollerContract)));
         }
@@ -71,7 +73,8 @@ contract HighRollers is Ownable{
             startTime: block.timestamp,
             endTime: block.timestamp + timeLimit,
             winner: address(0),
-            tickets: 0
+            tickets: 0,
+            status: 0
         });
         chainLink.transfer(_contractAddress, chainLinkFee); // send Link to new game
         _contractAddress.transfer(ethFee); // send eth to new game (txn fees)
@@ -82,6 +85,10 @@ contract HighRollers is Ownable{
         if (currentHighRollerGame.contractAddress != address(0)) { // check if struct is empty ( for initializing )
             pastGames.push(currentHighRollerGame);
         }
+    }
+
+    function updateStatus() external {
+        currentHighRollerGame.status = 1;
     }
 
     // VIEW FUNCTIONS

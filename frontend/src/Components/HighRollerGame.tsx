@@ -1,6 +1,5 @@
 import React from 'react';
 import { ethers } from 'ethers';
-import { _HighRoller_abi } from "../interfaces/HighRoller_Interface";
 import { _HighRollers_abi } from '../interfaces/HighRollers_Interface';
 import "./HighRollerGame.css";
 

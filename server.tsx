@@ -96,7 +96,11 @@ async function withDrawToWinner() { // Call when winner game is over --> Withdra
         }
       })
     }
-  });
+  })
+  .then(async function() { // Update game status after NFT's withdrawl --> 1
+    const HighRollersContract = new ethers.Contract(HighRollers_Interface.HighRollersAddress, HighRollers_Interface._HighRollers_abi, signer);
+    await HighRollersContract.updateStatus();
+  })
 }
 
 async function processCurrentGame() {

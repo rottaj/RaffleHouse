@@ -36,9 +36,10 @@ contract HighRoller is VRFConsumerBase, Ownable { // add VRF
         uint endTime;
         address winner;
         uint256 tickets;
+        uint8 status;
     }
 
-    enum State {STARTED, PROCESSING, ENDED}
+    enum State {STARTED, PROCESSING, PROCESSED}
 
     address[] tickets;
 
@@ -68,7 +69,7 @@ contract HighRoller is VRFConsumerBase, Ownable { // add VRF
     function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
         uint256 valueBetween = (randomness % tickets.length) + 1;
         winner = tickets[valueBetween];
-        state = State.ENDED;
+        state = State.PROCESSED;
         emit WinnerPicked(requestId, valueBetween);
     }
 
@@ -85,12 +86,13 @@ contract HighRoller is VRFConsumerBase, Ownable { // add VRF
 
     // VIEW FUNCTIONS 
 
-    function getGameInfo() view external returns (GameInfo memory) {
+    function getGameInfo() view public returns (GameInfo memory) {
         GameInfo memory gameInfo = GameInfo({
             startTime: startTime,
             endTime: endTime,
             winner: winner,
-            tickets: tickets.length
+            tickets: tickets.length,
+            status: uint8(state)
         });
         return gameInfo;
     }
@@ -102,5 +104,6 @@ contract HighRoller is VRFConsumerBase, Ownable { // add VRF
     function getWinner() view public returns (address) {
         return winner;
     }
+
 
 }
