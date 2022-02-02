@@ -17,6 +17,11 @@ const ETHERSCAN_API_ABI = 'https://api.etherscan.io/api?module=contract&action=g
 //&apikey=YourApiKeyToken
 const ETHERSCAN_API_KEY = 'FS4Q2NK8JQJ7DPD73R3G1S1T948RPY3JSI';
 
+const OPENSEA_CONTRACT_URL = "https://testnets-api.opensea.io/api/v1/asset_contract/";
+const OPENSEA_ASSET_URL = "https://testnets-api.opensea.io/api/v1/asset/" // ContractAddress + '/' + id
+
+
+
 
 interface Token {
     blockHash: string;
@@ -104,11 +109,13 @@ export default class HighRollers extends React.Component {
                     }
                 }
                 this.getMetaData(tokens, stateName)
+                this.getOpenSeaPrice(tokens, stateName)
             })
             
 
         }
     }
+
 
     getMetaData = async (tokens: any, stateName: string) => {
         if (window.ethereum) {
@@ -139,12 +146,34 @@ export default class HighRollers extends React.Component {
                                 })
                             }
                         }).catch((err) => console.log(err))
+
                     //}
                 }
             }
 
         }
     }
+
+    getOpenSeaPrice = async (tokens: any, stateName: string) => {
+        if (window.ethereum) {
+            for (let i=0; i<=tokens.length; i++ ) {
+                this.doSetTimeout(i)
+                if (tokens[i]) {
+                    let url = OPENSEA_ASSET_URL + tokens[i].contractAddress + '/' + tokens[i].tokenID
+                    fetch(url).then(res => {
+                        return res.json();
+                    }).then((data) => {
+                        console.log("TOKEN OPENSEA DATA", data)
+                    })
+                }
+            }
+        }
+    }
+
+    doSetTimeout(i: number) {
+        setTimeout(function() { alert(i); }, 10000);
+    }
+
 
     // END OF HANDLING USER TOKENS
     // START OF DEPOSITS

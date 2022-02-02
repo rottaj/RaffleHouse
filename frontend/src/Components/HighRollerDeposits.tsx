@@ -13,7 +13,9 @@ declare let window: any;
 export default class HighRollerDeposits extends React.Component <Props>{
 
     componentDidMount() {
-        this.getOpenSeaData(this.props.tokens[0])
+        console.log("HIGHROLLERDEPOSIT MOUNTED");
+        console.log(this.props.tokens)
+        this.getOpenSeaData(this.props.tokens[0]);
     }
 
 
