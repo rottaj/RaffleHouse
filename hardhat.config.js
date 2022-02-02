@@ -3,7 +3,7 @@ require("hardhat-deploy");
 require("dotenv").config();
 
 const RINKEBY_URL = process.env.RINKEBY_URL;
-const PHRASE = process.env.PHRASE;
+const PHRASE = process.env.SERVER_PHRASE;
 module.exports = {
   solidity: "0.8.11",
   networks: {

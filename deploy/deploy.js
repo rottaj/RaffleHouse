@@ -6,7 +6,7 @@ const { parseEther } = require('ethers/lib/utils');
 
 require('dotenv').config()
 const RINKEBY_URL = process.env.RINKEBY_URL;
-const PHRASE = process.env.PHRASE;
+const PHRASE = process.env.SERVER_PHRASE;
 
 const main = async() => {
   const abi = JSON.parse(LinkInterface._abi_two.result);

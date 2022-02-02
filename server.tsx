@@ -2,6 +2,7 @@
 // WALLET REQUIRES ETH & LINK TO OPERATE W/ CONTRACTS.
 // EDIT PHRASE IN .ENV TO CHANGE WALLET ADDRESS.
 
+
 const ethers = require('ethers');
 const HighRollers_Interface = require("./interfaces/HighRollers_Interface");
 const HighRoller_Interface = require("./interfaces/HighRoller_Interface");
@@ -16,7 +17,7 @@ var jsonParser = bodyParser.json();
 
 // GLOBAL VARIABLES
 const RINKEBY_URL = process.env.RINKEBY_URL;
-const PHRASE = process.env.PHRASE;
+const PHRASE = process.env.SERVER_PHRASE; // Node Server
 
 const ETHERSCAN_API_NFT_TXN = 'https://api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=';
 const ETHERSCAN_API_KEY = 'FS4Q2NK8JQJ7DPD73R3G1S1T948RPY3JSI';
@@ -65,6 +66,11 @@ async function getContract() { // GET CURRENT GAME CONTRACT { GAME INFO }
 
 // END OF HELPER FUNCTIONS
 
+async function updateGameStatus() {
+    const HighRollersContract = new ethers.Contract(HighRollers_Interface.HighRollersAddress, HighRollers_Interface._HighRollers_abi, signer);
+    await HighRollersContract.updateStatus();
+}
+
 // START MAIN  FUNCTIONS
 async function submitTickets(ticketCount, playerAddress) { // Call when user deposits NFT --> Grab value from opensea api --> Push ticket count to Tickets[]
     getContract().then(async function(currentGame) {
@@ -79,31 +85,34 @@ async function submitTickets(ticketCount, playerAddress) { // Call when user dep
 
 async function withDrawToWinner() { // Call when winner game is over --> Withdraws all ERC721 tokens in current game to winner address.
   getContract().then(async function(currentGame) {
-    console.log(currentGame)
-    console.log(currentGame.contractAddress)
     var url = ETHERSCAN_API_NFT_TXN + currentGame.contractAddress + '&startblock=0&endblock=999999999&sort=asc&apikey=' + ETHERSCAN_API_KEY
     const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
     //const gameInfo = await currentGameContract.getGameInfo();
     if (currentGame.winner != "0x0000000000000000000000000000000000000000") {
-      console.log("GAME WINNER", currentGame.winner);
+      var tokens = []; // maybe keep json request length as variable? ( To make this suck even more )
       request(url, async function(error, response, body) {
         let json = JSON.parse(response.body);
         console.log(json.result)
         for (let key in json.result) {
-          try { // Just for testing now
-            console.log("Sending NFT", key, json.result[key])
-            const withDrawNFTTxn = await currentGameContract.withDrawNFT(json.result[key].contractAddress, json.result[key].tokenID)
-            withDrawNFTTxn.wait();
-          } catch( err ) { console.log("Err", err )} // Just for now
-
+          let index = tokens.findIndex(temp => (temp['tokenID'] === json.result[key]['tokenID']) && (temp['contractAddress'] === json.result[key]['contractAddress']));
+          if (index === -1) {
+              tokens.push(json.result[key])
+          } else {
+              tokens.splice(index, 1)
+          }
         }
+        for (let token in tokens) {
+          if (tokens[token]) { // Just for testing now
+            console.log("Sending NFT", tokens[token])
+            const withDrawNFTTxn = await currentGameContract.withDrawNFT(tokens[token].contractAddress, tokens[token].tokenID)
+            withDrawNFTTxn.wait();
+          } //catch( err ) { console.log("Err", err )} // Just for now
+        }
+        updateGameStatus() // THIS WHOLE FUNCTION FUCKING SUCKS.... I SUCK
       })
     }
   })
-  .then(async function() { // Update game status after NFT's withdrawl --> 1
-    const HighRollersContract = new ethers.Contract(HighRollers_Interface.HighRollersAddress, HighRollers_Interface._HighRollers_abi, signer);
-    await HighRollersContract.updateStatus();
-  })
+
 }
 
 async function processCurrentGame() {
@@ -112,16 +121,19 @@ async function processCurrentGame() {
 
     const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
     const gameInfo = await currentGameContract.getGameInfo();
-    console.log("GAME INFO", gameInfo)
     console.log(currentGame)
-    console.log("TESTING GAME INF", gameInfo.winner)
-    console.log("TESTING FOOOBAR", currentGame.winner)
-    if (currentGame.winner != undefined) {
-      if (currentGame.winner == "0x0000000000000000000000000000000000000000") {
+    console.log("TESTING GAMEINFO", gameInfo.winner)
+    console.log("TESTING CURRENTGAME", currentGame.winner)
+    console.log("TESTING STATUS", currentGame.status)
+    if (currentGame.winner !== undefined) {
+      if (currentGame.winner === "0x0000000000000000000000000000000000000000" || currentGame.status === 1) {
+        console.log("PROCESSING GAME")
         const HighRollersProcessTxn = await HighRollersContract.processCurrentGame();
         HighRollersProcessTxn.wait()
       }
+
       else {
+        console.log("WITHDRAWING TOKENS")
         await withDrawToWinner();
       }
     }
@@ -137,6 +149,7 @@ setInterval(async function() { // Call Every minute
   await processCurrentGame().then(function(txn) {
     console.log("PROCESSING GAME")
   });
+//}, 2000)
 }, 30000)
 //}, 180000)
 
