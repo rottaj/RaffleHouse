@@ -19,7 +19,7 @@ export default class HighRollerGame extends React.Component <Props>{
 
     render() {
         return (
-            <div>
+            <div className="PastHighRollerGame-Main-Div">
                 <h3 className="PastHighRollerGame-Winner-h3">Winner: {this.props.winner}</h3>
                 <h3 className="PastHighRollerGame-Tickets-h3">Tickets: {this.props.tickets}</h3>
                 <h6 className="PastHighRollerGame-Address-h6">Contract: {this.props.contractAddress}</h6>

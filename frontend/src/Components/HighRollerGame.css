@@ -1,17 +1,26 @@
+.PastHighRollerGame-Main-Div {
+    background: #211c1c;
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-top: 1%;
+    -moz-border-radius: 20px; /* or 50% */
+    border-radius: 20px; /* or 50% */
+}
+
 .PastHighRollerGame-Winner-h3 {
     color: rgb(255, 242, 145);
-    text-shadow: rgb(203, 176, 204) 3px 3px;
+    /*text-shadow: rgb(203, 176, 204) 3px 3px; */
     font-size: 30px;
 }
 
 .PastHighRollerGame-Tickets-h3 {
     color: rgb(255, 242, 145);
-    text-shadow: rgb(203, 176, 204) 3px 3px;
+    /*text-shadow: rgb(203, 176, 204) 3px 3px; */
     font-size: 30px;
 }
 
 .PastHighRollerGame-Address-h6 {
     color: rgb(255, 242, 145);
-    text-shadow: rgb(203, 176, 204) 3px 3px;
+    /*text-shadow: rgb(203, 176, 204) 3px 3px; */
     font-size: 20px;
 }
