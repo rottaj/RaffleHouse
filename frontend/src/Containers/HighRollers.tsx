@@ -156,9 +156,12 @@ export default class HighRollers extends React.Component {
 
     getOpenSeaPrice = async (tokens: any, stateName: string) => {
         if (window.ethereum) {
-            for (let i=0; i<=tokens.length; i++ ) {
-                this.doSetTimeout(i)
-                if (tokens[i]) {
+            let i =0
+            setTimeout(function() {
+                alert("Fetching Opensea")
+                console.log("TESTING TIMEOUT", tokens.length)
+                if (tokens[i] && i<= tokens.length) {
+                    console.log("TESTING", tokens[i])
                     let url = OPENSEA_ASSET_URL + tokens[i].contractAddress + '/' + tokens[i].tokenID
                     fetch(url).then(res => {
                         return res.json();
@@ -166,14 +169,10 @@ export default class HighRollers extends React.Component {
                         console.log("TOKEN OPENSEA DATA", data)
                     })
                 }
-            }
+                i++;
+            }, 3000)
         }
     }
-
-    doSetTimeout(i: number) {
-        setTimeout(function() { alert(i); }, 10000);
-    }
-
 
     // END OF HANDLING USER TOKENS
     // START OF DEPOSITS
