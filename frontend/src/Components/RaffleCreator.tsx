@@ -103,7 +103,6 @@ export default class RaffleCreator extends React.Component{
                         tokens.push(data.result[i])
                     }
                 }
-                console.log("TOKENS", tokens)
                 this.getMetaData(tokens)
             })
             
@@ -122,11 +121,9 @@ export default class RaffleCreator extends React.Component{
             for (let i=0; i<=tokens.length; i++ ) {
                 //try {
                 if(tokens[i]) {
-                    console.log("TESTING TOKEN METADATA", tokens[i], tokens.length)
                     //if (String(tokens[i].contractAddress) === '0x8f44a8b9059b2bc914c893eed250a2e1097ee187') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
                         let contract = new ethers.Contract(tokens[i].contractAddress, _abi, signer)
                         let metaData = await contract.tokenURI(parseInt(tokens[i].tokenID))
-                        console.log("METADATA", metaData)
                         fetch(metaData).then(res => {return res.json()}).then(data => {
                             tokens[i]['image'] = data.image
                             this.setState({
@@ -153,7 +150,6 @@ export default class RaffleCreator extends React.Component{
 
     handleSubmit = async (e: any) => {
         e.preventDefault();
-        console.log("SELECTED TOKEN HDSKLFKJLSDF", this.tokenSelector.state.selectedToken);
         if (window.ethereum) {
             var accounts = await window.ethereum.send('eth_requestAccounts');
             var provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -186,7 +182,6 @@ export default class RaffleCreator extends React.Component{
         return (
             <div className="CreateRaffleForm-Main" >
                 <div className="PopUpRaffle-Form">
-                    {console.log("TESTING STATE FOOBAR", this.state.tokens)}
                     <h3 className="CreateRaffle-h3">Create your Raffle!</h3>
                     <NFTSelector tokens={this.state.tokens} ref={(tokenSelector) => this.tokenSelector = tokenSelector}/>
                     <div className="CreateRaffle-Form-Container">

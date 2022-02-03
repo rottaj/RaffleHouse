@@ -4,7 +4,11 @@ interface Props {
     token: any;
 }
 
+
 export default class NFT extends React.Component<Props> {
+
+
+
     render() {
         return (
             <div className="NFT-Main-Container">

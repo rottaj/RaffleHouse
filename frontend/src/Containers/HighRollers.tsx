@@ -109,6 +109,7 @@ export default class HighRollers extends React.Component {
                     }
                 }
                 this.getMetaData(tokens, stateName);
+                //this.getOpenSeaPrice(tokens, stateName);
             })
             
 
