@@ -157,8 +157,7 @@ export default class HighRollers extends React.Component {
     getOpenSeaPrice = async (tokens: any, stateName: string) => {
         if (window.ethereum) {
             let i =0
-            setTimeout(function() {
-                alert("Fetching Opensea")
+            var interval = setInterval(function() {
                 console.log("TESTING TIMEOUT", tokens.length)
                 if (tokens[i] && i<= tokens.length) {
                     console.log("TESTING", tokens[i])
@@ -168,7 +167,7 @@ export default class HighRollers extends React.Component {
                     }).then((data) => {
                         console.log("TOKEN OPENSEA DATA", data)
                     })
-                }
+                } else {clearInterval(interval)}
                 i++;
             }, 3000)
         }
