@@ -39,31 +39,37 @@ export default class NFTSelector extends React.Component <Props>{
         var interval = setInterval(() => {
             if (tokens[i] != undefined && i<= tokens.length) {
                 //let tokens = [...this.state.userTokens];
-                let url = OPENSEA_ASSET_URL + tokens[i].contractAddress + '/' + tokens[i].tokenID
-                fetch(url).then(res => {
-                    return res.json();
-                }).then((data) => {
-                    if (data) {
-                        let token = tokens[i];
-                        token['price'] = String(data.collection.payment_tokens[0].eth_price);
-                        tokens[i] = token;
-                        console.log("TESTING TOKEN UPDATE", tokens[i])
-                        this.setState({
-                            tokens: [...this.state.tokens, token]
-                        })
-                    }
+                if (tokens[i]) {
+                    console.log(tokens[i])
+                    let url = OPENSEA_ASSET_URL + tokens[i].contractAddress + '/' + tokens[i].tokenID
+                    fetch(url).then(res => {
+                        return res.json();
+                    }).then((data) => {
+                        if (data) {
+                            let token = tokens[i];
 
-                })
+                            token['price'] = String(data.collection.payment_tokens[0].eth_price);
+                            tokens[i] = token;
+                            console.log("TESTING TOKEN UPDATE", tokens[i])
+                            this.setState({
+                                tokens: [...this.state.tokens, token]
+                            })
+                        }
+
+                    })
+                }
             } else {
                 clearInterval(interval)
             }
             i++;
-        }, 3000)
+        }, 6000)
 
     }
 
-    componentDidMount() {
-        this.getOpenSeaPrice(this.props.tokens)
+    componentDidUpdate() {
+        if ( this.state.tokens.length ===0 ) {
+            //this.getOpenSeaPrice(this.props.tokens)
+        }
     }
 
     render() {
@@ -72,7 +78,7 @@ export default class NFTSelector extends React.Component <Props>{
                 {/*this.state.tokens.map(token => {this.getMetaData(token)})*/}
                 {/*<Grid className="NFTSelector-Grid-Container" container spacing={2}> */}
                 { this.props.tokens ?
-                    this.state.tokens.map(token => {return (<div className="NFT-Div-Container" onClick={() => this.handleClick(token)}><NFT token={token}></NFT></div>)})
+                    this.props.tokens.map(token => {return (<div className="NFT-Div-Container" onClick={() => this.handleClick(token)}><NFT token={token}></NFT></div>)})
                     :
                     <h5>No Tokens</h5>
                 }
