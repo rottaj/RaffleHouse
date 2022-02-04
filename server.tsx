@@ -150,6 +150,7 @@ setInterval(async function() { // Call Every minute
     console.log("PROCESSING GAME")
   });
 //}, 2000)
-}, 30000)
+//}, 30000)
+}, 60000)
 //}, 180000)
 

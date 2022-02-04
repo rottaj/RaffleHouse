@@ -1,4 +1,4 @@
-export const HighRollersAddress = "0xa06331CfA2D2586c6e71d60e5081795E0b21ba71"
+export const HighRollersAddress = "0x21dA19cc94B19FC44836BFef6B8504b7257ca74E"
 
 export const _HighRollers_abi = 
 [

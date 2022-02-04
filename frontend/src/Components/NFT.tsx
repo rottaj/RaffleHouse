@@ -22,7 +22,7 @@ export default class NFT extends React.Component<Props> {
     getOpenSeaPrice = async (token: any) => {
         let i =0;
         var interval = setInterval(() => {
-            if (token !== undefined && token !== 'undefined' && i ===0) {
+            if (token !== undefined && token !== 'undefined' && i >=0) {
                 //let tokens = [...this.state.userTokens];
                 if (token !== undefined && token !== 'undefined') {
                     //console.log(token)
@@ -38,14 +38,17 @@ export default class NFT extends React.Component<Props> {
                                 this.setState({
                                     tokenPrice: price
                                 })
-                                i++;
+                                i = -1;
                             }
 
                         }
 
                     })
                     } catch(err) {}
+                } else if (i >= 5) {
+                    i = -1; // pretty shitty way but whatever ( will prob delete later )
                 }
+                i++;
             } else {
                 clearInterval(interval)
             }
