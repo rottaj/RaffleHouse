@@ -32,10 +32,12 @@ export default class NFT extends React.Component<Props> {
                     }).then((data) => {
                         if (data !== undefined && data !== 'undefined' && token != undefined) {
                             if (data.collection !== undefined && data.collection !== 'undefined' && data.collection['payment_tokens'].length !== 0) {
+                                console.log(data)
                                 let price = String(data['collection']['payment_tokens'][0]['eth_price']);
                                 this.setState({
                                     tokenPrice: price
                                 })
+                                i++;
                             }
 
                         }
@@ -45,7 +47,6 @@ export default class NFT extends React.Component<Props> {
             } else {
                 clearInterval(interval)
             }
-            i++;
         }, 3000)
 
     }
