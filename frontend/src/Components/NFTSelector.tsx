@@ -37,23 +37,26 @@ export default class NFTSelector extends React.Component <Props>{
 
         let i =0;
         var interval = setInterval(() => {
-            if (tokens[i] != undefined && i<= tokens.length) {
+            if (tokens[i] !== undefined && tokens[i] !== 'undefined' && i<= tokens.length) {
                 //let tokens = [...this.state.userTokens];
-                if (tokens[i]) {
+                if (tokens[i] !== undefined && tokens[i] !== 'undefined') {
                     console.log(tokens[i])
                     let url = OPENSEA_ASSET_URL + tokens[i].contractAddress + '/' + tokens[i].tokenID
                     fetch(url).then(res => {
                         return res.json();
                     }).then((data) => {
-                        if (data) {
-                            let token = tokens[i];
+                        if (data !== undefined && data !== 'undefined' && tokens[i] != undefined) {
+                            console.log("TOKEN", tokens[i])
+                            console.log(data.collection)
+                            if (data.collection !== undefined && data.collection !== 'undefined' && data.collection['payment_tokens'].length !== 0) {
+                                console.log("PRICE", String(data.collection.payment_tokens[0].eth_price))
+                                tokens[i]['price'] = String(data['collection']['payment_tokens'][0]['eth_price']);
+                                console.log("TESTING TOKEN UPDATE", tokens[i])
+                                this.setState({
+                                    tokens: [...this.state.tokens, tokens[i]]
+                                })
+                            }
 
-                            token['price'] = String(data.collection.payment_tokens[0].eth_price);
-                            tokens[i] = token;
-                            console.log("TESTING TOKEN UPDATE", tokens[i])
-                            this.setState({
-                                tokens: [...this.state.tokens, token]
-                            })
                         }
 
                     })
@@ -62,13 +65,13 @@ export default class NFTSelector extends React.Component <Props>{
                 clearInterval(interval)
             }
             i++;
-        }, 6000)
+        }, 1000)
 
     }
 
     componentDidUpdate() {
         if ( this.state.tokens.length ===0 ) {
-            //this.getOpenSeaPrice(this.props.tokens)
+            this.getOpenSeaPrice(this.props.tokens)
         }
     }
 
@@ -78,7 +81,7 @@ export default class NFTSelector extends React.Component <Props>{
                 {/*this.state.tokens.map(token => {this.getMetaData(token)})*/}
                 {/*<Grid className="NFTSelector-Grid-Container" container spacing={2}> */}
                 { this.props.tokens ?
-                    this.props.tokens.map(token => {return (<div className="NFT-Div-Container" onClick={() => this.handleClick(token)}><NFT token={token}></NFT></div>)})
+                    this.state.tokens.map(token => {return (<div className="NFT-Div-Container" onClick={() => this.handleClick(token)}><NFT token={token}></NFT></div>)})
                     :
                     <h5>No Tokens</h5>
                 }
