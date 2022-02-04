@@ -1,4 +1,4 @@
-const HighRollersAddress = "0x3dF33680991d31F9B495C5E4Ee5E1E8991685896"
+const HighRollersAddress = "0xa06331CfA2D2586c6e71d60e5081795E0b21ba71"
 
 const _HighRollers_abi = 
 [

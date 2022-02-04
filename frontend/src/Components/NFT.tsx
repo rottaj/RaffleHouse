@@ -25,14 +25,15 @@ export default class NFT extends React.Component<Props> {
             if (token !== undefined && token !== 'undefined' && i ===0) {
                 //let tokens = [...this.state.userTokens];
                 if (token !== undefined && token !== 'undefined') {
-                    console.log(token)
+                    //console.log(token)
                     let url = OPENSEA_ASSET_URL + token.contractAddress + '/' + token.tokenID
+                    try {
                     fetch(url).then(res => {
                         return res.json();
                     }).then((data) => {
                         if (data !== undefined && data !== 'undefined' && token != undefined) {
                             if (data.collection !== undefined && data.collection !== 'undefined' && data.collection['payment_tokens'].length !== 0) {
-                                console.log(data)
+                                //console.log(data)
                                 let price = String(data['collection']['payment_tokens'][0]['eth_price']);
                                 this.setState({
                                     tokenPrice: price
@@ -43,6 +44,7 @@ export default class NFT extends React.Component<Props> {
                         }
 
                     })
+                    } catch(err) {}
                 }
             } else {
                 clearInterval(interval)

@@ -16,8 +16,11 @@ export default class HighRollerDeposits extends React.Component <Props>{
     render() {
         return (
             <div className="HighRollerDeposits-Main-Div">
+
+                {console.log("HIGHROLLERDEPOSITS", this.props.tokens)}
                 {this.props.tokens.length != 0 ?
-                this.props.tokens.map((token:any) => {return (<div className="NFT-Div-Container" ><NFT token={String(token.image)}></NFT></div>)})
+
+                this.props.tokens.map((token:any) => {return (<div className="NFT-Div-Container" ><NFT token={token}></NFT></div>)})
                 :
                 <h5>No Tokens</h5>
                 }

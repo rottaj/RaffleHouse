@@ -40,7 +40,7 @@ http.listen(8080, () => {
 
 app.post('/submit-tickets-high-rollers', jsonParser, function (req, res) { // Create submit tickets route.
   console.log("SUBMIT HIGH ROLLERS", req.body);
-  submitTickets(5, req.body.playerAddress); // testing w/ 5 tickets until I build opensea api connect
+  submitTickets(req.body.tickets, req.body.playerAddress); //  need to add authentication to prevent frontend smuggling
   
 })
 
