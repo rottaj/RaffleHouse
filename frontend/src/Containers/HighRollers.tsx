@@ -9,6 +9,7 @@ import NFTSelector from "../Components/NFTSelector";
 import PlayerList from "../Components/PlayersList";
 import HighRollerDeposits from "../Components/HighRollerDeposits";
 import PastHighRollerGames from "./PastHighRollerGames";
+import Footer from "../Components/Footer";
 import Button from '@mui/material/Button';
 import "./HighRollers.css";
 
@@ -273,8 +274,11 @@ export default class HighRollers extends React.Component {
                         <h3 className="HighRollers-Current-Game-Address-h3">Contract Address: {this.state.currentGame.contractAddress}</h3>
                         {this.state.currentGame.winner !== "0x0000000000000000000000000000000000000000" ?
                             <h3 className="HighRollers-Current-Game-Winner-Address-h3">Winner: {this.state.currentGame.winner}</h3>
-                        :     
-                            <h3 className="HighRollers-Current-Game-Winner-Address-h3">Game in Progress</h3>
+                        :    
+                            <div> 
+                                <h3 className="HighRollers-Current-Game-Winner-Address-h3">Game in Progress</h3>
+                                <h6 className="CoinFlip-Waiting-h6"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></h6>
+                            </div>
                         }
                         <h3 className="HighRollers-Current-Game-TimeLeft-h3"> Minutes: {this.state.minutesLeft} Seconds: {this.state.secondsLeft}</h3>
                     </div>
@@ -292,6 +296,7 @@ export default class HighRollers extends React.Component {
                 </Button>
                 <NFTSelector tokens={this.state.userTokens}  ref={(tokenSelector) => this.tokenSelector = tokenSelector}/>
                 <PastHighRollerGames/>
+                <Footer/>
             </div>
         )
     }
