@@ -75,7 +75,7 @@ async function updateGameStatus() {
 async function submitTickets(ticketCount, playerAddress) { // Call when user deposits NFT --> Grab value from opensea api --> Push ticket count to Tickets[]
     getContract().then(async function(currentGame) {
       const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
-      const submitTicketTxn = await currentGameContract.deposit(ticketCount, playerAddress);
+      const submitTicketTxn = await currentGameContract.deposit(ticketCount - 1, playerAddress);
       submitTicketTxn.wait();
       console.log(`SUBMITTED PLAYER ${playerAddress} TICKETS. \n TXN: `, submitTicketTxn)
       //const processGameTxn = currentGameContract.processGame(); // JUST FOR TESTING (WILL BE INTERVAL)
