@@ -13,7 +13,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import EnterApp from "../Components/EnterApp";
-import logo from '../Raffle_House.png';
+import logo from '../images/RaffleHouse_Logo_HighLight.png';
 import './MenuItems.css';
 import Header from "../Containers/Header";
 
