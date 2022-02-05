@@ -30,7 +30,8 @@
     height: 50%;
     min-height: 300px;
     margin-left: 30%;
-    border: 1px solid blue;
+    /*border: 1px solid blue; */
+    background: #211c1c;
 }
 
 .HighRollers-PlayerList-Container {

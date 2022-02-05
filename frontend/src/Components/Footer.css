@@ -1,3 +1,13 @@
 /* .test {
     float: right;
 } */
+
+.Phyllis-Img-Container {
+}
+
+.Phyllis-token{
+    height: 3%;
+    width: 3%;
+    -moz-border-radius: 50px; /* or 50% */
+    border-radius: 50px; /* or 50% */
+}

@@ -13,4 +13,10 @@
     height: 25%;
     width: 25%;
     padding-right: 1%;
+
+}
+
+.Token-Image {
+    -moz-border-radius: 20px; /* or 50% */
+    border-radius: 20px; /* or 50% */
 }

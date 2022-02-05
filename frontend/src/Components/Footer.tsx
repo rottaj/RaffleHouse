@@ -7,6 +7,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import TwitterIcon from '@mui/icons-material/Twitter';
+import PhyllisToken from "../images/my_fucking_mayc.png";
 import './Footer.css';
 
 
@@ -31,9 +32,12 @@ export default class Footer extends React.Component {
                 >
                     <Container>
                     <Typography variant="body1" color="white" textAlign="center">
-                        © 2022 Raffle House, Inc
+
+                        <p>© 2022 Raffle House, Inc</p>
+                        <img className="Phyllis-token" src={PhyllisToken}></img>
                         <TwitterIcon sx={{float: "right"}}><a href="https://twitter.com/0xahawk"/></TwitterIcon>
                     </Typography>
+
                     </Container>
                 </Box>
             </Box>

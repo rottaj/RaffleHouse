@@ -2,9 +2,10 @@
     display: flex;
     margin-bottom: 1%;
     border: 1px solid black;
-    background: rgb(80, 80, 138);
+    background: #211c1c;
     -moz-border-radius: 20px; /* or 50% */
     border-radius: 20px; /* or 50% */
+    color: white;
 }
 
 .Player-Address {
