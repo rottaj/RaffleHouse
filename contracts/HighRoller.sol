@@ -97,8 +97,12 @@ contract HighRoller is VRFConsumerBase, Ownable { // add VRF
         return gameInfo;
     }
 
-    function getTickets() view public returns (uint256) {
-        return tickets.length;
+    function getTickets() view public returns (address[] memory) {
+        return tickets;
+    }
+
+    function getTicketByIndex (uint256 _index) public view returns (address) {
+        return tickets[_index];
     }
 
     function getWinner() view public returns (address) {

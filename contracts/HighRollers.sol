@@ -43,10 +43,10 @@ contract HighRollers is Ownable{
     receive() external payable {}
 
     function processCurrentGame() public onlyOwner {  // will be called from API
-        uint256 tickets = currentHighRollerContract.getTickets();
+        address[] memory tickets = currentHighRollerContract.getTickets();
         address winner = currentHighRollerContract.getWinner();
-        if (tickets > currentHighRollerGame.tickets) {
-            currentHighRollerGame.tickets = tickets;
+        if (tickets.length > currentHighRollerGame.tickets) {
+            currentHighRollerGame.tickets = tickets.length;
         }
         if (winner != address(0)) {
             currentHighRollerGame.winner = winner;

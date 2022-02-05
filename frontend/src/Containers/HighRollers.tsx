@@ -1,10 +1,12 @@
 import { ethers } from "ethers";
 import { _abi } from '../interfaces/Eyescream_Interface';
 import { HighRollersAddress, _HighRollers_abi } from "../interfaces/HighRollers_Interface";
+import { _HighRoller_abi } from "../interfaces/HighRoller_Interface";
 import React from 'react';
 import MenuItems from "../Components/MenuItems";
 import Messages from "../Components/Messages";
 import NFTSelector from "../Components/NFTSelector";
+import PlayerList from "../Components/PlayersList";
 import HighRollerDeposits from "../Components/HighRollerDeposits";
 import PastHighRollerGames from "./PastHighRollerGames";
 import Button from '@mui/material/Button';
@@ -58,6 +60,7 @@ export default class HighRollers extends React.Component {
     state = {
         userTokens: [],
         gameTokens: [],
+        players: [],
         currentGame: {contractAddress: "", startTime: "", endTime: "", winner: ""},
         account: "",
         minutesLeft: "",
@@ -202,6 +205,34 @@ export default class HighRollers extends React.Component {
     // END OF GAME INFO
 
 
+    getUniqueAddresses(array: any) {
+        let unique = array.filter((item: any, i: any, ar: any) => ar.indexOf(item) === i);
+        return unique;
+    }
+
+    getOccurances(array: any, val: any) {
+        let ticketNumber = array.reduce((a: any, v: any) => (v === val ? a + 1 : a), 0);
+        return ticketNumber;
+    }
+
+    getTickets = async (uniqueAddresses: any, tickets: any) => {
+        console.log(tickets)
+        for (let i=0; i<=uniqueAddresses.length; i++ ) {
+            let ticketNumber = this.getOccurances(tickets, uniqueAddresses[i])
+            if (uniqueAddresses[i] !== undefined) {
+                console.log("TESTING GET_TICKETS", uniqueAddresses[i], ticketNumber, (ticketNumber).toFixed(2))
+                let player = {address: uniqueAddresses[i], tickets: ticketNumber, totalEth: (ticketNumber).toFixed(2), chance: ((ticketNumber / tickets.length) * 100).toFixed(2)}
+                this.setState({
+                    players: [...this.state.players, player]
+                })
+            }
+        }
+
+    }
+
+
+
+
     async componentDidMount() {
         document.title = "High Rollers - Raffle House"
         if(window.ethereum) {
@@ -220,6 +251,11 @@ export default class HighRollers extends React.Component {
                 currentGame: currentGame
             })
             this.fetchNFTs(currentGame.contractAddress, "gameTokens");
+            const currentHighRollerContract = new ethers.Contract(currentGame.contractAddress, _HighRoller_abi, signer);
+            const tickets = await currentHighRollerContract.getTickets();
+            console.log("TICKETS", tickets)
+            const uniqueAddresses = this.getUniqueAddresses(tickets);
+            this.getTickets(uniqueAddresses, tickets);
             setInterval(() => {
                 this.getCountDown();
             }, 1000)
@@ -248,7 +284,9 @@ export default class HighRollers extends React.Component {
                 <div className="HighRollers-GameInfo-Container">
                     <HighRollerDeposits tokens={this.state.gameTokens}/>
                 </div>
-
+                <div className="HighRollers-PlayerList-Container">
+                    <PlayerList players={this.state.players}/>
+                </div>
                 <Button onClick={() => this.handleDeposit() }variant="contained" type="submit" style={{maxHeight: '55px'}}>
                     Deposit 
                 </Button>

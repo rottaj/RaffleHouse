@@ -1,4 +1,4 @@
-const _HighRoller_abi = 
+export const _HighRoller_abi = 
  [
     {
       "inputs": [],
@@ -234,6 +234,3 @@ const _HighRoller_abi =
       "type": "receive"
     }
   ]
-module.exports = {
-    _HighRoller_abi
-}
