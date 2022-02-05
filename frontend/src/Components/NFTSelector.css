@@ -12,5 +12,7 @@
 }
 
 .NFT-Div-Container {
+    -moz-border-radius: 50px; /* or 50% */
+    border-radius: 50px; /* or 50% */
 }
 
