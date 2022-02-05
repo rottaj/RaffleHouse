@@ -89,7 +89,7 @@ contract HighRollers is Ownable{
 
     function updateStatus() external {
         currentHighRollerGame.status = 1;
-        processCurrentGame();
+        //processCurrentGame();
     }
 
     // VIEW FUNCTIONS

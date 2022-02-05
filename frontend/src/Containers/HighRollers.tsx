@@ -235,7 +235,11 @@ export default class HighRollers extends React.Component {
                 {this.state.currentGame.contractAddress ?
                     <div>
                         <h3 className="HighRollers-Current-Game-Address-h3">Contract Address: {this.state.currentGame.contractAddress}</h3>
-                        <h3 className="HighRollers-Current-Game-Winner-Address-h3">Winner: {this.state.currentGame.winner}</h3>
+                        {this.state.currentGame.winner !== "0x0000000000000000000000000000000000000000" ?
+                            <h3 className="HighRollers-Current-Game-Winner-Address-h3">Winner: {this.state.currentGame.winner}</h3>
+                        :     
+                            <h3 className="HighRollers-Current-Game-Winner-Address-h3">Game in Progress</h3>
+                        }
                         <h3 className="HighRollers-Current-Game-TimeLeft-h3"> Minutes: {this.state.minutesLeft} Seconds: {this.state.secondsLeft}</h3>
                     </div>
                 :
