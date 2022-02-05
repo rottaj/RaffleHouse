@@ -15,7 +15,7 @@ export default class NFT extends React.Component<Props> {
 
 
     state = {
-        tokenPrice: "0"
+        tokenPrice: "Loading"
     }
 
 
@@ -64,7 +64,11 @@ export default class NFT extends React.Component<Props> {
         return (
             <div className="NFT-Main-Container">
                 <img className="NFT-Img"src={this.props.token.image}></img>
-                <h5 className="NFT-Price">Price: {this.state.tokenPrice} eth</h5>
+                {this.state.tokenPrice != "Loading" ?
+                    <h5 className="NFT-Price">Price: {this.state.tokenPrice} eth</h5>
+                :
+                    <h5 className="NFT-Price">{this.state.tokenPrice} Price </h5>
+                }
             </div>
         )
     }

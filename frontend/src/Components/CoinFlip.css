@@ -1,4 +1,5 @@
 .CoinFlip-Div-Main {
+    overflow: auto;
     border: 1px solid black;
     /*background: rgb(80, 80, 138);  */
     background: #211c1c;
@@ -28,12 +29,13 @@
 }
 
 .CoinFlip-Waiting-h6 {
-    margin-left: 20%;
+    margin-left: 30%;
     margin-right: 13%;
 }
 
 
 .CoinFlip-BuyIn-h6 {
+    float: right;
     margin-left: 12%;
     margin-right: 5%;
 }
