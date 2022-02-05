@@ -24,6 +24,8 @@
 }
 
 .HighRollers-GameInfo-Container {
+    -moz-border-radius: 20px; /* or 50% */
+    border-radius: 20px; /* or 50% */
     width: 40%;
     height: 50%;
     min-height: 300px;

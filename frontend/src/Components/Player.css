@@ -3,6 +3,8 @@
     margin-bottom: 1%;
     border: 1px solid black;
     background: rgb(80, 80, 138);
+    -moz-border-radius: 20px; /* or 50% */
+    border-radius: 20px; /* or 50% */
 }
 
 .Player-Address {
