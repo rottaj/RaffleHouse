@@ -12,9 +12,12 @@
     font-size: 40px;
 }
 
+.CoinFlip-VS-Container {
+
+}
+
 .CoinFlip-VS-h3 {
-    padding-right: 5%;
-    color: rgb(3, 3, 3);
+    color: #FDCFF3;
     text-shadow: rgb(203, 176, 204) 3px 3px;
     font-size: 40px;
 }
@@ -25,7 +28,8 @@
 }
 
 .CoinFlip-GameInfo-Div {
-    background: rgb(80, 80, 138);
+    color: white;
+    background: #40434E;
     border: 1px solid black;
     margin-left: 30%;
     margin-right: 30%;
@@ -41,8 +45,11 @@
 }
 
 .CoinFlip-Players-Creator-Div {
+    padding-left: 1%;
+    padding-right: 1%;
+    color: white;
     border: 1px solid black;
-    background: rgb(80, 80, 138);
+    background: #40434E;
     margin-right: 5%;
     -moz-border-radius: 10px; /* or 50% */
     border-radius: 10px; /* or 50% */
@@ -50,8 +57,11 @@
 }
 
 .CoinFlip-Players-Joinee-Div {
+    padding-left: 1%;
+    padding-right: 1%;
+    color: white;
     border: 1px solid black;
-    background: rgb(80, 80, 138);
+    background: #40434E;
     margin-left: 5%;
     -moz-border-radius: 10px; /* or 50% */
     border-radius: 10px; /* or 50% */
@@ -64,6 +74,63 @@
     border-radius: 10px; /* or 50% */
 }
 
-
+.CoinFlipViewer-Waiting-h6 {
+    margin-left: 19%;
+}
 
 /* COIN FLIP ANIMATION */
+lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    /* width: 25px; */
+    height: 25px;
+  }
+  .lds-ellipsis div {
+    position: absolute;
+    /* top: 10px; */
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #fff;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+  }
+  .lds-ellipsis div:nth-child(1) {
+    left: 8px;
+    animation: lds-ellipsis1 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(2) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(3) {
+    left: 32px;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(4) {
+    left: 56px;
+    animation: lds-ellipsis3 0.6s infinite;
+  }
+  @keyframes lds-ellipsis1 {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  @keyframes lds-ellipsis3 {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(0);
+    }
+  }
+  @keyframes lds-ellipsis2 {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(24px, 0);
+    }
+  }

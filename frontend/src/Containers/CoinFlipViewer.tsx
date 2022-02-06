@@ -79,12 +79,19 @@ export default class CoinFlipViewer extends React.Component<Props>{
                     {this.state.gameInfo ?
                         <div>
                             <div className="CoinFlip-GameInfo-Div">
+
+                                <h2>Buy in Price: {parseInt(this.state.gameInfo.buyInPrice) / (10 ** 18)} eth</h2>
                                 {this.state.gameInfo.winner !== "0x0000000000000000000000000000000000000000" ?
                                     <h6>Winner: {this.state.gameInfo.winner}</h6>
                                 :
                                     <div>
                                         {this.state.gameInfo.joineeAddress !== "0x0000000000000000000000000000000000000000" ?
-                                            <h6>Selecting Winner</h6> 
+                                            <div>
+                                                <h3>Processing Winner</h3> 
+                                                <div>
+                                                    <h6 className="CoinFlipViewer-Waiting-h6"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></h6>
+                                                </div>
+                                            </div>
                                         :
                                             <h6>Waiting for player</h6>
                                         }
@@ -95,15 +102,17 @@ export default class CoinFlipViewer extends React.Component<Props>{
 
 
                                 <div className="CoinFlip-Players-Creator-Div">
-                                    <h6>Creator: {this.state.gameInfo.creatorAddress}</h6>
-                                    <h6>Buy in Price: {parseInt(this.state.gameInfo.buyInPrice) / (10 ** 18)} eth</h6>
+                                    <h3>Creator:</h3>
+                                    <h6>{this.state.gameInfo.creatorAddress}</h6>
                                 </div>
-
-                                <h3 className="CoinFlip-VS-h3">VS</h3>
+                                <div className="CoinFlip-VS-Container">
+                                    <h3 className="CoinFlip-VS-h3">VS</h3>
+                                </div>
                                 {this.state.gameInfo.joineeAddress !== "0x0000000000000000000000000000000000000000" ? 
                                     <div className="CoinFlip-Players-Joinee-Div">
-                                    <h6>Joinee: {this.state.gameInfo.joineeAddress}</h6>
-                                    <h6></h6>
+
+                                        <h3>Joinee:</h3>
+                                        <h6>{this.state.gameInfo.joineeAddress}</h6>
                                     </div>
                                 :
                                     <div className="CoinFlip-Players-Waiting-Div">
