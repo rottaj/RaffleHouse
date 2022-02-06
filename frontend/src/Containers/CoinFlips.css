@@ -4,7 +4,7 @@
 }
 
 .CoinFlips-Container-Title-h1 {
-    color: rgb(255, 242, 145);
+    color: #DE89BE;
     text-shadow: rgb(203, 176, 204) 3px 3px;
     font-size: 40px;
 }
@@ -24,7 +24,7 @@
 
 .CoinFlips-Current-CoinFlips-h2 {
     margin-bottom: 2%;
-    color: rgb(255, 242, 145);
+    color: #DE89BE;
     text-shadow: rgb(203, 176, 204) 3px 3px;
     font-size: 40px;
 }
@@ -44,8 +44,8 @@
 .CoinFlips-Creator-h3 {
     margin-left: 20%;
     margin-right: 5%;
-    color: rgb(255, 242, 145);
-    text-shadow: rgb(203, 176, 204) 3px 3px;
+    color: #DE89BE;
+    /*text-shadow: rgb(203, 176, 204) 3px 3px; */
     font-size: 20px;
 }
 
@@ -59,8 +59,8 @@
 .CoinFlips-BuyIn-h3 {
     margin-left: 56%;
     margin-right: 5%;
-    color: rgb(255, 242, 145);
-    text-shadow: rgb(203, 176, 204) 3px 3px;
+    color: #DE89BE;
+    /*text-shadow: rgb(203, 176, 204) 3px 3px; */
     font-size: 20px;
 }
 
@@ -95,7 +95,7 @@
     margin-right: 5%;
 }
 .CoinFlips-Current-CoinFlips-h2 {
-    color: rgb(255, 242, 145);
+    color: #DE89BE;
     text-shadow: rgb(203, 176, 204) 3px 3px;
     font-size: 40px;
 }

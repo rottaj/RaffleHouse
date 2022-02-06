@@ -3,23 +3,23 @@
 }
 
 .HighRollers-Current-Game-h3 {
-    color: rgb(255, 242, 145);
-    text-shadow: rgb(203, 176, 204) 3px 3px;
+    color: #DE89BE;
+    text-shadow:  #FDCFF3 3px 3px;
     font-size: 40px;
 }
 
 .HighRollers-Current-Game-Address-h3 {
-    color: rgb(255, 242, 145);
+    color: #FDCFF3;
     font-size: 20px;
 }
 
 .HighRollers-Current-Game-Winner-Address-h3 {
-    color: rgb(255, 242, 145);
+    color: #FDCFF3;
     font-size: 20px;
 }
 
 .HighRollers-Current-Game-TimeLeft-h3 {
-    color: rgb(255, 242, 145);
+    color: #FDCFF3;
     font-size: 20px;
 }
 
@@ -36,7 +36,7 @@
     min-height: 300px;
     margin-left: 30%;
     /*border: 1px solid blue; */
-    background: #211c1c;
+    background: #40434E;
 }
 
 .HighRollers-PlayerList-Container {
