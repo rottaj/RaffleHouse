@@ -69,7 +69,7 @@ export default class CoinFlips extends React.Component {
                 <div className="CoinFlips-Games-Container">
                     <div className="CurrentCoinFlips-Container">
 
-                        <h2 className="CoinFlips-Current-CoinFlips-h2">Current Coin Flips</h2>
+                        <h2 className="CoinFlips-Current-CoinFlips-h2">COIN FLIPS</h2>
                         <div className="CoinFlips-Games-Header">
                             <h3 className="CoinFlips-Creator-h3">Creator</h3>
                             <h3 className="CoinFlips-BuyIn-h3">Buy in Price</h3>
@@ -91,7 +91,7 @@ export default class CoinFlips extends React.Component {
                         </div>
                     </div>
                     */}
-                        <h2 className="CoinFlips-Current-CoinFlips-h2">Past Games</h2>
+                        <h2 className="CoinFlips-Current-CoinFlips-h2">PAST GAMES</h2>
                         {this.state.currentCoinFlips.map((coinFlip: any) => {
                             return (
                                 <Link to={`coin-flip/${coinFlip['contractAddress']}`}>

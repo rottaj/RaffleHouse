@@ -268,10 +268,10 @@ export default class HighRollers extends React.Component {
             <div className="HighRollers-Div-Main">
                 <MenuItems account={this.state.account}/>
                 <Messages/>
-                <h3 className="HighRollers-Current-Game-h3">Current Game</h3>
+                <h3 className="HighRollers-Current-Game-h3">HIGH ROLLERS</h3>
                 {this.state.currentGame.contractAddress ?
                     <div>
-                        <h3 className="HighRollers-Current-Game-Address-h3">Contract Address: {this.state.currentGame.contractAddress}</h3>
+                        <h3 className="HighRollers-Current-Game-Address-h3">Current Game: {this.state.currentGame.contractAddress}</h3>
                         {this.state.currentGame.winner !== "0x0000000000000000000000000000000000000000" ?
                             <h3 className="HighRollers-Current-Game-Winner-Address-h3">Winner: {this.state.currentGame.winner}</h3>
                         :    
