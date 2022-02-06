@@ -5,7 +5,6 @@ import React from 'react';
 import MenuItems from '../Components/MenuItems';
 import Deposit from "../Components/Deposit";
 import PlayersList from "../Components/PlayersList";
-import WinnerBox from "../Components/WinnerBox";
 import Messages from "../Components/Messages";
 import Button from '@mui/material/Button';
 import Header from './Header';
@@ -151,7 +150,18 @@ export default class RaffleViewer extends React.Component {
                 {/* <Header/> */}
                 <MenuItems account={this.state.account}/>
                 <Messages/>
-                <WinnerBox winner={this.state.gameInfo.winner}/>
+                <div className="WinnerBox-Main-Div">
+                <h3 className="Title-Raffle-Winner">Raffle Winner:</h3>
+                {this.state.gameInfo.winner !== "0x0000000000000000000000000000000000000000" ?
+                    <h3>{this.state.gameInfo.winner}</h3>
+                :
+                    <h3>Winner not picked</h3>
+                }
+                { /*    // Will add later
+                <h3 className="Title-Raffle-Total-Pot">Total</h3> 
+                <h3 className="Title-Raffle-Chance">Chance</h3>
+                */ }
+                </div>
                 {console.log("GAME INNFO", this.state.gameInfo)}
                 <div className="RaffleViewer-Viewer-Container">
                     <div className="Token-Image-Div">

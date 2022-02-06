@@ -27,11 +27,13 @@ export default class Host extends React.Component {
     render() {
         return (
             <div className="Host-Container-Main-Div">
-                {/* <Header/> */}
                 <MenuItems account={this.state.account}/>
                 <Messages/>
-                <RaffleCreator/>
-                <CoinFlipCreator/>
+                <div className="Host-Games-Container-Div">
+                    <RaffleCreator/>
+                    <CoinFlipCreator/>
+                </div>
+
                 <Footer/>
             </div>
         )
