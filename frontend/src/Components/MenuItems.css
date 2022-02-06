@@ -4,6 +4,7 @@
     margin-top: 20px;
     margin-left: 10%;
     margin-right: 10%;
+    color: #FDCFF3;
 }
 
 .logo {
@@ -14,6 +15,7 @@
   
   a:link, a:visited, a:active
   {
+
       font-family: "Courier New, Monospace";
       text-decoration: none;
       /*

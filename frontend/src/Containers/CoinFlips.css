@@ -95,7 +95,8 @@
     margin-right: 5%;
 }
 .CoinFlips-Current-CoinFlips-h2 {
-    color: #DE89BE;
+    color: #DE89BE; 
+    /*color: white; */
     text-shadow: rgb(203, 176, 204) 3px 3px;
     font-size: 40px;
 }
