@@ -53,18 +53,20 @@ export default class Messages extends React.Component {
         return (
             <div className="Messages-Main-Div-Container">
                <h1>Messages </h1>
-                {this.state.messages.map((message: any) => {
-                    return (
-                        <div className="Messages-Message-Div">
-                            <h6>{message.messager === this.state.myAddress[this.state.myAddress.length - 1] ? 
-                                "You" + ": " 
-                                : message.messager.substring(0, 6) + "..." + message.messager.substring(36, 40) + ": "} 
-                            </h6>
-                            <h6>{message.message}</h6>
-                        </div>
-                    )
-                })
-                }
+                <div className="test"><div>
+                        {this.state.messages.map((message: any) => {
+                            return (
+                                <div className="Messages-Message-Div">
+                                    <h6>{message.messager === this.state.myAddress[this.state.myAddress.length - 1] ? 
+                                        "You" + ": " 
+                                        : message.messager.substring(0, 6) + "..." + message.messager.substring(36, 40) + ": "} 
+                                    </h6>
+                                    <h6>{message.message}</h6>
+                                </div>
+                            )
+                        })
+                        }
+                </div></div>
                <form className="CreateMessage-Form" onSubmit={(e) => this.handleSubmit(e)}>
                     <TextField className="Messages-Create-New-Message" sx={{background: 'white', color: 'black', input: { color:'black' }}} placeholder="Message" id="filled-basic" label="Write something" variant="filled"></TextField>
                     <Button variant="contained" type="submit" style={{maxHeight: '55px'}}>
