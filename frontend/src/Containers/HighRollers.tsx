@@ -190,9 +190,6 @@ export default class HighRollers extends React.Component {
         let dateString: any = parseInt(this.state.currentGame.endTime);
         var now = new Date().getTime();
         var countDownDate = new Date(dateString).getTime();
-        console.log("NOW", now / 1000)
-        console.log("countDownDate", countDownDate)
-        console.log("test", (countDownDate - (now / 1000)))
         var minutes  = parseInt(String((countDownDate - (now) / 1000) / 60))
         var seconds = parseInt(String(((countDownDate - (now / 1000)) - (parseInt(String(minutes)) * 60))))
         if (minutes <= 0) {
@@ -263,14 +260,14 @@ export default class HighRollers extends React.Component {
             const uniqueAddresses = this.getUniqueAddresses(tickets);
             this.getTickets(uniqueAddresses, tickets);
             */
-
+            setInterval(() => {
+                this.getCountDown();
+            }, 1000)
         }
     }
 
     async componentDidUpdate() {
-        setInterval(() => {
-            this.getCountDown();
-        }, 1000)
+
     }
 
     render() {
