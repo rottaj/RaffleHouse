@@ -12,6 +12,7 @@ import PastHighRollerGames from "./PastHighRollerGames";
 import Footer from "../Components/Footer";
 import Button from '@mui/material/Button';
 import "./HighRollers.css";
+import { listItemSecondaryActionClasses } from "@mui/material";
 
 
 
@@ -64,8 +65,8 @@ export default class HighRollers extends React.Component {
         players: [],
         currentGame: {contractAddress: "", startTime: "", endTime: "", winner: ""},
         account: "",
-        minutesLeft: "",
-        secondsLeft: ""
+        minutesLeft: 0,
+        secondsLeft: 0
     }
 
     // HANDLE USER TOKENS
@@ -189,14 +190,17 @@ export default class HighRollers extends React.Component {
         let dateString: any = parseInt(this.state.currentGame.endTime);
         var now = new Date().getTime();
         var countDownDate = new Date(dateString).getTime();
-        let distance = dateString - now;
-        console.log("NOW", now)
-        console.log("DATE STRING", dateString)
-        console.log("COUNTDOWN DATE", countDownDate)
-
-        var minutes = Math.floor((distance % (1000 * 60)) / (1000 * 60)) * -1;
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000) * -1 - 60;
-        console.log("MINUTES", minutes, "SECONDS", seconds)
+        console.log("NOW", now / 1000)
+        console.log("countDownDate", countDownDate)
+        console.log("test", (countDownDate - (now / 1000)))
+        var minutes  = parseInt(String((countDownDate - (now) / 1000) / 60))
+        var seconds = parseInt(String(((countDownDate - (now / 1000)) - (parseInt(String(minutes)) * 60))))
+        if (minutes <= 0) {
+            minutes = 0
+        }
+        if (seconds <= 0) {
+            seconds = 0
+        }
         this.setState({
             minutesLeft: minutes,
             secondsLeft: seconds
@@ -239,8 +243,6 @@ export default class HighRollers extends React.Component {
         if(window.ethereum) {
             var accounts = await window.ethereum.send('eth_requestAccounts');
             const account = accounts.result[0];
-            this.fetchNFTs(account, "userTokens"); // FETCHES USER NFTS
-
             this.setState({account: account});
             var provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
@@ -251,20 +253,24 @@ export default class HighRollers extends React.Component {
             this.setState({
                 currentGame: currentGame
             })
+            /*
+            this.fetchNFTs(account, "userTokens"); // FETCHES USER NFTS
+
             this.fetchNFTs(currentGame.contractAddress, "gameTokens");
             const currentHighRollerContract = new ethers.Contract(currentGame.contractAddress, _HighRoller_abi, signer);
             const tickets = await currentHighRollerContract.getTickets();
             console.log("TICKETS", tickets)
             const uniqueAddresses = this.getUniqueAddresses(tickets);
             this.getTickets(uniqueAddresses, tickets);
-            setInterval(() => {
-                this.getCountDown();
-            }, 1000)
+            */
+
         }
     }
 
     async componentDidUpdate() {
-
+        setInterval(() => {
+            this.getCountDown();
+        }, 1000)
     }
 
     render() {
@@ -284,7 +290,7 @@ export default class HighRollers extends React.Component {
                                 <h6 className="CoinFlip-Waiting-h6"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></h6>
                             </div>
                         }
-                        <h3 className="HighRollers-Current-Game-TimeLeft-h3"> Minutes: {this.state.minutesLeft} Seconds: {this.state.secondsLeft}</h3>
+                        <h3 className="HighRollers-Current-Game-TimeLeft-h3"> {this.state.minutesLeft} Minutes {this.state.secondsLeft} Seconds </h3>
                     </div>
                 :
                     <h3 className="HighRollers-Current-Game-Address-h3">No Game</h3>

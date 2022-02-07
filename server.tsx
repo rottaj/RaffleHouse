@@ -127,6 +127,7 @@ async function processCurrentGame() {
     console.log("TESTING CURRENTGAME", currentGame.winner)
     console.log("TESTING STATUS", currentGame.status)
     */
+   console.log(gameInfo)
     if (currentGame.winner !== undefined) {
       if (currentGame.winner === "0x0000000000000000000000000000000000000000" || currentGame.status === 1) {
         console.log("PROCESSING GAME")
@@ -151,8 +152,8 @@ setInterval(async function() { // Call Every minute
   await processCurrentGame().then(function(txn) {
     console.log("PROCESSING GAME")
   });
-//}, 2000)
-}, 30000)
+}, 2000)
+//}, 30000)
 //}, 60000)
 //}, 180000)
 
