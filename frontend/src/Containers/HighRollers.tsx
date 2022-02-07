@@ -283,6 +283,7 @@ export default class HighRollers extends React.Component {
                 <div className="HighRollers-GameInfo-Container">
                     <HighRollerDeposits tokens={this.state.gameTokens}/>
                 </div>
+
                 <div className="HighRollers-PlayerList-Container">
                     <PlayerList players={this.state.players}/>
                 </div>

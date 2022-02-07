@@ -7,9 +7,6 @@ interface Props {
 }
 
 
-const OPENSEA_CONTRACT_URL = "https://testnets-api.opensea.io/api/v1/asset_contract/";
-const OPENSEA_ASSET_URL = "https://testnets-api.opensea.io/api/v1/asset/" // ContractAddress + '/' + id
-
 declare let window: any;
 export default class HighRollerDeposits extends React.Component <Props>{
 
