@@ -8,7 +8,7 @@ import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 
 contract HighRoller is VRFConsumerBase, Ownable { // add VRF
 
-    uint private timeLimit = 3 minutes;
+    uint private timeLimit = 10 minutes;
     uint private startTime;
     uint private endTime;
     address private winner;
@@ -67,7 +67,7 @@ contract HighRoller is VRFConsumerBase, Ownable { // add VRF
     }
 
     function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
-        uint256 valueBetween = (randomness % tickets.length) + 1;
+        uint256 valueBetween = (randomness % tickets.length);
         winner = tickets[valueBetween];
         state = State.PROCESSED;
         emit WinnerPicked(requestId, valueBetween);

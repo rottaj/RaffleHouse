@@ -1,5 +1,5 @@
 export const _HighRoller_abi = 
- [
+[
     {
       "inputs": [],
       "stateMutability": "nonpayable",

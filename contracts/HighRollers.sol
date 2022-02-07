@@ -8,7 +8,7 @@ import "./HighRoller.sol";
 contract HighRollers is Ownable{
     uint256 private chainLinkFee = 0.1 * 1e18;
     uint256 private ethFee = 0.1 * 1e18;
-    uint private timeLimit = 3 minutes;
+    uint private timeLimit = 10 minutes;
     IERC20 chainLink;
 
     event NewGameCreated(address contractAddress);

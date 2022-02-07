@@ -152,8 +152,8 @@ setInterval(async function() { // Call Every minute
   await processCurrentGame().then(function(txn) {
     console.log("PROCESSING GAME")
   });
-}, 2000)
+//}, 2000)
 //}, 30000)
-//}, 60000)
+}, 60000)
 //}, 180000)
 

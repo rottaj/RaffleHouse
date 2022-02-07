@@ -89,9 +89,7 @@ export default class HighRollers extends React.Component {
 
                 for (let i=0; i<=data.result.length; i++ ) {
                     if (tokens.length > 0) {
-                        //try {
                         if (data.result[i]) {
-                            //let x: any = tokens.find(token => token['tokenID'] !== data.result[i]['tokenID'])
                             let index = tokens.findIndex(temp => (temp['tokenID'] === data.result[i]['tokenID']) && (temp['contractAddress'] === data.result[i]['contractAddress']));
                             if (index === -1) {
                                 tokens.push(data.result[i])
@@ -99,10 +97,6 @@ export default class HighRollers extends React.Component {
                                 tokens.splice(index, 1)
                             }
                         }
-                        //} 
-                        //catch(err) {
-                            //console.log(err)
-                        //}
                     }
                     else {
                         tokens.push(data.result[i])
@@ -129,18 +123,15 @@ export default class HighRollers extends React.Component {
                     //if (String(tokens[i].contractAddress) === '0x8f44a8b9059b2bc914c893eed250a2e1097ee187') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
                         let contract = new ethers.Contract(tokens[i].contractAddress, _abi, signer)
                         let metaData = await contract.tokenURI(parseInt(tokens[i].tokenID))
-                        //console.log("METADATA", metaData)
                         fetch(metaData).then(res => {return res.json()}).then(data => {
                             tokens[i]['image'] = data.image
                             if (stateName === "userTokens") {
                                 this.setState({
-                                    //tokens: this.state.tokens.filter(tempToken => tempToken['tokenID'] !== tokens[i].tokenID)
                                     userTokens: [...this.state.userTokens, tokens[i]]
                                 })
                             } 
                             else if (stateName === "gameTokens") {
                                 this.setState({
-                                    //tokens: this.state.tokens.filter(tempToken => tempToken['tokenID'] !== tokens[i].tokenID)
                                     gameTokens: [...this.state.gameTokens, tokens[i]]
                                 })
                             }
