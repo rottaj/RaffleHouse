@@ -1,6 +1,7 @@
 .NFT-Selector-Main {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
+    overflow: auto;
     grid-auto-rows: 200px;
     margin-top: 3%;
     margin-left: 16%;

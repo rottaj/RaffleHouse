@@ -121,10 +121,12 @@ async function processCurrentGame() {
 
     const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
     const gameInfo = await currentGameContract.getGameInfo();
+    /*
     console.log(currentGame)
     console.log("TESTING GAMEINFO", gameInfo.winner)
     console.log("TESTING CURRENTGAME", currentGame.winner)
     console.log("TESTING STATUS", currentGame.status)
+    */
     if (currentGame.winner !== undefined) {
       if (currentGame.winner === "0x0000000000000000000000000000000000000000" || currentGame.status === 1) {
         console.log("PROCESSING GAME")
@@ -150,7 +152,7 @@ setInterval(async function() { // Call Every minute
     console.log("PROCESSING GAME")
   });
 //}, 2000)
-//}, 30000)
-}, 60000)
+}, 30000)
+//}, 60000)
 //}, 180000)
 

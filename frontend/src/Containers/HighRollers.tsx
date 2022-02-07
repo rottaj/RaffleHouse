@@ -186,17 +186,17 @@ export default class HighRollers extends React.Component {
 
     // START OF GAME INFO
     getCountDown = () => {
-        let dateString: any = this.state.currentGame.endTime;
+        let dateString: any = parseInt(this.state.currentGame.endTime);
         var now = new Date().getTime();
         var countDownDate = new Date(dateString).getTime();
         let distance = dateString - now;
-        //console.log("NOW", now)
-        //console.log("DATE STRING", dateString)
-        //console.log("COUNTDOWN DATE", countDownDate)
+        console.log("NOW", now)
+        console.log("DATE STRING", dateString)
+        console.log("COUNTDOWN DATE", countDownDate)
 
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        //console.log("MINUTES", minutes, "SECONDS", seconds)
+        var minutes = Math.floor((distance % (1000 * 60)) / (1000 * 60)) * -1;
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000) * -1 - 60;
+        console.log("MINUTES", minutes, "SECONDS", seconds)
         this.setState({
             minutesLeft: minutes,
             secondsLeft: seconds
@@ -261,6 +261,10 @@ export default class HighRollers extends React.Component {
                 this.getCountDown();
             }, 1000)
         }
+    }
+
+    async componentDidUpdate() {
+
     }
 
     render() {
