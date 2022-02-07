@@ -250,16 +250,13 @@ export default class HighRollers extends React.Component {
             this.setState({
                 currentGame: currentGame
             })
-            /*
             this.fetchNFTs(account, "userTokens"); // FETCHES USER NFTS
-
-            this.fetchNFTs(currentGame.contractAddress, "gameTokens");
+            this.fetchNFTs(currentGame.contractAddress, "gameTokens"); // FETCHES GAME TOKENS
             const currentHighRollerContract = new ethers.Contract(currentGame.contractAddress, _HighRoller_abi, signer);
             const tickets = await currentHighRollerContract.getTickets();
             console.log("TICKETS", tickets)
             const uniqueAddresses = this.getUniqueAddresses(tickets);
             this.getTickets(uniqueAddresses, tickets);
-            */
             setInterval(() => {
                 this.getCountDown();
             }, 1000)
