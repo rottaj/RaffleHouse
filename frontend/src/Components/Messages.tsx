@@ -66,13 +66,16 @@ export default class Messages extends React.Component {
                             )
                         })
                         }
+                <div className="Messages-Message-Form-Container">
+                    <form className="CreateMessage-Form" onSubmit={(e) => this.handleSubmit(e)}>
+                        <TextField className="Messages-Create-New-Message" sx={{background: 'white', color: 'black', input: { color:'black' }}} placeholder="Message" id="filled-basic" label="Write something" variant="filled"></TextField>
+                        <Button variant="contained" type="submit" style={{maxHeight: '55px'}}>
+                            Send Message
+                        </Button>
+                    </form>
+                </div>
                 </div></div>
-               <form className="CreateMessage-Form" onSubmit={(e) => this.handleSubmit(e)}>
-                    <TextField className="Messages-Create-New-Message" sx={{background: 'white', color: 'black', input: { color:'black' }}} placeholder="Message" id="filled-basic" label="Write something" variant="filled"></TextField>
-                    <Button variant="contained" type="submit" style={{maxHeight: '55px'}}>
-                        Send Message
-                    </Button>
-                </form>
+
             </div>
         )
     }
