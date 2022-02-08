@@ -249,18 +249,8 @@ export default class HighRollers extends React.Component {
             const uniqueAddresses = this.getUniqueAddresses(tickets);
             this.getTickets(uniqueAddresses, tickets);
 
-
-            var time = 60;
-            var initialOffset = 164;
-            var i: any;
-            var timer_content;
-            var rotation_class;
-            var border;
-
             var interval = setInterval(() => {
                 this.getCountDown();
-
- 
 
             }, 1000)
         }
