@@ -248,8 +248,20 @@ export default class HighRollers extends React.Component {
             console.log("TICKETS", tickets)
             const uniqueAddresses = this.getUniqueAddresses(tickets);
             this.getTickets(uniqueAddresses, tickets);
-            setInterval(() => {
+
+
+            var time = 60;
+            var initialOffset = 164;
+            var i: any;
+            var timer_content;
+            var rotation_class;
+            var border;
+
+            var interval = setInterval(() => {
                 this.getCountDown();
+
+ 
+
             }, 1000)
         }
     }
@@ -280,6 +292,7 @@ export default class HighRollers extends React.Component {
                 :
                     <h3 className="HighRollers-Current-Game-Address-h3">No Game</h3>
                 }
+  
                 <div className="HighRollers-GameInfo-Container">
                     <HighRollerDeposits tokens={this.state.gameTokens}/>
                 </div>
