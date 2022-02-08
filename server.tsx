@@ -130,7 +130,7 @@ async function processCurrentGame() {
    console.log(gameInfo)
     if (currentGame.winner !== undefined) {
       if (currentGame.winner === "0x0000000000000000000000000000000000000000" || currentGame.status === 1) {
-        console.log("PROCESSING GAME")
+        console.log("PROCESSING GAME", currentGame.contractAddress)
         const HighRollersProcessTxn = await HighRollersContract.processCurrentGame();
         HighRollersProcessTxn.wait()
       }
