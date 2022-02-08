@@ -2,6 +2,7 @@ import React from 'react';
 import HighRollerGame from '../Components/HighRollerGame';
 import { ethers } from 'ethers';
 import { HighRollersAddress, _HighRollers_abi } from '../interfaces/HighRollers_Interface';
+import { Link } from 'react-router-dom';
 import "./PastHighRollerGames.css";
 
 declare let window: any;
@@ -39,7 +40,9 @@ export default class PastHighRollerGames extends React.Component {
                     <div>
                         {this.state.pastGames.map( (game: any) => {
                             return (
-                                <HighRollerGame winner={game.winner} tickets={parseInt(game.tickets)} contractAddress={game.contractAddress}/> 
+                                <Link to={`high-roller/${game['contractAddress']}`}>
+                                    <HighRollerGame winner={game.winner} tickets={parseInt(game.tickets)} contractAddress={game.contractAddress}/> 
+                                </Link>
                             )
                         })}
                     </div>

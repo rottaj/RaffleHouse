@@ -7,6 +7,7 @@ import RaffleViewer from './Containers/RaffleViewer';
 import HighRollers from "./Containers/HighRollers";
 import Host from "./Containers/Host";
 import CoinFlipViewer from "./Containers/CoinFlipViewer";
+import HighRollerViewer from './Containers/HighRollerViewer';
 import './App.css';
 
 export default class App extends React.Component {
@@ -22,6 +23,7 @@ export default class App extends React.Component {
           <Route exact path = "/high-rollers" component = {HighRollers} />
           <Route path = "/raffle/:contractAddress" component = {RaffleViewer}/>
           <Route path = "/coin-flip/:contractAddress" component = {CoinFlipViewer}/>
+          <Route path = "/high-roller/:contractAddress" component = {HighRollerViewer} />
         </BrowserRouter>
       </div>
     )
