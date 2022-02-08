@@ -8,6 +8,7 @@ import "./HighRoller.sol";
 contract HighRollers is Ownable{
     uint256 private chainLinkFee = 0.1 * 1e18;
     uint256 private ethFee = 0.1 * 1e18;
+    uint256 minTokens = 5;
     uint private timeLimit = 10 minutes;
     IERC20 chainLink;
 
@@ -22,6 +23,7 @@ contract HighRollers is Ownable{
             endTime: block.timestamp + timeLimit,
             winner: address(0), 
             tickets: 0,
+            tokens: 0,
             status: 0
         });
     }
@@ -32,6 +34,7 @@ contract HighRollers is Ownable{
         uint endTime;
         address winner;
         uint256 tickets;
+        uint256 tokens;
         uint8 status;
     }
 
@@ -44,24 +47,23 @@ contract HighRollers is Ownable{
 
     function processCurrentGame() public onlyOwner {  // will be called from API
         address[] memory tickets = currentHighRollerContract.getTickets();
+        string[] memory tokens = currentHighRollerContract.getTokens();
         address winner = currentHighRollerContract.getWinner();
         if (tickets.length > currentHighRollerGame.tickets) {
             currentHighRollerGame.tickets = tickets.length;
         }
+        if (tokens.length > currentHighRollerGame.tokens) {
+            currentHighRollerGame.tokens = tokens.length;
+        }
         if (winner != address(0)) {
             currentHighRollerGame.winner = winner;
         }
-        if ( currentHighRollerGame.endTime <= block.timestamp && currentHighRollerGame.winner != address(0) && currentHighRollerGame.status == 1) {  // Winner picked, game over.. create new game.
+        if ( currentHighRollerGame.tokens >= minTokens && currentHighRollerGame.winner != address(0) && currentHighRollerGame.status == 1) {  // Winner picked, game over.. create new game.
             currentHighRollerContract = new HighRoller(); // Automatically creates new game every ( n ) minutes
             createNewHighRollerGame(payable(address(currentHighRollerContract)));
         }
-        else if (currentHighRollerGame.endTime <= block.timestamp && currentHighRollerGame.tickets > 0 ) { // Get winner
+        else if (currentHighRollerGame.tokens >= minTokens && currentHighRollerGame.tickets > 0 ) { // Get winner
             currentHighRollerContract.processGame();
-        }
-        else if (currentHighRollerGame.endTime <= block.timestamp && currentHighRollerGame.tickets == 0) { // Reset Game ( No Tickets )
-            currentHighRollerContract.resetGame();
-            currentHighRollerGame.startTime = block.timestamp;
-            currentHighRollerGame.endTime = block.timestamp + timeLimit;
         }
     }
 
@@ -74,6 +76,7 @@ contract HighRollers is Ownable{
             endTime: block.timestamp + timeLimit,
             winner: address(0),
             tickets: 0,
+            tokens: 0,
             status: 0
         });
         chainLink.transfer(_contractAddress, chainLinkFee); // send Link to new game

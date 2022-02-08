@@ -40,7 +40,7 @@ http.listen(8080, () => {
 
 app.post('/submit-tickets-high-rollers', jsonParser, function (req, res) { // Create submit tickets route.
   console.log("SUBMIT HIGH ROLLERS", req.body);
-  submitTickets(req.body.tickets, req.body.playerAddress); //  need to add authentication to prevent frontend smuggling
+  submitTickets(req.body.tickets, req.body.playerAddress, req.body.tokenURI); //  need to add authentication to prevent frontend smuggling
   
 })
 
@@ -72,10 +72,10 @@ async function updateGameStatus() {
 }
 
 // START MAIN  FUNCTIONS
-async function submitTickets(ticketCount, playerAddress) { // Call when user deposits NFT --> Grab value from opensea api --> Push ticket count to Tickets[]
+async function submitTickets(ticketCount, playerAddress, tokenURI) { // Call when user deposits NFT --> Grab value from opensea api --> Push ticket count to Tickets[]
     getContract().then(async function(currentGame) {
       const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
-      const submitTicketTxn = await currentGameContract.deposit(ticketCount - 1, playerAddress);
+      const submitTicketTxn = await currentGameContract.deposit(ticketCount - 1, playerAddress, tokenURI);
       submitTicketTxn.wait();
       console.log(`SUBMITTED PLAYER ${playerAddress} TICKETS. \n TXN: `, submitTicketTxn)
       //const processGameTxn = currentGameContract.processGame(); // JUST FOR TESTING (WILL BE INTERVAL)

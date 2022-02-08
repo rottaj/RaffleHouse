@@ -8,7 +8,8 @@ import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 
 contract HighRoller is VRFConsumerBase, Ownable { // add VRF
 
-    uint private timeLimit = 10 minutes;
+    uint private timeLimit = 10 minutes; // Change to processing Time
+    uint256 minTokens = 5;
     uint private startTime;
     uint private endTime;
     address private winner;
@@ -36,24 +37,27 @@ contract HighRoller is VRFConsumerBase, Ownable { // add VRF
         uint endTime;
         address winner;
         uint256 tickets;
+        uint256 tokens;
         uint8 status;
     }
 
     enum State {STARTED, PROCESSING, PROCESSED}
 
     address[] private tickets;
+    string[] private tokens;
 
     receive() external payable {}
 
     function processGame() public {
-        if ((endTime <= block.timestamp) && (state == State.STARTED)) { // REMOVED FOR TESTING ( WILL ADD BACK LATER )
+        if ((endTime <= block.timestamp) && (state == State.STARTED) && (tokens.length >= minTokens)) { // REMOVED FOR TESTING ( WILL ADD BACK LATER )
             getRandomNumber();
         }
     }
 
-    function deposit(uint256 _tickets, address _accountAddress) public {
+    function deposit(uint256 _tickets, address _accountAddress, string memory _tokenURI) public {
         require(msg.sender != address(0), "DEPOSIT: INVALID ADDRESS");
         //_userDeposits[_accountAddress] += _tickets; // If MIN_TICKETS !! REACHED --> REFUND
+        tokens.push(_tokenURI);
         for (uint i=0; i<=_tickets; i++) {
             tickets.push(_accountAddress);
         }
@@ -79,10 +83,6 @@ contract HighRoller is VRFConsumerBase, Ownable { // add VRF
         collection.transferFrom(address(this), winner, _tokenID); // Sends ERC721 Token to Winner
     }
 
-    function resetGame() public { // Might need to refactor, could cost us lots of gas
-        startTime = block.timestamp;
-        endTime = block.timestamp + timeLimit;
-    }
 
     // VIEW FUNCTIONS 
 
@@ -92,17 +92,28 @@ contract HighRoller is VRFConsumerBase, Ownable { // add VRF
             endTime: endTime,
             winner: winner,
             tickets: tickets.length,
+            tokens: tokens.length,
             status: uint8(state)
         });
         return gameInfo;
     }
 
+    // Will probably refactor to allow batch returns
+
     function getTickets() view public returns (address[] memory) {
         return tickets;
     }
 
-    function getTicketByIndex (uint256 _index) public view returns (address) {
+    function getTicketByIndex (uint256 _index) public view returns (address) { 
         return tickets[_index];
+    }
+
+    function getTokens() view public returns (string[] memory) {
+        return tokens;
+    }
+
+    function getTokensByIndex (uint256 _index) public view returns (string memory) {
+        return tokens[_index];
     }
 
     function getWinner() view public returns (address) {

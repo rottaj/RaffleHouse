@@ -1,4 +1,4 @@
-const HighRollersAddress = "0x58f32DEA128f0Fbfa7689a12684100e7504663af"
+const HighRollersAddress = "0x1129750B6dC5eF5a5F11E3708bB50528Cb00000a"
 
 const _HighRollers_abi = 
  [
@@ -101,6 +101,11 @@ const _HighRollers_abi =
           "type": "uint256"
         },
         {
+          "internalType": "uint256",
+          "name": "tokens",
+          "type": "uint256"
+        },
+        {
           "internalType": "uint8",
           "name": "status",
           "type": "uint8"
@@ -138,6 +143,11 @@ const _HighRollers_abi =
             {
               "internalType": "uint256",
               "name": "tickets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokens",
               "type": "uint256"
             },
             {
@@ -189,6 +199,11 @@ const _HighRollers_abi =
             {
               "internalType": "uint256",
               "name": "tickets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokens",
               "type": "uint256"
             },
             {
@@ -264,6 +279,11 @@ const _HighRollers_abi =
         {
           "internalType": "uint256",
           "name": "tickets",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokens",
           "type": "uint256"
         },
         {

@@ -1,5 +1,5 @@
 const _HighRoller_abi = 
-[
+ [
     {
       "inputs": [],
       "stateMutability": "nonpayable",
@@ -54,6 +54,11 @@ const _HighRoller_abi =
           "internalType": "address",
           "name": "_accountAddress",
           "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "_tokenURI",
+          "type": "string"
         }
       ],
       "name": "deposit",
@@ -85,6 +90,11 @@ const _HighRoller_abi =
             {
               "internalType": "uint256",
               "name": "tickets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokens",
               "type": "uint256"
             },
             {
@@ -128,6 +138,38 @@ const _HighRoller_abi =
           "internalType": "address[]",
           "name": "",
           "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getTokens",
+      "outputs": [
+        {
+          "internalType": "string[]",
+          "name": "",
+          "type": "string[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getTokensByIndex",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
         }
       ],
       "stateMutability": "view",
@@ -187,13 +229,6 @@ const _HighRoller_abi =
     {
       "inputs": [],
       "name": "renounceOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "resetGame",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

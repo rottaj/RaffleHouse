@@ -162,7 +162,7 @@ export default class HighRollers extends React.Component {
             const requestParameters = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tickets: selectedToken.tokenPrice, playerAddress: account }) // CREATE REQUEST BODY ( WILL ADD CONTRACT ADDRESS + TOKEN ID FOR BACKEND AUTH)
+            body: JSON.stringify({ tickets: selectedToken.tokenPrice, playerAddress: account, tokenURI: selectedToken.image }) // CREATE REQUEST BODY ( WILL ADD CONTRACT ADDRESS + TOKEN ID FOR BACKEND AUTH)
             };
             fetch('http://127.0.0.1:8080/submit-tickets-high-rollers', requestParameters).then(res => { // FETCH TO HIGHROLLER API
                 return res.json()
