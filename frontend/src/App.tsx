@@ -13,6 +13,7 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="App">
+        sessionStorage.setItem("userTokens", {})
         <BrowserRouter>
           <Route exact path = "/" component = {Home} />
           <Route exact path = "/raffles" component = {Raffles}/>

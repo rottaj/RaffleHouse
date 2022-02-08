@@ -34,7 +34,7 @@ export default class PastHighRollerGames extends React.Component {
     render() {
         return (
             <div className="PastHighRoller-Games-Main-Div">
-                <h1>Past High Roller Games</h1>
+                <h1 className="PastHighRoller-Games-h1">Past High Roller Games</h1>
                 {this.state.pastGames.length !== 0 ? 
                     <div>
                         {this.state.pastGames.map( (game: any) => {

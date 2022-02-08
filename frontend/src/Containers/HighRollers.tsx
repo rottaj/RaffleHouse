@@ -248,17 +248,13 @@ export default class HighRollers extends React.Component {
             console.log("TICKETS", tickets)
             const uniqueAddresses = this.getUniqueAddresses(tickets);
             this.getTickets(uniqueAddresses, tickets);
-
             var interval = setInterval(() => {
                 this.getCountDown();
-
+                //console.log("SESSION USERTOKENS", JSON.parse(sessionStorage.userTokens))
             }, 1000)
         }
     }
 
-    async componentDidUpdate() {
-
-    }
 
     render() {
         return (
