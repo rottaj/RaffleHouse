@@ -7,7 +7,6 @@ import Deposit from "../Components/Deposit";
 import PlayersList from "../Components/PlayersList";
 import Messages from "../Components/Messages";
 import Button from '@mui/material/Button';
-import Header from './Header';
 import Footer from '../Components/Footer';
 
 
@@ -34,6 +33,7 @@ export default class RaffleViewer extends React.Component {
         gameInfo: [],
         account: ""
     }
+
 
     fetchNFTs = async (contractAddress: any) => {
         if (window.ethereum) {

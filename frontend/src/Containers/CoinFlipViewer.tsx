@@ -6,7 +6,6 @@ import TextField from '@mui/material/TextField';
 import Messages from "../Components/Messages";
 import Button from '@mui/material/Button';
 import Footer from '../Components/Footer';
-import Header from "./Header";
 import "./CoinFlipViewer.css";
 declare let window: any;
 

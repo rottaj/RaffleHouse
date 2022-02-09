@@ -70,7 +70,7 @@ export default class NFT extends React.Component<Props> {
     }
 
     componentDidMount() {
-        this.getOpenSeaPrice(this.props.token)
+        //this.getOpenSeaPrice(this.props.token)
     }
 
     render() {

@@ -2,7 +2,6 @@ import React from 'react';
 import CoinFlip from '../Components/CoinFlip';
 import MenuItems from '../Components/MenuItems';
 import Messages from "../Components/Messages";
-import Header from "./Header";
 import { Link } from 'react-router-dom';
 import { ethers } from "ethers";
 import { CoinFlipAddress, _CoinFlips_abi } from "../interfaces/CoinFlips_Interface";

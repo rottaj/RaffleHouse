@@ -15,12 +15,17 @@ import MenuItem from '@mui/material/MenuItem';
 import EnterApp from "../Components/EnterApp";
 import logo from '../images/RaffleHouse_Logo_HighLight.png';
 import './MenuItems.css';
-import Header from "../Containers/Header";
 
 const pages = [ 'raffles', 'high-rollers', 'coin-flips', 'host'];
 const settings = ['Profile', 'Logout'];
 
-
+const Header = () => {
+    return (
+        <div className="sign-header">
+            <span className="fast-flicker-header">Raffle House</span>
+        </div>
+    )
+}
 const ResponsiveAppBar = (props: any) => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);

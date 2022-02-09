@@ -50,7 +50,6 @@ export default class HighRollerViewer extends React.Component {
 
     state = {
         account: "",
-        userTokens: [],
         gameTokens: [],
         players: []
     }
@@ -110,16 +109,9 @@ export default class HighRollerViewer extends React.Component {
                         let metaData = await contract.tokenURI(parseInt(tokens[i].tokenID))
                         fetch(metaData).then(res => {return res.json()}).then(data => {
                             tokens[i]['image'] = data.image
-                            if (stateName === "userTokens") {
-                                this.setState({
-                                    userTokens: [...this.state.userTokens, tokens[i]]
-                                })
-                            } 
-                            else if (stateName === "gameTokens") {
-                                this.setState({
-                                    gameTokens: [...this.state.gameTokens, tokens[i]]
-                                })
-                            }
+                            this.setState({
+                                gameTokens: [...this.state.gameTokens, tokens[i]]
+                            })
                         }).catch((err) => console.log(err))
 
                     //}
@@ -181,7 +173,6 @@ export default class HighRollerViewer extends React.Component {
                 gameInfo: gameData
             })
 
-            this.fetchNFTs(account, "userTokens"); // FETCHES USER NFTS
             this.fetchNFTs(contractAddress, "gameTokens"); // FETCHES GAME TOKENS
             const currentHighRollerContract = new ethers.Contract(contractAddress, _HighRoller_abi, signer);
             const tickets = await currentHighRollerContract.getTickets();
@@ -197,13 +188,16 @@ export default class HighRollerViewer extends React.Component {
             <div className="HighRollerViewer-Main-Container">
                 <MenuItems account={this.state.account}/>
                 <Messages/>
-                <div className="HighRollers-GameInfo-Container">
-                    <HighRollerDeposits tokens={this.state.gameTokens}/>
+                <div className="HighRollerViewer-Game-Container">
+                    <div className="HighRollers-GameInfo-Container">
+                        <HighRollerDeposits tokens={this.state.gameTokens}/>
+                    </div>
+
+                    <div className="HighRollers-PlayerList-Container">
+                        <PlayersList players={this.state.players}/>
+                    </div>
                 </div>
 
-                <div className="HighRollers-PlayerList-Container">
-                    <PlayersList players={this.state.players}/>
-                </div>
             </div>
         )
     }

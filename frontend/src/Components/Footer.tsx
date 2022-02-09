@@ -11,36 +11,36 @@ import PhyllisToken from "../images/my_fucking_mayc.png";
 import './Footer.css';
 
 
-export default class Footer extends React.Component {
-    render() {
-        return (
+const Footer = () => {
+    return (
+        <Box
+            sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '100vh',
+            }}
+        >
             <Box
+                component="footer"
                 sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                minHeight: '100vh',
+                py: 3,
+                px: 2,
+                mt: 'auto',
+                backgroundColor: 'transparent',
                 }}
             >
-                <Box
-                    component="footer"
-                    sx={{
-                    py: 3,
-                    px: 2,
-                    mt: 'auto',
-                    backgroundColor: 'transparent',
-                    }}
-                >
-                    <Container>
-                    <Typography variant="body1" color="white" textAlign="center">
+                <Container>
+                <Typography variant="body1" color="white" textAlign="center">
 
-                        <p>© 2022 Raffle House, Inc</p>
-                        <img className="Phyllis-token" src={PhyllisToken}></img>
-                        <TwitterIcon sx={{float: "right"}}><a href="https://twitter.com/0xahawk"/></TwitterIcon>
-                    </Typography>
+                    <p>© 2022 Raffle House, Inc</p>
+                    <img className="Phyllis-token" src={PhyllisToken}></img>
+                    <TwitterIcon sx={{float: "right"}}><a href="https://twitter.com/0xahawk"/></TwitterIcon>
+                </Typography>
 
-                    </Container>
-                </Box>
+                </Container>
             </Box>
-        )
-    }
+        </Box>
+    )
 }
+
+export default Footer

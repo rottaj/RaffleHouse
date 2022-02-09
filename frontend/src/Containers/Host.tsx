@@ -1,41 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import RaffleCreator from "../Components/RaffleCreator";
 import CoinFlipCreator from '../Components/CoinFlipCreator';
 import MenuItems from "../Components/MenuItems";
 import Messages from "../Components/Messages";
 import "./Host.css";
 import Footer from '../Components/Footer';
-import Header from './Header'
 
 
 declare let window: any;
-export default class Host extends React.Component {
+const Host = () => {
 
-    state = {
-        account: ""
-    }
+    const [account, setAccount] = useState('')
 
-    async componentDidMount() {
+
+    useEffect(() => {
         document.title = "Host - Raffle House"
-        if(window.ethereum) {
+        const getAccount = async () => {
             var accounts = await window.ethereum.send('eth_requestAccounts');
             const account = accounts.result[0];
-            this.setState({account: account});
+            setAccount(account);
         }
-    } 
+        if(window.ethereum) {
+            getAccount()
+        }
+    }, [])
 
-    render() {
-        return (
-            <div className="Host-Container-Main-Div">
-                <MenuItems account={this.state.account}/>
-                <Messages/>
-                <div className="Host-Games-Container-Div">
-                    <RaffleCreator/>
-                    <CoinFlipCreator/>
-                </div>
-
-                <Footer/>
+    return (
+        <div className="Host-Container-Main-Div">
+            <MenuItems account={account}/>
+            <Messages/>
+            <div className="Host-Games-Container-Div">
+                <RaffleCreator/>
+                <CoinFlipCreator/>
             </div>
-        )
-    }
+
+            <Footer/>
+        </div>
+    )
 }
+
+export default Host
