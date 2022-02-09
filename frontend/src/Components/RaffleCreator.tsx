@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import NFTSelector from "./NFTSelector";
 import { ethers, ContractFactory } from 'ethers';
 import { _abi } from '../interfaces/Eyescream_Interface';
@@ -47,28 +47,20 @@ interface Token {
 
 
 declare let window: any;
-export default class RaffleCreator extends React.Component{
-    state = {
-        tokens: [],
-        RaffleFormOpen: false,
-        CoinFlipFormOpen: false
+const RaffleCreator = () => {
+
+
+    const [tokens, setTokens]: any = useState([]);
+    const [RaffleFormOpen, setRaffleFormOpen] = useState(false);
+
+
+    const handleRaffleForm = () => {
+        setRaffleFormOpen(!RaffleFormOpen);
     }
 
-    tokenSelector: any = React.createRef() 
 
-    handleRaffleForm = () => {
-        this.setState({
-          RaffleFormOpen: !this.state.RaffleFormOpen
-        })
-    }
 
-    handleCoinFlipForm = () => {
-        this.setState({
-            CoinFlipFormOpen: !this.state.CoinFlipFormOpen
-        })
-    }
-
-    fetchNFTs = async () => {
+    const fetchNFTs = async () => {
         if (window.ethereum) {
             var provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
@@ -83,16 +75,16 @@ export default class RaffleCreator extends React.Component{
                 return res.json();
             })
             .then(data => {
-                var tokens: Token[] = []
+                var tempTokens: Token[] = []
                 //console.log("TOKENS TESTING FOOBAR", data.result)
                 for (let i=0; i<=data.result.length; i++ ) {
-                    if (tokens.length > 0) {
+                    if (tempTokens.length > 0) {
                         try {
-                            let index = tokens.findIndex(temp => (temp['tokenID'] === data.result[i]['tokenID']) && (temp['contractAddress'] === data.result[i]['contractAddress']));
+                            let index = tempTokens.findIndex(temp => (temp['tokenID'] === data.result[i]['tokenID']) && (temp['contractAddress'] === data.result[i]['contractAddress']));
                             if (index === -1) {
-                                tokens.push(data.result[i])
+                                tempTokens.push(data.result[i])
                             } else {
-                                tokens.splice(index, 1)
+                                tempTokens.splice(index, 1)
                             }
                         } 
                         catch(err) {
@@ -100,17 +92,17 @@ export default class RaffleCreator extends React.Component{
                         }
                     }
                     else {
-                        tokens.push(data.result[i])
+                        tempTokens.push(data.result[i])
                     }
                 }
-                this.getMetaData(tokens)
+                getMetaData(tempTokens)
             })
             
 
         }
     }
 
-    getMetaData = async (tokens: any) => {
+    const getMetaData = async (tempTokens: any) => {
         if (window.ethereum) {
             var provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
@@ -118,18 +110,15 @@ export default class RaffleCreator extends React.Component{
             //var abi = fetch (url) // get verified contract abi
             // PERFORM FETCH ABI REQUEST ON VERIFIED CONTRACT
             //console.log(token.contractAddress, address)
-            for (let i=0; i<=tokens.length; i++ ) {
+            for (let i=0; i<=tempTokens.length; i++ ) {
                 //try {
-                if(tokens[i]) {
+                if(tempTokens[i]) {
                     //if (String(tokens[i].contractAddress) === '0x8f44a8b9059b2bc914c893eed250a2e1097ee187') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
-                        let contract = new ethers.Contract(tokens[i].contractAddress, _abi, signer)
-                        let metaData = await contract.tokenURI(parseInt(tokens[i].tokenID))
+                        let contract = new ethers.Contract(tempTokens[i].contractAddress, _abi, signer)
+                        let metaData = await contract.tokenURI(parseInt(tempTokens[i].tokenID))
                         fetch(metaData).then(res => {return res.json()}).then(data => {
-                            tokens[i]['image'] = data.image
-                            this.setState({
-                                //tokens: this.state.tokens.filter(tempToken => tempToken['tokenID'] !== tokens[i].tokenID)
-                                tokens: [...this.state.tokens, tokens[i]]
-                            })
+                            tempTokens[i]['image'] = data.image
+                            setTokens((tokens: any) => [...tokens, tempTokens[i]])
                         }).catch((err) => console.log(err))
                     //}
                 }
@@ -144,11 +133,11 @@ export default class RaffleCreator extends React.Component{
 
 
 
-    componentDidMount() {
-        this.fetchNFTs()
-    }
+    useEffect(() =>  {
+        fetchNFTs()
+    }, [])
 
-    handleSubmit = async (e: any) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
         if (window.ethereum) {
             var accounts = await window.ethereum.send('eth_requestAccounts');
@@ -158,7 +147,8 @@ export default class RaffleCreator extends React.Component{
             const rafflesContract = await new ethers.Contract(RafflesAddress, _abi_raffles, signer)  // connect to Raffles Contract
             // DEPLOY CONTRACT
             const account = accounts.result[0];
-            const selectedToken = this.tokenSelector.state.selectedToken; // maybe remove?
+            //const selectedToken = this.tokenSelector.state.selectedToken; // maybe remove?
+            /*
             const contract = await raffleFactory.deploy(
                                                         parseInt(e.target[0].value),
                                                         parseInt(e.target[1].value),
@@ -175,28 +165,29 @@ export default class RaffleCreator extends React.Component{
                 console.log(dataTwo);
                 const addRaffleTxn = rafflesContract.addRaffle(selectedToken.image, contract.address, selectedToken.tokenName, selectedToken.tokenID)
             })
+            */
         }
     }
 
-    render() {
-        return (
-            <div className="CreateRaffleForm-Main" >
-                <div className="PopUpRaffle-Form">
-                    <h3 className="CreateRaffle-h3">Create your Raffle!</h3>
-                    <NFTSelector tokens={this.state.tokens} />
-                    <div className="CreateRaffle-Form-Container">
-                        <form className="CreateRaffle-Form" onSubmit={(e) => this.handleSubmit(e)}>
-                            <h3 className="Minimum-BuyIn-h3">Minimum Buy in: </h3>
-                            <TextField className="RaffleForm-Minimum-Buyin" defaultValue="0.08" id="filled-basic" label="Deposit" variant="filled"></TextField>
-                            <h3 className="Minimum-BuyIn-h3">Minimum Tickets: (1 ticket = 0.01)</h3>
-                            <TextField className="RaffleForm-Minimum-Tickets" defaultValue="16" id="filled-basic" label="Deposit" variant="filled"></TextField>
-                            <Button variant="contained" type="submit" style={{maxHeight: '55px'}}>
-                                Create Raffle
-                            </Button>
-                        </form>
-                    </div>
+    return (
+        <div className="CreateRaffleForm-Main" >
+            <div className="PopUpRaffle-Form">
+                <h3 className="CreateRaffle-h3">Create your Raffle!</h3>
+                <NFTSelector tokens={tokens} />
+                <div className="CreateRaffle-Form-Container">
+                    <form className="CreateRaffle-Form" onSubmit={(e) => handleSubmit(e)}>
+                        <h3 className="Minimum-BuyIn-h3">Minimum Buy in: </h3>
+                        <TextField className="RaffleForm-Minimum-Buyin" defaultValue="0.08" id="filled-basic" label="Deposit" variant="filled"></TextField>
+                        <h3 className="Minimum-BuyIn-h3">Minimum Tickets: (1 ticket = 0.01)</h3>
+                        <TextField className="RaffleForm-Minimum-Tickets" defaultValue="16" id="filled-basic" label="Deposit" variant="filled"></TextField>
+                        <Button variant="contained" type="submit" style={{maxHeight: '55px'}}>
+                            Create Raffle
+                        </Button>
+                    </form>
                 </div>
             </div>
-        )
-    }
+        </div>
+    )
 }
+
+export default RaffleCreator;

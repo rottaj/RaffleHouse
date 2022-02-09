@@ -26,7 +26,6 @@ const PlayersList = (props:PropsPlayersList) => {
     )
 }
 
-export default PlayersList;
 
 interface Props {
     player: PlayerInterface;
@@ -42,3 +41,6 @@ const Player = (props:Props) => {
         </div>
     )
 }
+
+
+export default PlayersList;
