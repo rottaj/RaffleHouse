@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import HighRollerDeposits from '../Components/HighRollerDeposits';
 import PlayersList from '../Components/PlayersList';
 import MenuItems from "../Components/MenuItems";
@@ -46,16 +46,15 @@ interface Token {
 
 
 declare let window: any;
-export default class HighRollerViewer extends React.Component {
-
-    state = {
-        account: "",
-        gameTokens: [],
-        players: []
-    }
+const HighRollerViewer = () => {
 
 
-    fetchNFTs = async (address: string, stateName: string) => {
+    const [account, setAccount] = useState('');
+    const [gameTokens, setGameTokens]:any = useState([]);
+    const [players, setPlayers]:any = useState([]);
+
+
+    const fetchNFTs = async (address: string, stateName: string) => {
         if (window.ethereum) {
             var provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
@@ -86,7 +85,7 @@ export default class HighRollerViewer extends React.Component {
                         tokens.push(data.result[i])
                     }
                 }
-                this.getMetaData(tokens, stateName);
+                getMetaData(tokens, stateName);
             })
             
 
@@ -94,7 +93,7 @@ export default class HighRollerViewer extends React.Component {
     }
 
 
-    getMetaData = async (tokens: any, stateName: string) => {
+    const getMetaData = async (tokens: any, stateName: string) => {
         if (window.ethereum) {
             var provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
@@ -109,9 +108,7 @@ export default class HighRollerViewer extends React.Component {
                         let metaData = await contract.tokenURI(parseInt(tokens[i].tokenID))
                         fetch(metaData).then(res => {return res.json()}).then(data => {
                             tokens[i]['image'] = data.image
-                            this.setState({
-                                gameTokens: [...this.state.gameTokens, tokens[i]]
-                            })
+                            setGameTokens((gameTokens: any) => [...gameTokens, tokens[i]])
                         }).catch((err) => console.log(err))
 
                     //}
@@ -125,26 +122,24 @@ export default class HighRollerViewer extends React.Component {
 
 
 
-    getUniqueAddresses(array: any) {
+    const getUniqueAddresses = (array: any) => {
         let unique = array.filter((item: any, i: any, ar: any) => ar.indexOf(item) === i);
         return unique;
     }
 
-    getOccurances(array: any, val: any) {
+    const getOccurances = (array: any, val: any) =>{
         let ticketNumber = array.reduce((a: any, v: any) => (v === val ? a + 1 : a), 0);
         return ticketNumber;
     }
 
-    getTickets = async (uniqueAddresses: any, tickets: any) => {
+    const getTickets = async (uniqueAddresses: any, tickets: any) => {
         console.log(tickets)
         for (let i=0; i<=uniqueAddresses.length; i++ ) {
-            let ticketNumber = this.getOccurances(tickets, uniqueAddresses[i])
+            let ticketNumber = getOccurances(tickets, uniqueAddresses[i])
             if (uniqueAddresses[i] !== undefined) {
                 console.log("TESTING GET_TICKETS", uniqueAddresses[i], ticketNumber, (ticketNumber).toFixed(2))
                 let player = {address: uniqueAddresses[i], tickets: ticketNumber, totalEth: (ticketNumber).toFixed(2), chance: ((ticketNumber / tickets.length) * 100).toFixed(2)}
-                this.setState({
-                    players: [...this.state.players, player]
-                })
+                setPlayers((players: any) => [...players, player]);
             }
         }
 
@@ -154,51 +149,48 @@ export default class HighRollerViewer extends React.Component {
 
 
 
-    async componentDidMount() {
-        if (window.ethereum){ 
-            const contractAddress = window.location.pathname.split('/').at(-1);
-            this.setState({
-                coinFlipContractAddress: contractAddress
-            })
+    useEffect(() => {
+
+        const contractAddress = window.location.pathname.split('/').at(-1);
+        const mountGameInfo = async () => {
             var accounts = await window.ethereum.send('eth_requestAccounts');
             const account = accounts.result[0];
-            this.setState({account: account});
+            setAccount(account);
             console.log(contractAddress);
             var provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             let contract = new ethers.Contract(contractAddress, _HighRoller_abi, signer);
             console.log(contract)
-            const gameData = await contract.getGameInfo();
-            this.setState({
-                gameInfo: gameData
-            })
 
-            this.fetchNFTs(contractAddress, "gameTokens"); // FETCHES GAME TOKENS
+            fetchNFTs(contractAddress, "gameTokens"); // FETCHES GAME TOKENS
             const currentHighRollerContract = new ethers.Contract(contractAddress, _HighRoller_abi, signer);
             const tickets = await currentHighRollerContract.getTickets();
             console.log("TICKETS", tickets)
-            const uniqueAddresses = this.getUniqueAddresses(tickets);
-            this.getTickets(uniqueAddresses, tickets);
+            const uniqueAddresses = getUniqueAddresses(tickets);
+            getTickets(uniqueAddresses, tickets);
         }
-    }
+        if (window.ethereum){ 
+            mountGameInfo()
+        }
+    }, [])
 
 
-    render() {
-        return (
-            <div className="HighRollerViewer-Main-Container">
-                <MenuItems account={this.state.account}/>
-                <Messages/>
-                <div className="HighRollerViewer-Game-Container">
-                    <div className="HighRollers-GameInfo-Container">
-                        <HighRollerDeposits tokens={this.state.gameTokens}/>
-                    </div>
-
-                    <div className="HighRollers-PlayerList-Container">
-                        <PlayersList players={this.state.players}/>
-                    </div>
+    return (
+        <div className="HighRollerViewer-Main-Container">
+            <MenuItems account={account}/>
+            <Messages/>
+            <div className="HighRollerViewer-Game-Container">
+                <div className="HighRollers-GameInfo-Container">
+                    <HighRollerDeposits tokens={gameTokens}/>
                 </div>
 
+                <div className="HighRollers-PlayerList-Container">
+                    <PlayersList players={players}/>
+                </div>
             </div>
-        )
-    }
+
+        </div>
+    )
 }
+
+export default HighRollerViewer;
