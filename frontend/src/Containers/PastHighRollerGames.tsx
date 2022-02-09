@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import HighRollerGame from '../Components/HighRollerGame';
 import { ethers } from 'ethers';
 import { HighRollersAddress, _HighRollers_abi } from '../interfaces/HighRollers_Interface';
@@ -6,13 +6,11 @@ import { Link } from 'react-router-dom';
 import "./PastHighRollerGames.css";
 
 declare let window: any;
-export default class PastHighRollerGames extends React.Component {
+const PastHighRollerGames = () => {
 
-    state = {
-        pastGames: []
-    }
+    const [pastGames, setPastGames]:any = useState([]);
 
-    getPastGames = async () => {
+    const getPastGames = async () => {
         if (window.ethereum) {
             var provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
@@ -21,35 +19,33 @@ export default class PastHighRollerGames extends React.Component {
             console.log("PAST GAMES", parseInt(pastGames))
             for ( let i=0; i<= parseInt(pastGames)-1; i++ ) {
                 let tempGame = await HighRollersContract.getPastGameByIndex(i);
-                this.setState({
-                    pastGames: [...this.state.pastGames, tempGame]
-                })
+                setPastGames((pastGames: any) => [...pastGames, tempGame])
             }
         }
     }
 
-    componentDidMount() {
-        this.getPastGames();
-    }
+    useEffect(() => { 
+        getPastGames();
+    }, [])
 
-    render() {
-        return (
-            <div className="PastHighRoller-Games-Main-Div">
-                <h1 className="PastHighRoller-Games-h1">Past Games</h1>
-                {this.state.pastGames.length !== 0 ? 
-                    <div>
-                        {this.state.pastGames.map( (game: any) => {
-                            return (
-                                <Link to={`high-roller/${game['contractAddress']}`}>
-                                    <HighRollerGame winner={game.winner} tickets={parseInt(game.tickets)} contractAddress={game.contractAddress}/> 
-                                </Link>
-                            )
-                        })}
-                    </div>
-                : 
-                    <h3 className="PastGames-Header-h3">No Games</h3>
-                }
-            </div>
-        )
-    }
+    return (
+        <div className="PastHighRoller-Games-Main-Div">
+            <h1 className="PastHighRoller-Games-h1">Past Games</h1>
+            {pastGames.length !== 0 ? 
+                <div>
+                    {pastGames.map( (game: any) => {
+                        return (
+                            <Link to={`high-roller/${game['contractAddress']}`}>
+                                <HighRollerGame winner={game.winner} tickets={parseInt(game.tickets)} contractAddress={game.contractAddress}/> 
+                            </Link>
+                        )
+                    })}
+                </div>
+            : 
+                <h3 className="PastGames-Header-h3">No Games</h3>
+            }
+        </div>
+    )
 }
+
+export default PastHighRollerGames

@@ -1,58 +1,48 @@
-import React from 'react';
-import RaffleCreator from "../Components/RaffleCreator";
+import React, { useEffect, useState } from 'react';
 import MenuItems from "../Components/MenuItems";
 import Footer from "../Components/Footer";
-import CoinFlipCreator from '../Components/CoinFlipCreator';
-import { Link } from 'react-router-dom';
 import './Home.css';
 
 
 declare let window: any;
-export default class Home extends React.Component {
+const Home = () => {
 
-    state = {
-        RaffleFormOpen: false,
-        CoinFlipFormOpen: false,
-        account: ""
-    }
+    const [RaffleFormOpen, setRaffleFormOpen] = useState(false);
+    const [CoinFlipFormOpen, setCoinFlipFormOpen] = useState(false);
+    const [account, setAccount] = useState('');
 
-    async componentDidMount() {
-        if(window.ethereum) {
-
-            document.title = "Welcome to Raffle House"
+    
+    useEffect(() => {
+        document.title = "Welcome to Raffle House"
+        const getAccount = async () => {
             var accounts = await window.ethereum.send('eth_requestAccounts');
             const account = accounts.result[0];
-            this.setState({account: account});
+            setAccount(account);
         }
-    }  
+        if(window.ethereum) {
+            getAccount();
+        }       
+    }, [])
     
-    handleRaffleForm = () => {
-        this.setState({
-          RaffleFormOpen: !this.state.RaffleFormOpen
-        })
+    const handleRaffleForm = () => {
+        setRaffleFormOpen(!RaffleFormOpen);
     }
 
-    handleCoinFlipForm = () => {
-        this.setState({
-            CoinFlipFormOpen: !this.state.CoinFlipFormOpen
-        })
+    const handleCoinFlipForm = () => {
+        setCoinFlipFormOpen(!CoinFlipFormOpen);
     }
 
-    componentDidUpdate() {
-        console.log(this.state, "oogabooga")
-    }
-    
-    render() {
-        return (
-            <div className="main-container">
-                <MenuItems account={this.state.account}/>
-                    <div className="home-title-container">
-                        <div className="sign">
-                        <span className="fast-flicker">Raffle House</span>
-                        </div>
+    return (
+        <div className="main-container">
+            <MenuItems account={account}/>
+                <div className="home-title-container">
+                    <div className="sign">
+                    <span className="fast-flicker">Raffle House</span>
                     </div>
-                <Footer/>
-            </div>
-        )
-    }
+                </div>
+            <Footer/>
+        </div>
+    )
 }
+
+export default Home;
