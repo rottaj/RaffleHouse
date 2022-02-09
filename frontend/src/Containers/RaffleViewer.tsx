@@ -3,7 +3,7 @@ import { _abi } from "../interfaces/Eyescream_Interface";
 import { _Raffle_abi } from '../interfaces/RaffleEscrow_Interface';
 import React, { useState, useEffect} from 'react';
 import MenuItems from '../Components/MenuItems';
-import Deposit from "../Components/Deposit";
+import RaffleDeposit from "../Components/Deposit";
 import PlayersList from "../Components/PlayersList";
 import Messages from "../Components/Messages";
 import Button from '@mui/material/Button';
@@ -158,7 +158,7 @@ const RaffleViewer = () => {
                     <Button onClick={handleDepositClicked} variant="contained" type="submit" style={{maxHeight: '55px'}}>
                         Deposit
                     </Button>
-                    <Deposit tokenMetaData={tokenMetaData} isDepositOpen={isDepositOpen} raffleContractAddress={raffleContractAddress}/>
+                    <RaffleDeposit tokenMetaData={tokenMetaData} isDepositOpen={isDepositOpen} raffleContractAddress={raffleContractAddress}/>
                 </div>
 
                 <PlayersList players={players}/>

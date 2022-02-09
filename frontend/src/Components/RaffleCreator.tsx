@@ -183,7 +183,7 @@ export default class RaffleCreator extends React.Component{
             <div className="CreateRaffleForm-Main" >
                 <div className="PopUpRaffle-Form">
                     <h3 className="CreateRaffle-h3">Create your Raffle!</h3>
-                    <NFTSelector tokens={this.state.tokens} ref={(tokenSelector) => this.tokenSelector = tokenSelector}/>
+                    <NFTSelector tokens={this.state.tokens} />
                     <div className="CreateRaffle-Form-Container">
                         <form className="CreateRaffle-Form" onSubmit={(e) => this.handleSubmit(e)}>
                             <h3 className="Minimum-BuyIn-h3">Minimum Buy in: </h3>

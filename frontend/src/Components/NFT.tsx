@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './NFT.css';
 
 
@@ -11,15 +11,11 @@ interface Props {
 }
 
 
-export default class NFT extends React.Component<Props> {
+const NFT = (props:Props) => {
 
+    const [tokenPrice, setTokenPrice] = useState("Loading");
 
-    state = {
-        tokenPrice: "Loading"
-    }
-
-
-    getOpenSeaPrice = async (token: any) => {
+    const getOpenSeaPrice = async (token: any) => {
         let i =0;
         console.log("TOKEN", token)
 
@@ -37,9 +33,7 @@ export default class NFT extends React.Component<Props> {
                             if (data.collection !== undefined && data.collection !== 'undefined' && data.collection['payment_tokens'].length !== 0) {
                                 //console.log(data)
                                 let price = String(data['collection']['payment_tokens'][0]['eth_price']);
-                                this.setState({
-                                    tokenPrice: price
-                                })
+                                setTokenPrice(price);
                                 //if (JSON.parse(sessionStorage.userTokens).hasOwnProperty(`token_${token.contractAddress}_${token.tokenID}`) !== true) {
                                     /*
                                     console.log("HELLLLO")
@@ -69,20 +63,21 @@ export default class NFT extends React.Component<Props> {
 
     }
 
-    componentDidMount() {
-        //this.getOpenSeaPrice(this.props.token)
-    }
+    useEffect(() => {
+        getOpenSeaPrice(props.token);
+    }, [])
 
-    render() {
-        return (
-            <div className="NFT-Main-Container">
-                <img className="NFT-Img"src={this.props.token.image}></img>
-                {this.state.tokenPrice != "Loading" ?
-                    <h5 className="NFT-Price">Price: {this.state.tokenPrice} eth</h5>
-                :
-                    <h5 className="NFT-Price">{this.state.tokenPrice} Price </h5>
-                }
-            </div>
-        )
-    }
+
+    return (
+        <div className="NFT-Main-Container">
+            <img className="NFT-Img"src={props.token.image}></img>
+            {tokenPrice != "Loading" ?
+                <h5 className="NFT-Price">Price: {tokenPrice} eth</h5>
+            :
+                <h5 className="NFT-Price">{tokenPrice} Price </h5>
+            }
+        </div>
+    )
 }
+
+export default NFT;

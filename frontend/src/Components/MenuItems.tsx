@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link } from "react-router-dom";
+import { ethers } from 'ethers';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,7 +13,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import EnterApp from "../Components/EnterApp";
 import logo from '../images/RaffleHouse_Logo_HighLight.png';
 import './MenuItems.css';
 
@@ -26,6 +26,39 @@ const Header = () => {
         </div>
     )
 }
+
+interface Props{
+    account: string;
+}
+
+declare let window: any;
+const EnterApp = (props:Props) => {
+
+
+    const connectWallet = async () => {
+        if (window.ethereum) {
+            var accounts = await window.ethereum.send('eth_requestAccounts');
+            await window.ethereum.enable();
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = await provider.getSigner();
+
+        }
+    }
+
+
+    return (
+        <div>
+            {/* {console.log(this.props.account, "testtest")} */}
+            {props.account !== "" ?
+                <h3>{props.account.substring(0, 6) + "..." + props.account.substring(36, 40)}</h3>
+                //need to add if string.length > 38 then substring *protection for ens case
+                :
+                <button onClick={connectWallet}> Connect Wallet </button>
+            }
+        </div>
+    )
+}
+
 const ResponsiveAppBar = (props: any) => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);

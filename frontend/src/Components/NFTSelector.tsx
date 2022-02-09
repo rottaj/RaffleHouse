@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { _abi, address} from '../interfaces/Eyescream_Interface'; // FOR TESTING
 import { Grid } from "@mui/material";
@@ -16,39 +16,34 @@ interface Props {
 
 
 declare let window:any;
-export default class NFTSelector extends React.Component <Props>{
+const NFTSelector = (props:Props) => {
 
-    selectedToken: any = React.createRef() 
-    
-    state = {
-        selectedToken: {}
-    }
+
+    const [selectedToken, setSelectedToken]: any = useState({});
 
 
 
-    handleClick = (e: any) => { // Prob need to fix this.. whatever
-        console.log("TESTING TOKEN PRICE", this.selectedToken.state.tokenPrice);
-        e.tokenPrice = this.selectedToken.state.tokenPrice;
-        this.setState({
-            selectedToken: e
-        })
+    const handleClick = (e: any) => { // Prob need to fix this.. whatever
+        console.log("TESTING TOKEN PRICE", selectedToken.tokenPrice);
+        e.tokenPrice = selectedToken.tokenPrice;
+        setSelectedToken(e);
         console.log(e)
     }
 
 
 
-    render() {
-        return (
-            <div className="NFT-Selector-Main">
-                {/*this.state.tokens.map(token => {this.getMetaData(token)})*/}
-                {/*<Grid className="NFTSelector-Grid-Container" container spacing={2}> */}
-                { this.props.tokens ?
-                    this.props.tokens.map(token => {return (<div className="NFT-Div-Container" onClick={() => this.handleClick(token)}><NFT ref={(selectedToken) => this.selectedToken = selectedToken} token={token}></NFT></div>)})
-                    :
-                    <h5>No Tokens</h5>
-                }
-                {/*</Grid> */}
-            </div>
-        )
-    }
+    return (
+        <div className="NFT-Selector-Main">
+            {/*this.state.tokens.map(token => {this.getMetaData(token)})*/}
+            {/*<Grid className="NFTSelector-Grid-Container" container spacing={2}> */}
+            { props.tokens ?
+                props.tokens.map(token => {return (<div className="NFT-Div-Container" onClick={() => handleClick(token)}><NFT token={token}></NFT></div>)})
+                :
+                <h5>No Tokens</h5>
+            }
+            {/*</Grid> */}
+        </div>
+    )
 }
+
+export default NFTSelector;

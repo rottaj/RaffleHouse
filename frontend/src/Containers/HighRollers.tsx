@@ -288,7 +288,7 @@ export default class HighRollers extends React.Component {
                 <Button onClick={() => this.handleDeposit() }variant="contained" type="submit" style={{maxHeight: '55px'}}>
                     Deposit 
                 </Button>
-                <NFTSelector tokens={this.state.userTokens}  ref={(tokenSelector) => this.tokenSelector = tokenSelector}/>
+                <NFTSelector tokens={this.state.userTokens}  />
                 <PastHighRollerGames/>
                 <Footer/>
             </div>

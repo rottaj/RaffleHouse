@@ -10,20 +10,15 @@ interface Props {
 }
 
 declare let window: any;
-export default class HighRollerGame extends React.Component <Props>{
+const HighRollerGame = (props:Props) => {
 
-    state = {
-        winner: ""
-    }
-
-
-    render() {
-        return (
-            <div className="PastHighRollerGame-Main-Div">
-                <h3 className="PastHighRollerGame-Winner-h3">Winner: {this.props.winner}</h3>
-                <h3 className="PastHighRollerGame-Tickets-h3">Tickets: {this.props.tickets}</h3>
-                <h6 className="PastHighRollerGame-Address-h6">Contract: {this.props.contractAddress}</h6>
-            </div>
-        )
-    }
+    return (
+        <div className="PastHighRollerGame-Main-Div">
+            <h3 className="PastHighRollerGame-Winner-h3">Winner: {props.winner}</h3>
+            <h3 className="PastHighRollerGame-Tickets-h3">Tickets: {props.tickets}</h3>
+            <h6 className="PastHighRollerGame-Address-h6">Contract: {props.contractAddress}</h6>
+        </div>
+    )
 }
+
+export default HighRollerGame;

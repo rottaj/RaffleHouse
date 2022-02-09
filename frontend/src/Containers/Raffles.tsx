@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import Raffle from '../Components/Raffle';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { ethers } from "ethers";
 import { Link } from 'react-router-dom';
 import { RafflesAddress, _abi_raffles } from '../interfaces/Raffles_Interface';
 import { _Raffle_abi } from '../interfaces/RaffleEscrow_Interface';
 import { Grid } from "@mui/material";
-import './Raffles.css';
 import MenuItems from "../Components/MenuItems";
 import Footer from '../Components/Footer';
 import Messages from "../Components/Messages";
 
+import './Raffles.css';
 
 declare let window: any;
 const Raffles = () => {
@@ -108,3 +108,26 @@ const Raffles = () => {
     )
 }
 export default Raffles
+
+
+interface Props {
+    token: any;
+}
+
+const Raffle = (props:Props) => {
+
+    return (
+        <div className="Raffle-Div-Main">
+            <img className="Raffle-Img"src={props.token.tokenImage}></img>
+            <div className="Raffle-Div-Info">
+                <div className="Raffle-Collection-Div">
+                    <h3 className="Raffle-CollionName-h3">{props.token.collectionName}</h3> 
+                    <h3> {" "} #</h3>
+                    <h3>{props.token.tokenID}</h3>
+                    <CheckCircleIcon className="Verified-Icon"/>
+                </div>
+                <h5>BUY IN PRICE: {props.token.buyInPrice} eth</h5>
+            </div>
+        </div>
+    )
+}

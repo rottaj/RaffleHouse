@@ -1,5 +1,4 @@
 import React from 'react';
-import Player from "./Player";
 import "./PlayersList.css";
 
 interface PlayerInterface {
@@ -9,22 +8,37 @@ interface PlayerInterface {
     chance: number;
 }
 
-interface Props {
+interface PropsPlayersList {
     players: PlayerInterface[];
 }
 
-export default class PlayersList extends React.Component <Props>{
-    render() {
-        return (
-            <div className="PlayersList-Main-Container">
-                <div className="PlayersList-Box-Header">
-                    <h4 className="PlayersList-Player-Header">Player</h4>
-                    <h4 className="PlayersList-Tickets-Header">Tickets</h4>
-                    <h4 className="PlayersList-TotalEth-Header">Total Eth</h4>
-                    <h4 className="PlayersList-Chance-Header">Chance</h4>
-                </div>
-                {this.props.players.map(player => {return <Player player={player}/>})}
+const PlayersList = (props:PropsPlayersList) => {
+    return (
+        <div className="PlayersList-Main-Container">
+            <div className="PlayersList-Box-Header">
+                <h4 className="PlayersList-Player-Header">Player</h4>
+                <h4 className="PlayersList-Tickets-Header">Tickets</h4>
+                <h4 className="PlayersList-TotalEth-Header">Total Eth</h4>
+                <h4 className="PlayersList-Chance-Header">Chance</h4>
             </div>
-        )
-    }
+            {props.players.map(player => {return <Player player={player}/>})}
+        </div>
+    )
+}
+
+export default PlayersList;
+
+interface Props {
+    player: PlayerInterface;
+}
+
+const Player = (props:Props) => {
+    return (
+        <div className="Player-Component-Main-Container">
+            <p className="Player-Address">{props.player.address}</p>
+            <p className="Player-Tickets">{props.player.tickets}</p>
+            <p className="Player-TotalEth">{props.player.totalEth}</p>
+            <p className="Player-Chance">{props.player.chance} %</p>
+        </div>
+    )
 }

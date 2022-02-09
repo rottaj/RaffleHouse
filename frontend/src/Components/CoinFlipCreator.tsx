@@ -6,15 +6,13 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import "./CoinFlipCreator.css";
 
-interface Props {
-    isOpen: boolean;
-}
+
 
 declare let window: any;
-export default class CoinFlipCreator extends React.Component {
+const CoinFlipCreator = () => {
 
 
-    handleSubmit = async (e: any) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
         console.log("HANDLE SUBMIT", e.target)
         if (window.ethereum) {
@@ -38,22 +36,22 @@ export default class CoinFlipCreator extends React.Component {
         }
     }
 
-    render() {
-        return (
-            <div className="CreateCoinFlipForm-Main" >
-                <div className="PopUpCoinFlip-Form">
-                    <h3 className="CreateCoinFlip-h3">Host a CoinFlip Game!</h3>
-                    <div className="CreateCoinFlip-Form-Container">
-                        <h3 className="MinimumCoinFlip-BuyIn-h3">Minimum Buy in: </h3>
-                        <form className="CreateCoinFlip-Form" onSubmit={(e) => this.handleSubmit(e)}>
-                            <TextField className="CoinFlipForm-Minimum-Buyin" defaultValue="0.08" id="filled-basic" label="Deposit" variant="filled"></TextField>
-                            <Button variant="contained" type="submit" style={{maxHeight: '55px'}}>
-                                Create Game
-                            </Button>
-                        </form>
-                    </div>
+    return (
+        <div className="CreateCoinFlipForm-Main" >
+            <div className="PopUpCoinFlip-Form">
+                <h3 className="CreateCoinFlip-h3">Host a CoinFlip Game!</h3>
+                <div className="CreateCoinFlip-Form-Container">
+                    <h3 className="MinimumCoinFlip-BuyIn-h3">Minimum Buy in: </h3>
+                    <form className="CreateCoinFlip-Form" onSubmit={(e) => handleSubmit(e)}>
+                        <TextField className="CoinFlipForm-Minimum-Buyin" defaultValue="0.08" id="filled-basic" label="Deposit" variant="filled"></TextField>
+                        <Button variant="contained" type="submit" style={{maxHeight: '55px'}}>
+                            Create Game
+                        </Button>
+                    </form>
                 </div>
             </div>
-        )
-    }
+        </div>
+    )
 }
+
+export default CoinFlipCreator;
