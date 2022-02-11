@@ -4,7 +4,7 @@ import './NFT.css';
 
 const OPENSEA_CONTRACT_URL = "https://testnets-api.opensea.io/api/v1/asset_contract/";
 const OPENSEA_ASSET_URL = "https://testnets-api.opensea.io/api/v1/asset/" // ContractAddress + '/' + id
-
+const OPENSEA_COLLECTION_URL = "https://testnets-api.opensea.io/api/v1/collection/" // collection-name + '/stats'
 
 interface Props {
     token: any;
@@ -24,15 +24,16 @@ const NFT = (props:Props) => {
                 //let tokens = [...this.state.userTokens];
                 if (token !== undefined && token !== 'undefined') {
                     //console.log(token)
-                    let url = OPENSEA_ASSET_URL + token.contractAddress + '/' + token.tokenID
+                    let assetUrl = OPENSEA_ASSET_URL + token.contractAddress + '/' + token.tokenID
+                    let collectionUrl = OPENSEA_COLLECTION_URL + token.tokenName + '/stats' 
                     try {
-                    fetch(url).then(res => {
+                    fetch(assetUrl).then(res => {
                         return res.json();
                     }).then((data) => {
                         if (data !== undefined && data !== 'undefined' && token != undefined) {
                             if (data.collection !== undefined && data.collection !== 'undefined' && data.collection['payment_tokens'].length !== 0) {
-                                //console.log(data)
-                                let price = String(data['collection']['payment_tokens'][0]['eth_price']);
+                                console.log(data)
+                                let price = String(data['collection']['stats']['average_price']);
                                 setTokenPrice(price);
                                 //if (JSON.parse(sessionStorage.userTokens).hasOwnProperty(`token_${token.contractAddress}_${token.tokenID}`) !== true) {
                                     /*
@@ -70,7 +71,11 @@ const NFT = (props:Props) => {
 
     return (
         <div className="NFT-Main-Container">
-            <img className="NFT-Img"src={props.token.image}></img>
+            {props.token.image ?
+                <img className="NFT-Img"src={props.token.image}></img>
+                :
+                <img className="NFT-Img"></img>
+            }
             {tokenPrice != "Loading" ?
                 <h5 className="NFT-Price">Price: {tokenPrice} eth</h5>
             :

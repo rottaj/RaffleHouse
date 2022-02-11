@@ -117,7 +117,11 @@ const RaffleCreator = () => {
                         let contract = new ethers.Contract(tempTokens[i].contractAddress, _abi, signer)
                         let metaData = await contract.tokenURI(parseInt(tempTokens[i].tokenID))
                         fetch(metaData).then(res => {return res.json()}).then(data => {
-                            tempTokens[i]['image'] = data.image
+                            if (data.image.startsWith('ipfs://')) {
+                                tempTokens[i]['image'] = 'https://ipfs.io/ipfs' + data.image.slice(6)
+                            } else {
+                                tempTokens[i]['image'] = data.image
+                            }
                             setTokens((tokens: any) => [...tokens, tempTokens[i]])
                         }).catch((err) => console.log(err))
                     //}

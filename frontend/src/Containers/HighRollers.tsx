@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { _abi } from '../interfaces/Eyescream_Interface';
 import { HighRollersAddress, _HighRollers_abi } from "../interfaces/HighRollers_Interface";
 import { _HighRoller_abi } from "../interfaces/HighRoller_Interface";
-import React from 'react';
+import { useState, useEffect } from 'react';
 import MenuItems from "../Components/MenuItems";
 import Messages from "../Components/Messages";
 import NFTSelector from "../Components/NFTSelector";
@@ -54,23 +54,21 @@ interface CurrentGame {
 
 
 declare let window: any;
-export default class HighRollers extends React.Component {
+const HighRollers = () => {
 
-    tokenSelector: any = React.createRef() 
 
-    state = {
-        userTokens: [],
-        gameTokens: [],
-        players: [],
-        currentGame: {contractAddress: "", startTime: "", endTime: "", winner: ""},
-        account: "",
-        minutesLeft: 0,
-        secondsLeft: 0
-    }
+    const [userTokens, setUserTokens]:any = useState([]);
+    const [gameTokens, setGameTokens]:any = useState([]);   
+    const [players, setPlayers]:any = useState([]);
+    const [currentGame, setCurrentGame] = useState({contractAddress: "", startTime: "", endTime: "", winner: ""});
+    const [account, setAccount] = useState('');
+    const [minutesLeft, setMinutesLeft] = useState(0);
+    const [secondsLeft, setSecondsLeft] = useState(0);
+    
 
     // HANDLE USER TOKENS
 
-    fetchNFTs = async (address: string, stateName: string) => {
+    const fetchNFTs = async (address: string, stateName: string) => {
         if (window.ethereum) {
             var provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
@@ -101,7 +99,15 @@ export default class HighRollers extends React.Component {
                         tokens.push(data.result[i])
                     }
                 }
-                this.getMetaData(tokens, stateName);
+                getMetaData(tokens, stateName).then((data:any) => {
+                    console.log("TESTING DATA", data)
+                    if (stateName === "userTokens") {
+                        setUserTokens(data);
+                    } 
+                    else if (stateName === "gameTokens") {
+                        setGameTokens(data);
+                    }
+                });
             })
             
 
@@ -109,7 +115,7 @@ export default class HighRollers extends React.Component {
     }
 
 
-    getMetaData = async (tokens: any, stateName: string) => {
+    const getMetaData = async (tokens: any, stateName: string) => {
         if (window.ethereum) {
             var provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
@@ -123,7 +129,13 @@ export default class HighRollers extends React.Component {
                         let contract = new ethers.Contract(tokens[i].contractAddress, _abi, signer)
                         let metaData = await contract.tokenURI(parseInt(tokens[i].tokenID))
                         fetch(metaData).then(res => {return res.json()}).then(data => {
-                            tokens[i]['image'] = data.image
+                            if (data.image.startsWith('ipfs://')) {
+                                tokens[i]['image'] = 'https://ipfs.io/ipfs' + data.image.slice(6)
+                                console.log(tokens[i]['image'])
+                            } else {
+                                tokens[i]['image'] = data.image
+                            }
+                            /*
                             if (stateName === "userTokens") {
                                 this.setState({
                                     userTokens: [...this.state.userTokens, tokens[i]]
@@ -134,11 +146,13 @@ export default class HighRollers extends React.Component {
                                     gameTokens: [...this.state.gameTokens, tokens[i]]
                                 })
                             }
+                            */
                         }).catch((err) => console.log(err))
 
                     //}
                 }
             }
+            return tokens;
 
         }
     }
@@ -148,14 +162,14 @@ export default class HighRollers extends React.Component {
     // END OF HANDLING USER TOKENS
     // START OF DEPOSITS
 
-    handleDeposit = async () => {
+    const handleDeposit = async () => {
         var provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         var accounts = await window.ethereum.send('eth_requestAccounts');
         const account = accounts.result[0];
-        let selectedToken = this.tokenSelector.state.selectedToken;
+        /*  // NEED TO REFACTOR TOKENSELECTOR
         const collectionContract = await new ethers.Contract(selectedToken.contractAddress, _abi, signer);
-        const sendingTxn = await collectionContract.transferFrom(account, this.state.currentGame.contractAddress, selectedToken.tokenID);
+        const sendingTxn = await collectionContract.transferFrom(account, currentGame.contractAddress, selectedToken.tokenID);
         sendingTxn.wait();
         if (sendingTxn) {
             const requestParameters = {
@@ -169,6 +183,7 @@ export default class HighRollers extends React.Component {
                 console.log(data)
             })
         }
+        */
 
     }
 
@@ -176,8 +191,8 @@ export default class HighRollers extends React.Component {
 
 
     // START OF GAME INFO
-    getCountDown = () => {
-        let dateString: any = parseInt(this.state.currentGame.endTime);
+    const getCountDown = () => {
+        let dateString: any = parseInt(currentGame.endTime);
         var now = new Date().getTime();
         var countDownDate = new Date(dateString).getTime();
         var minutes  = parseInt(String((countDownDate - (now) / 1000) / 60))
@@ -188,35 +203,31 @@ export default class HighRollers extends React.Component {
         if (seconds <= 0) {
             seconds = 0
         }
-        this.setState({
-            minutesLeft: minutes,
-            secondsLeft: seconds
-        })
+        setMinutesLeft(minutes);
+        setSecondsLeft(seconds);
     }
 
     // END OF GAME INFO
 
 
-    getUniqueAddresses(array: any) {
+    const getUniqueAddresses = (array: any) => {
         let unique = array.filter((item: any, i: any, ar: any) => ar.indexOf(item) === i);
         return unique;
     }
 
-    getOccurances(array: any, val: any) {
+    const getOccurances = (array: any, val: any) => {
         let ticketNumber = array.reduce((a: any, v: any) => (v === val ? a + 1 : a), 0);
         return ticketNumber;
     }
 
-    getTickets = async (uniqueAddresses: any, tickets: any) => {
+    const getTickets = async (uniqueAddresses: any, tickets: any) => {
         console.log(tickets)
         for (let i=0; i<=uniqueAddresses.length; i++ ) {
-            let ticketNumber = this.getOccurances(tickets, uniqueAddresses[i])
+            let ticketNumber = getOccurances(tickets, uniqueAddresses[i])
             if (uniqueAddresses[i] !== undefined) {
                 console.log("TESTING GET_TICKETS", uniqueAddresses[i], ticketNumber, (ticketNumber).toFixed(2))
                 let player = {address: uniqueAddresses[i], tickets: ticketNumber, totalEth: (ticketNumber).toFixed(2), chance: ((ticketNumber / tickets.length) * 100).toFixed(2)}
-                this.setState({
-                    players: [...this.state.players, player]
-                })
+                setPlayers((players: any) => [...players, player])
             }
         }
 
@@ -225,73 +236,76 @@ export default class HighRollers extends React.Component {
 
 
 
-    async componentDidMount() {
+    useEffect(() => {
         document.title = "High Rollers - Raffle House"
-        if(window.ethereum) {
+
+        const mountHighRollerGameInfo = async () => {
             var accounts = await window.ethereum.send('eth_requestAccounts');
             const account = accounts.result[0];
-            this.setState({account: account});
+            setAccount(account);
             var provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const HighRollersContract = new ethers.Contract(HighRollersAddress, _HighRollers_abi, signer);
             const currentHighRollerGame: any = await HighRollersContract.getCurrentGame();
             // REFACTOR THIS
-            var currentGame: CurrentGame = {contractAddress: currentHighRollerGame['contractAddress'], startTime: currentHighRollerGame.startTime, endTime: currentHighRollerGame.endTime, winner: currentHighRollerGame.winner}
-            this.setState({
-                currentGame: currentGame
-            })
-            this.fetchNFTs(account, "userTokens"); // FETCHES USER NFTS
-            this.fetchNFTs(currentGame.contractAddress, "gameTokens"); // FETCHES GAME TOKENS
-            const currentHighRollerContract = new ethers.Contract(currentGame.contractAddress, _HighRoller_abi, signer);
+            var currentGameInstance: CurrentGame = {contractAddress: currentHighRollerGame['contractAddress'], startTime: currentHighRollerGame.startTime, endTime: currentHighRollerGame.endTime, winner: currentHighRollerGame.winner}
+            setCurrentGame(currentGameInstance);
+            fetchNFTs(account, "userTokens"); // FETCHES USER NFTS
+            fetchNFTs(currentGameInstance.contractAddress, "gameTokens"); // FETCHES GAME TOKENS
+            const currentHighRollerContract = new ethers.Contract(currentGameInstance.contractAddress, _HighRoller_abi, signer);
             const tickets = await currentHighRollerContract.getTickets();
             console.log("TICKETS", tickets)
-            const uniqueAddresses = this.getUniqueAddresses(tickets);
-            this.getTickets(uniqueAddresses, tickets);
+            const uniqueAddresses = getUniqueAddresses(tickets);
+            getTickets(uniqueAddresses, tickets);
             var interval = setInterval(() => {
-                this.getCountDown();
+                getCountDown();
                 //console.log("SESSION USERTOKENS", JSON.parse(sessionStorage.userTokens))
             }, 1000)
         }
-    }
+
+        if(window.ethereum) {
+            mountHighRollerGameInfo();
+        }
+    })
 
 
-    render() {
-        return (
-            <div className="HighRollers-Div-Main">
-                <MenuItems account={this.state.account}/>
-                <Messages/>
-                <h3 className="HighRollers-Current-Game-h3">HIGH ROLLERS</h3>
-                {this.state.currentGame.contractAddress ?
-                    <div>
-                        <h3 className="HighRollers-Current-Game-Address-h3">Current Game: {this.state.currentGame.contractAddress}</h3>
-                        {this.state.currentGame.winner !== "0x0000000000000000000000000000000000000000" ?
-                            <h3 className="HighRollers-Current-Game-Winner-Address-h3">Winner: {this.state.currentGame.winner}</h3>
-                        :    
-                            <div> 
-                                <h3 className="HighRollers-Current-Game-Winner-Address-h3">Game in Progress</h3>
-                                <h6 className="CoinFlip-Waiting-h6"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></h6>
-                            </div>
-                        }
-                        <h3 className="HighRollers-Current-Game-TimeLeft-h3"> {this.state.minutesLeft} Minutes {this.state.secondsLeft} Seconds </h3>
-                    </div>
-                :
-                    <h3 className="HighRollers-Current-Game-Address-h3">No Game</h3>
-                }
-  
-                <div className="HighRollers-GameInfo-Container">
-                    <HighRollerDeposits tokens={this.state.gameTokens}/>
+    return (
+        <div className="HighRollers-Div-Main">
+            <MenuItems account={account}/>
+            <Messages/>
+            <h3 className="HighRollers-Current-Game-h3">HIGH ROLLERS</h3>
+            {currentGame.contractAddress ?
+                <div>
+                    <h3 className="HighRollers-Current-Game-Address-h3">Current Game: {currentGame.contractAddress}</h3>
+                    {currentGame.winner !== "0x0000000000000000000000000000000000000000" ?
+                        <h3 className="HighRollers-Current-Game-Winner-Address-h3">Winner: {currentGame.winner}</h3>
+                    :    
+                        <div> 
+                            <h3 className="HighRollers-Current-Game-Winner-Address-h3">Game in Progress</h3>
+                            <h6 className="CoinFlip-Waiting-h6"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></h6>
+                        </div>
+                    }
+                    <h3 className="HighRollers-Current-Game-TimeLeft-h3"> {minutesLeft} Minutes {secondsLeft} Seconds </h3>
                 </div>
+            :
+                <h3 className="HighRollers-Current-Game-Address-h3">No Game</h3>
+            }
 
-                <div className="HighRollers-PlayerList-Container">
-                    <PlayerList players={this.state.players}/>
-                </div>
-                <Button onClick={() => this.handleDeposit() }variant="contained" type="submit" style={{maxHeight: '55px'}}>
-                    Deposit 
-                </Button>
-                <NFTSelector tokens={this.state.userTokens}  />
-                <PastHighRollerGames/>
-                <Footer/>
+            <div className="HighRollers-GameInfo-Container">
+                <HighRollerDeposits tokens={gameTokens}/>
             </div>
-        )
-    }
+
+            <div className="HighRollers-PlayerList-Container">
+                <PlayerList players={players}/>
+            </div>
+            <Button onClick={() => handleDeposit() }variant="contained" type="submit" style={{maxHeight: '55px'}}>
+                Deposit 
+            </Button>
+            <NFTSelector tokens={userTokens}  />
+            <PastHighRollerGames/>
+            <Footer/>
+        </div>
+    )
 }
+
+export default HighRollers;

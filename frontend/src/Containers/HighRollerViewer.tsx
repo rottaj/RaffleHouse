@@ -107,6 +107,12 @@ const HighRollerViewer = () => {
                         let contract = new ethers.Contract(tokens[i].contractAddress, _abi, signer)
                         let metaData = await contract.tokenURI(parseInt(tokens[i].tokenID))
                         fetch(metaData).then(res => {return res.json()}).then(data => {
+                            if (data.image.startsWith('ipfs://')) {
+                                tokens[i]['image'] = 'https://ipfs.io/ipfs' + data.image.slice(6)
+                                console.log(tokens[i]['image'])
+                            } else {
+                                tokens[i]['image'] = data.image
+                            }
                             tokens[i]['image'] = data.image
                             setGameTokens((gameTokens: any) => [...gameTokens, tokens[i]])
                         }).catch((err) => console.log(err))
