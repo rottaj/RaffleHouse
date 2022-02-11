@@ -76,6 +76,13 @@ function App() {
         <Route exact path="/coin-flips" component={CoinFlips} />
         <Route exact path="/high-rollers" component={HighRollers} />
         <Route exact path="/host" component={Host} />
+        {/*         
+        <Route path="/raffle/:contractAddress" component={RaffleViewer} />
+        <Route path="/coin-flip/:contractAddress" component={CoinFlipViewer} />
+        <Route
+          path="/high-roller/:contractAddress"
+          component={HighRollerViewer}
+        /> */}
       </BrowserRouter>
     </MetaMaskUserContext.Provider>
   );
