@@ -36,6 +36,7 @@ const NFTSelector = (props:Props) => {
         <div className="NFT-Selector-Main">
             {/*this.state.tokens.map(token => {this.getMetaData(token)})*/}
             {/*<Grid className="NFTSelector-Grid-Container" container spacing={2}> */}
+            {console.log(props.tokens) /* for some reason this doesn't work without this... oh well*/} 
             { props.tokens ?
                 props.tokens.map(token => {return (<div className="NFT-Div-Container" onClick={() => handleClick(token)}><NFT token={token}></NFT></div>)})
                 :

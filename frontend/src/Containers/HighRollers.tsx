@@ -3,6 +3,7 @@ import { _abi } from '../interfaces/Eyescream_Interface';
 import { HighRollersAddress, _HighRollers_abi } from "../interfaces/HighRollers_Interface";
 import { _HighRoller_abi } from "../interfaces/HighRoller_Interface";
 import { useState, useEffect } from 'react';
+import fetchNFTs from '../utils/HandleNFTs';
 import MenuItems from "../Components/MenuItems";
 import Messages from "../Components/Messages";
 import NFTSelector from "../Components/NFTSelector";
@@ -65,102 +66,6 @@ const HighRollers = () => {
     const [minutesLeft, setMinutesLeft] = useState(0);
     const [secondsLeft, setSecondsLeft] = useState(0);
     
-
-    // HANDLE USER TOKENS
-
-    const fetchNFTs = async (address: string, stateName: string) => {
-        if (window.ethereum) {
-            var provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
-            // var url = ETHERSCAN_API_ABI + token.address + ABI_KEY
-            //var abi = fetch (url) // get verified contract abi
-            // PERFORM FETCH ABI REQUEST ON VERIFIED CONTRACT
-            //console.log(token.contractAddress, address)
-            var accounts = await window.ethereum.send('eth_requestAccounts');
-            var url = ETHERSCAN_API_NFT_TXN + address + '&startblock=0&endblock=999999999&sort=asc&apikey=' + ETHERSCAN_API_KEY
-            fetch(url).then(res => {
-                return res.json();
-            })
-            .then(data => {
-                var tokens: Token[] = []
-
-                for (let i=0; i<=data.result.length; i++ ) {
-                    if (tokens.length > 0) {
-                        if (data.result[i]) {
-                            let index = tokens.findIndex(temp => (temp['tokenID'] === data.result[i]['tokenID']) && (temp['contractAddress'] === data.result[i]['contractAddress']));
-                            if (index === -1) {
-                                tokens.push(data.result[i])
-                            } else {
-                                tokens.splice(index, 1)
-                            }
-                        }
-                    }
-                    else {
-                        tokens.push(data.result[i])
-                    }
-                }
-                getMetaData(tokens, stateName).then((data:any) => {
-                    console.log("TESTING DATA", data)
-                    if (stateName === "userTokens") {
-                        setUserTokens(data);
-                    } 
-                    else if (stateName === "gameTokens") {
-                        setGameTokens(data);
-                    }
-                });
-            })
-            
-
-        }
-    }
-
-
-    const getMetaData = async (tokens: any, stateName: string) => {
-        if (window.ethereum) {
-            var provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
-            // var url = ETHERSCAN_API_ABI + token.address + ABI_KEY
-            //var abi = fetch (url) // get verified contract abi
-            // PERFORM FETCH ABI REQUEST ON VERIFIED CONTRACT
-            //console.log(token.contractAddress, address)
-            for (let i=0; i<=tokens.length; i++ ) {
-                if (tokens[i]) {
-                    //if (String(tokens[i].contractAddress) === '0x8f44a8b9059b2bc914c893eed250a2e1097ee187') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
-                        let contract = new ethers.Contract(tokens[i].contractAddress, _abi, signer)
-                        let metaData = await contract.tokenURI(parseInt(tokens[i].tokenID))
-                        fetch(metaData).then(res => {return res.json()}).then(data => {
-                            if (data.image.startsWith('ipfs://')) {
-                                tokens[i]['image'] = 'https://ipfs.io/ipfs' + data.image.slice(6)
-                                console.log(tokens[i]['image'])
-                            } else {
-                                tokens[i]['image'] = data.image
-                            }
-                            /*
-                            if (stateName === "userTokens") {
-                                this.setState({
-                                    userTokens: [...this.state.userTokens, tokens[i]]
-                                })
-                            } 
-                            else if (stateName === "gameTokens") {
-                                this.setState({
-                                    gameTokens: [...this.state.gameTokens, tokens[i]]
-                                })
-                            }
-                            */
-                        }).catch((err) => console.log(err))
-
-                    //}
-                }
-            }
-            return tokens;
-
-        }
-    }
-
-
-
-    // END OF HANDLING USER TOKENS
-    // START OF DEPOSITS
 
     const handleDeposit = async () => {
         var provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -225,7 +130,6 @@ const HighRollers = () => {
         for (let i=0; i<=uniqueAddresses.length; i++ ) {
             let ticketNumber = getOccurances(tickets, uniqueAddresses[i])
             if (uniqueAddresses[i] !== undefined) {
-                console.log("TESTING GET_TICKETS", uniqueAddresses[i], ticketNumber, (ticketNumber).toFixed(2))
                 let player = {address: uniqueAddresses[i], tickets: ticketNumber, totalEth: (ticketNumber).toFixed(2), chance: ((ticketNumber / tickets.length) * 100).toFixed(2)}
                 setPlayers((players: any) => [...players, player])
             }
@@ -234,11 +138,8 @@ const HighRollers = () => {
     }
 
 
-
-
     useEffect(() => {
         document.title = "High Rollers - Raffle House"
-
         const mountHighRollerGameInfo = async () => {
             var accounts = await window.ethereum.send('eth_requestAccounts');
             const account = accounts.result[0];
@@ -247,30 +148,30 @@ const HighRollers = () => {
             const signer = provider.getSigner();
             const HighRollersContract = new ethers.Contract(HighRollersAddress, _HighRollers_abi, signer);
             const currentHighRollerGame: any = await HighRollersContract.getCurrentGame();
-            // REFACTOR THIS
             var currentGameInstance: CurrentGame = {contractAddress: currentHighRollerGame['contractAddress'], startTime: currentHighRollerGame.startTime, endTime: currentHighRollerGame.endTime, winner: currentHighRollerGame.winner}
             setCurrentGame(currentGameInstance);
-            fetchNFTs(account, "userTokens"); // FETCHES USER NFTS
-            fetchNFTs(currentGameInstance.contractAddress, "gameTokens"); // FETCHES GAME TOKENS
+            fetchNFTs(account).then(data => {
+                setUserTokens(data);
+            }) // FETCHES USER NFTS
+            fetchNFTs(currentGameInstance.contractAddress); // FETCHES GAME TOKENS
             const currentHighRollerContract = new ethers.Contract(currentGameInstance.contractAddress, _HighRoller_abi, signer);
             const tickets = await currentHighRollerContract.getTickets();
-            console.log("TICKETS", tickets)
             const uniqueAddresses = getUniqueAddresses(tickets);
             getTickets(uniqueAddresses, tickets);
-            var interval = setInterval(() => {
-                getCountDown();
-                //console.log("SESSION USERTOKENS", JSON.parse(sessionStorage.userTokens))
-            }, 1000)
         }
 
         if(window.ethereum) {
             mountHighRollerGameInfo();
+            var interval = setInterval(() => {
+                getCountDown();
+            }, 1000)
         }
-    })
+    }, [])
 
 
     return (
         <div className="HighRollers-Div-Main">
+            {console.log("TESTING TOKENS", userTokens)}
             <MenuItems account={account}/>
             <Messages/>
             <h3 className="HighRollers-Current-Game-h3">HIGH ROLLERS</h3>

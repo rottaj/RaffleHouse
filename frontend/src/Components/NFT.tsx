@@ -33,7 +33,7 @@ const NFT = (props:Props) => {
                         if (data !== undefined && data !== 'undefined' && token != undefined) {
                             if (data.collection !== undefined && data.collection !== 'undefined' && data.collection['payment_tokens'].length !== 0) {
                                 console.log(data)
-                                let price = String(data['collection']['stats']['average_price']);
+                                let price = String(data['collection']['stats']['average_price'].toFixed(2));
                                 setTokenPrice(price);
                                 //if (JSON.parse(sessionStorage.userTokens).hasOwnProperty(`token_${token.contractAddress}_${token.tokenID}`) !== true) {
                                     /*
@@ -71,10 +71,10 @@ const NFT = (props:Props) => {
 
     return (
         <div className="NFT-Main-Container">
-            {props.token.image ?
+            {props.token ?
                 <img className="NFT-Img"src={props.token.image}></img>
                 :
-                <img className="NFT-Img"></img>
+                undefined
             }
             {tokenPrice != "Loading" ?
                 <h5 className="NFT-Price">Price: {tokenPrice} eth</h5>

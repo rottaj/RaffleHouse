@@ -35,22 +35,15 @@ interface Token {
 
 
 declare let window: any;
-const fetchNFTs = async (address: string, stateName: string) => {
+
+const fetchNFTs = async (address: string) => {
     if (window.ethereum) {
-        var provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        // var url = ETHERSCAN_API_ABI + token.address + ABI_KEY
-        //var abi = fetch (url) // get verified contract abi
-        // PERFORM FETCH ABI REQUEST ON VERIFIED CONTRACT
-        //console.log(token.contractAddress, address)
-        var accounts = await window.ethereum.send('eth_requestAccounts');
         var url = ETHERSCAN_API_NFT_TXN + address + '&startblock=0&endblock=999999999&sort=asc&apikey=' + ETHERSCAN_API_KEY
+        var tokens: Token[] = []
         fetch(url).then(res => {
             return res.json();
         })
         .then(data => {
-            var tokens: Token[] = []
-
             for (let i=0; i<=data.result.length; i++ ) {
                 if (tokens.length > 0) {
                     if (data.result[i]) {
@@ -66,43 +59,38 @@ const fetchNFTs = async (address: string, stateName: string) => {
                     tokens.push(data.result[i])
                 }
             }
-            getMetaData(tokens, stateName);
+            getMetaData(tokens).then((data:any) => {
+                tokens = data
+            });
         })
         
-
+        return tokens;
     }
 }
 
 
-const getMetaData = async (tokens: any, stateName: string) => {
+const getMetaData = async (tokens: any) => {
     if (window.ethereum) {
         var provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
-        // var url = ETHERSCAN_API_ABI + token.address + ABI_KEY
-        //var abi = fetch (url) // get verified contract abi
-        // PERFORM FETCH ABI REQUEST ON VERIFIED CONTRACT
-        //console.log(token.contractAddress, address)
         for (let i=0; i<=tokens.length; i++ ) {
             if (tokens[i]) {
-                //if (String(tokens[i].contractAddress) === '0x8f44a8b9059b2bc914c893eed250a2e1097ee187') { // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
-                    let contract = new ethers.Contract(tokens[i].contractAddress, _abi, signer)
-                    let metaData = await contract.tokenURI(parseInt(tokens[i].tokenID))
-                    fetch(metaData).then(res => {return res.json()}).then(data => {
-                        if (data.image.startsWith('ipfs://')) {
-                            tokens[i]['image'] = 'https://ipfs.io/ipfs' + data.image.slice(6)
-                            console.log(tokens[i]['image'])
-                        } else {
-                            tokens[i]['image'] = data.image
-                        }
+                let contract = new ethers.Contract(tokens[i].contractAddress, _abi, signer)
+                let metaData = await contract.tokenURI(parseInt(tokens[i].tokenID))
+                fetch(metaData).then(res => {return res.json()}).then(data => {
+                    if (data.image.startsWith('ipfs://')) {
+                        tokens[i]['image'] = 'https://ipfs.io/ipfs' + data.image.slice(6)
+                        console.log(tokens[i]['image'])
+                    } else {
                         tokens[i]['image'] = data.image
-                        //setGameTokens((gameTokens: any) => [...gameTokens, tokens[i]])
-                    }).catch((err) => console.log(err))
+                    }
+                }).catch((err) => console.log(err))
 
-                //}
             }
         }
+        return tokens;
 
     }
 }
 
-
+export default fetchNFTs;
