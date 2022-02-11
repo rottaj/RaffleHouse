@@ -1,84 +1,103 @@
-import {useState, useEffect} from 'react';
-import CoinFlip from '../Components/CoinFlip';
-import MenuItems from '../Components/MenuItems';
+import { useState, useEffect } from "react";
+import CoinFlip from "../Components/CoinFlip";
+import MenuItems from "../Components/MenuItems";
 import Messages from "../Components/Messages";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { ethers } from "ethers";
-import { CoinFlipAddress, _CoinFlips_abi } from "../interfaces/CoinFlips_Interface";
-import { _CoinFlip_abi, _CoinFlip_bytecode } from "../interfaces/CoinFlip_Interface";
+import {
+  CoinFlipAddress,
+  _CoinFlips_abi,
+} from "../interfaces/CoinFlips_Interface";
+import {
+  _CoinFlip_abi,
+  _CoinFlip_bytecode,
+} from "../interfaces/CoinFlip_Interface";
 import "./CoinFlips.css";
-import Footer from '../Components/Footer';
-
+import Footer from "../Components/Footer";
+import BaseContainer from "../Components/BaseContainers/BaseContainer";
 
 declare let window: any;
 const CoinFlips = () => {
+  const [currentCoinFlips, setCurrentCoinFlips]: any = useState([]);
+  const [pastCoinFlips, setPastCoinFlips]: any = useState([]);
+  const [account, setAccount] = useState("");
 
-    const [currentCoinFlips, setCurrentCoinFlips]: any = useState([]);
-    const [pastCoinFlips, setPastCoinFlips]: any = useState([]);
-    const [account, setAccount] = useState('');
+  useEffect(() => {
+    document.title = "Coin Flips - Raffle House";
 
-    useEffect(() => {
-        document.title = "Coin Flips - Raffle House"
-
-        const mountCoinFlipData = async () => {
-            var accounts = await window.ethereum.send('eth_requestAccounts');
-            const account = accounts.result[0];
-            setAccount(account);
-            getCoinFlips();
-        }
-        if(window.ethereum) {
-            mountCoinFlipData();
-        }
-    }, []); 
-  
-    const getCoinFlips = async () => {
-        if (window.ethereum) {
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
-            const coinFlipContract = await new ethers.Contract(CoinFlipAddress, _CoinFlips_abi, signer);
-            let coinFlipLength = await coinFlipContract.getCoinFlips();
-            for (let i =0; i<=coinFlipLength-1; i++ ) {
-                var tempCoinFlip:any  = {}
-                var coinFlip = await coinFlipContract.getCoinFlipByIndex(i);
-                const coinFlipInstance = await new ethers.Contract(coinFlip.contractAddress, _CoinFlip_abi, signer);
-                const gameInfo = await coinFlipInstance.getGameInfo();
-                tempCoinFlip['contractAddress'] = coinFlip['contractAddress'];
-                tempCoinFlip['buyInPrice'] = parseInt(gameInfo['buyInPrice']) / (10 ** 18);
-                tempCoinFlip['creatorAddress'] = gameInfo['creatorAddress'];
-                tempCoinFlip['joineeAddress'] = gameInfo['joineeAddress'];
-                tempCoinFlip['winner'] = gameInfo['winner'];
-                if (gameInfo.winner !== "0x0000000000000000000000000000000000000000") {
-                    setCurrentCoinFlips((currentCoinFlips: any) => [...currentCoinFlips, tempCoinFlip]);
-                }else {
-                    setPastCoinFlips((pastCoinFlips: any) => [...pastCoinFlips, tempCoinFlip]);
-                }
-            }
-        }
+    const mountCoinFlipData = async () => {
+      var accounts = await window.ethereum.send("eth_requestAccounts");
+      const account = accounts.result[0];
+      setAccount(account);
+      getCoinFlips();
+    };
+    if (window.ethereum) {
+      mountCoinFlipData();
     }
- 
+  }, []);
 
-    return (
-        <div className="CoinFlips-Container-Main">
-            {/* <Header/> */}
-            <MenuItems account={account}/>
-            <Messages/>
-            <div className="CoinFlips-Games-Container">
-                <div className="CurrentCoinFlips-Container">
+  const getCoinFlips = async () => {
+    if (window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const coinFlipContract = await new ethers.Contract(
+        CoinFlipAddress,
+        _CoinFlips_abi,
+        signer
+      );
+      let coinFlipLength = await coinFlipContract.getCoinFlips();
+      for (let i = 0; i <= coinFlipLength - 1; i++) {
+        var tempCoinFlip: any = {};
+        var coinFlip = await coinFlipContract.getCoinFlipByIndex(i);
+        const coinFlipInstance = await new ethers.Contract(
+          coinFlip.contractAddress,
+          _CoinFlip_abi,
+          signer
+        );
+        const gameInfo = await coinFlipInstance.getGameInfo();
+        tempCoinFlip["contractAddress"] = coinFlip["contractAddress"];
+        tempCoinFlip["buyInPrice"] =
+          parseInt(gameInfo["buyInPrice"]) / 10 ** 18;
+        tempCoinFlip["creatorAddress"] = gameInfo["creatorAddress"];
+        tempCoinFlip["joineeAddress"] = gameInfo["joineeAddress"];
+        tempCoinFlip["winner"] = gameInfo["winner"];
+        if (gameInfo.winner !== "0x0000000000000000000000000000000000000000") {
+          setCurrentCoinFlips((currentCoinFlips: any) => [
+            ...currentCoinFlips,
+            tempCoinFlip,
+          ]);
+        } else {
+          setPastCoinFlips((pastCoinFlips: any) => [
+            ...pastCoinFlips,
+            tempCoinFlip,
+          ]);
+        }
+      }
+    }
+  };
 
-                    <h2 className="CoinFlips-Current-CoinFlips-h2">COIN FLIPS</h2>
-                    <div className="CoinFlips-Games-Header">
-                        <h3 className="CoinFlips-Creator-h3">Creator</h3>
-                        <h3 className="CoinFlips-BuyIn-h3">Buy in Price</h3>
-                    </div>
-                    {pastCoinFlips.map((coinFlip: any) => {
-                        return (
-                            <Link to={`coin-flip/${coinFlip['contractAddress']}`}>
-                                <CoinFlip coinFlip={coinFlip}></CoinFlip>
-                            </Link>
-                        )
-                    })}
-                </div>
-                {/* // Work on this
+  return (
+    <BaseContainer>
+      <div className="CoinFlips-Container-Main">
+        {/* <Header/> */}
+        {/* <MenuItems account={account}/> */}
+        <Messages />
+        <div className="CoinFlips-Games-Container">
+          <div className="CurrentCoinFlips-Container">
+            <h2 className="CoinFlips-Current-CoinFlips-h2">COIN FLIPS</h2>
+            <div className="CoinFlips-Games-Header">
+              <h3 className="CoinFlips-Creator-h3">Creator</h3>
+              <h3 className="CoinFlips-BuyIn-h3">Buy in Price</h3>
+            </div>
+            {pastCoinFlips.map((coinFlip: any) => {
+              return (
+                <Link to={`coin-flip/${coinFlip["contractAddress"]}`}>
+                  <CoinFlip coinFlip={coinFlip}></CoinFlip>
+                </Link>
+              );
+            })}
+          </div>
+          {/* // Work on this
                 <div className="PastCoinFlips-Container">
                     <div className="PastCoinFlips-Games-Header">
                         <h3 className="PastCoinFlips-Creator-h3">Creator</h3>
@@ -87,18 +106,19 @@ const CoinFlips = () => {
                     </div>
                 </div>
                 */}
-                    <h2 className="CoinFlips-Current-CoinFlips-h2">PAST GAMES</h2>
-                    {currentCoinFlips.map((coinFlip: any) => {
-                        return (
-                            <Link to={`coin-flip/${coinFlip['contractAddress']}`}>
-                                <CoinFlip coinFlip={coinFlip}></CoinFlip>
-                            </Link>
-                        )
-                    })}
-                </div>
-                <Footer/>
-            </div>
-    )
-}
+          <h2 className="CoinFlips-Current-CoinFlips-h2">PAST GAMES</h2>
+          {currentCoinFlips.map((coinFlip: any) => {
+            return (
+              <Link to={`coin-flip/${coinFlip["contractAddress"]}`}>
+                <CoinFlip coinFlip={coinFlip}></CoinFlip>
+              </Link>
+            );
+          })}
+        </div>
+        {/* <Footer /> */}
+      </div>
+    </BaseContainer>
+  );
+};
 
 export default CoinFlips;

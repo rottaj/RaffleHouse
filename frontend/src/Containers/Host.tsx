@@ -1,42 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import RaffleCreator from "../Components/RaffleCreator";
-import CoinFlipCreator from '../Components/CoinFlipCreator';
+import CoinFlipCreator from "../Components/CoinFlipCreator";
 import MenuItems from "../Components/MenuItems";
 import Messages from "../Components/Messages";
 import "./Host.css";
-import Footer from '../Components/Footer';
+import Footer from "../Components/Footer";
+import BaseContainer from "../Components/BaseContainers/BaseContainer";
 
-
-declare let window: any;
 const Host = () => {
+  const [account, setAccount] = useState("");
 
-    const [account, setAccount] = useState('')
+  useEffect(() => {
+    document.title = "Host - Raffle House";
+  }, []);
 
-
-    useEffect(() => {
-        document.title = "Host - Raffle House"
-        const getAccount = async () => {
-            var accounts = await window.ethereum.send('eth_requestAccounts');
-            const account = accounts.result[0];
-            setAccount(account);
-        }
-        if(window.ethereum) {
-            getAccount()
-        }
-    }, [])
-
-    return (
-        <div className="Host-Container-Main-Div">
-            <MenuItems account={account}/>
-            <Messages/>
-            <div className="Host-Games-Container-Div">
-                <RaffleCreator/>
-                <CoinFlipCreator/>
-            </div>
-
-            <Footer/>
+  return (
+    <BaseContainer>
+      <div className="Host-Container-Main-Div">
+        <Messages />
+        <div className="Host-Games-Container-Div">
+          <RaffleCreator />
+          <CoinFlipCreator />
         </div>
-    )
-}
 
-export default Host
+        {/* <Footer /> */}
+      </div>
+    </BaseContainer>
+  );
+};
+
+export default Host;
