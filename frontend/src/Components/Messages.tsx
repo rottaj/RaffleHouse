@@ -56,11 +56,11 @@ const Messages = () => {
   return (
     <div className="Messages-Main-Div-Container">
       <h1>Messages </h1>
-      <div className="test">
+      <div>
         <div>
           {messages.map((message: any) => {
             return (
-              <div className="Messages-Message-Div">
+              <div>
                 <h6>
                   {message.messager === myAddress[myAddress.length - 1]
                     ? "You" + ": "

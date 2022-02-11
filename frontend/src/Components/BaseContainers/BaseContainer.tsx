@@ -34,7 +34,7 @@ const BaseContainer = ({
           <Spinner />
         </Center>
       ) : !user ? (
-        <Box h="100vh " bgColor="#141114">
+        <Box minH="100vh" h="100%" bgColor="#141114">
           <Flex pt="120px" w="100%" h="100%" flexDir="column" align="center">
             <div className="sign">
               <span className="fast-flicker">Raffle House</span>
@@ -56,7 +56,12 @@ const BaseContainer = ({
       ) : (
         <>
           <NavBar />
-          <Box h="100vh" pt={["56px", null, "66px"]} bgColor="#141114">
+          <Box
+            h="100%"
+            minH="100vh"
+            pt={["56px", null, "84px"]}
+            bgColor="#141114"
+          >
             {children}
           </Box>
         </>
