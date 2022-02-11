@@ -1,9 +1,13 @@
 import { ethers } from "ethers";
-import { _abi } from '../interfaces/Eyescream_Interface';
-import { HighRollersAddress, _HighRollers_abi } from "../interfaces/HighRollers_Interface";
+import { _abi } from "../interfaces/Eyescream_Interface";
+import {
+  HighRollersAddress,
+  _HighRollers_abi,
+} from "../interfaces/HighRollers_Interface";
 import { _HighRoller_abi } from "../interfaces/HighRoller_Interface";
 import { useState, useEffect } from 'react';
 import fetchNFTs from '../utils/HandleNFTs';
+
 import MenuItems from "../Components/MenuItems";
 import Messages from "../Components/Messages";
 import NFTSelector from "../Components/NFTSelector";
@@ -11,50 +15,49 @@ import PlayerList from "../Components/PlayersList";
 import HighRollerDeposits from "../Components/HighRollerDeposits";
 import PastHighRollerGames from "./PastHighRollerGames";
 import Footer from "../Components/Footer";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 import "./HighRollers.css";
+import BaseContainer from "../Components/BaseContainers/BaseContainer";
 
-
-
-const ETHERSCAN_API_NFT_TXN = 'https://api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=';
-const ETHERSCAN_API_ABI = 'https://api.etherscan.io/api?module=contract&action=getabi&address='
+const ETHERSCAN_API_NFT_TXN =
+  "https://api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=";
+const ETHERSCAN_API_ABI =
+  "https://api.etherscan.io/api?module=contract&action=getabi&address=";
 //&apikey=YourApiKeyToken
-const ETHERSCAN_API_KEY = 'FS4Q2NK8JQJ7DPD73R3G1S1T948RPY3JSI';
-
+const ETHERSCAN_API_KEY = "FS4Q2NK8JQJ7DPD73R3G1S1T948RPY3JSI";
 
 interface Token {
-    blockHash: string;
-    blockNumber: number;
-    confirmations: number;
-    contractAddress: string; 
-    cumulativeGasUsed: number;
-    from: string;
-    gas: number;
-    gasPrice: number;
-    gasUsed: number; 
-    hash: string;
-    image: string;
-    input: string;
-    nonce: number;
-    timeStamp: number;
-    to: string;
-    tokenDecimal: number;
-    tokenID: number;
-    tokenName: string;
-    tokenSymbol: string;
-    transactionIndex: number;
+  blockHash: string;
+  blockNumber: number;
+  confirmations: number;
+  contractAddress: string;
+  cumulativeGasUsed: number;
+  from: string;
+  gas: number;
+  gasPrice: number;
+  gasUsed: number;
+  hash: string;
+  image: string;
+  input: string;
+  nonce: number;
+  timeStamp: number;
+  to: string;
+  tokenDecimal: number;
+  tokenID: number;
+  tokenName: string;
+  tokenSymbol: string;
+  transactionIndex: number;
 }
 
 interface CurrentGame {
-    contractAddress: string,
-    startTime: string,
-    endTime: string, 
-    winner: string
+  contractAddress: string;
+  startTime: string;
+  endTime: string;
+  winner: string;
 }
 
-
-
 declare let window: any;
+
 const HighRollers = () => {
 
 

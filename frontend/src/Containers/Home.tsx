@@ -1,48 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import MenuItems from "../Components/MenuItems";
-import Footer from "../Components/Footer";
-import './Home.css';
+import React, { useEffect } from "react";
 
-
-declare let window: any;
+import "./Home.css";
+import BaseContainer from "../Components/BaseContainers/BaseContainer";
+import { Flex } from "@chakra-ui/react";
 const Home = () => {
+  useEffect(() => {
+    document.title = "Raffle House";
+  }, []);
 
-    const [RaffleFormOpen, setRaffleFormOpen] = useState(false);
-    const [CoinFlipFormOpen, setCoinFlipFormOpen] = useState(false);
-    const [account, setAccount] = useState('');
-
-    
-    useEffect(() => {
-        document.title = "Welcome to Raffle House"
-        const getAccount = async () => {
-            var accounts = await window.ethereum.send('eth_requestAccounts');
-            const account = accounts.result[0];
-            setAccount(account);
-        }
-        if(window.ethereum) {
-            getAccount();
-        }       
-    }, [])
-    
-    const handleRaffleForm = () => {
-        setRaffleFormOpen(!RaffleFormOpen);
-    }
-
-    const handleCoinFlipForm = () => {
-        setCoinFlipFormOpen(!CoinFlipFormOpen);
-    }
-
-    return (
-        <div className="main-container">
-            <MenuItems account={account}/>
-                <div className="home-title-container">
-                    <div className="sign">
-                    <span className="fast-flicker">Raffle House</span>
-                    </div>
-                </div>
-            <Footer/>
+  return (
+    <BaseContainer>
+      <Flex w="100%" minH="100vh" h="100%" justify="center" mt="220px">
+        <div className="sign">
+          <span className="fast-flicker">Raffle House</span>
         </div>
-    )
-}
+      </Flex>
+    </BaseContainer>
+  );
+};
 
 export default Home;

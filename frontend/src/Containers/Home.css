@@ -16,21 +16,12 @@
   
   
   .sign {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 50%;
-    height: 50%;
-    background-image: radial-gradient(
+  -image: radial-gradient(
       ellipse 50% 35% at 50% 50%,
       #6b1839,
       transparent
     );
-    transform: translate(-50%, -50%);
     letter-spacing: 2;
-    left: 50%;
-    top: 50%;
     font-family: 'Greatest Richmond Alternate Thr', sans-serif; 
     text-transform: uppercase;
     font-size: 6em;
