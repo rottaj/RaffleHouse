@@ -2,11 +2,18 @@ import { useState, useEffect } from "react";
 import MenuItems from "../Components/MenuItems";
 import { ethers } from "ethers";
 import { _CoinFlip_abi } from "../interfaces/CoinFlip_Interface";
-import TextField from "@mui/material/TextField";
 import Messages from "../Components/Messages";
-import Button from "@mui/material/Button";
 import Footer from "../Components/Footer";
-import "./CoinFlipViewer.css";
+
+import {
+  Box,
+  Flex,
+  Heading,
+  Input,
+  Button
+} from "@chakra-ui/react"
+import "../styles/CoinFlips/CoinFlipViewer.scss";
+import BaseContainer from "../Components/BaseContainers/BaseContainer";
 
 declare let window: any;
 const CoinFlipViewer = () => {
@@ -56,79 +63,103 @@ const CoinFlipViewer = () => {
   };
 
   return (
-    <div className="CoinFlipViewer-Div-Main">
-      {/* <Header/> */}
-      <MenuItems account={account} />
-      <Messages />
-      <div className="CoinFlip-Game-Container">
-        <h1 className="Coinflip-Main-Title">COIN FLIP</h1>
-        {gameInfo ? (
-          <div>
-            <div className="CoinFlip-GameInfo-Div">
-              <h2>
-                Buy in Price: {parseInt(gameInfo.buyInPrice) / 10 ** 18} eth
-              </h2>
-              {gameInfo.winner !==
-              "0x0000000000000000000000000000000000000000" ? (
-                <h6>Winner: {gameInfo.winner}</h6>
-              ) : (
-                <div>
-                  {gameInfo.joineeAddress !==
-                  "0x0000000000000000000000000000000000000000" ? (
-                    <div>
-                      <h3>Processing Winner</h3>
-                      <div>
-                        <h6 className="CoinFlipViewer-Waiting-h6">
-                          <div className="lds-ellipsis">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                          </div>
-                        </h6>
-                      </div>
-                    </div>
-                  ) : (
-                    <h6>Waiting for player</h6>
-                  )}
-                </div>
-              )}
-            </div>
-            <div className="CoinFlip-Players-Container">
-              <div className="CoinFlip-Players-Creator-Div">
-                <h3>Creator:</h3>
-                <h6>{gameInfo.creatorAddress}</h6>
-              </div>
-              <div className="CoinFlip-VS-Container">
-                <h3 className="CoinFlip-VS-h3">VS</h3>
-              </div>
-              {gameInfo.joineeAddress !==
-              "0x0000000000000000000000000000000000000000" ? (
-                <div className="CoinFlip-Players-Joinee-Div">
-                  <h3>Joinee:</h3>
-                  <h6>{gameInfo.joineeAddress}</h6>
-                </div>
-              ) : (
-                <div className="CoinFlip-Players-Waiting-Div">
-                  <h6>Waiting for player</h6>
-                  <form
-                    onSubmit={(e) => handleSubmit(e, coinFlipContractAddress)}
+    <BaseContainer>
+      <Box textAlign="center" alignItems="center">
+        {/* <Header/> */}
+        <MenuItems account={account} />
+        <Messages />
+        <Box>
+          <Heading color="rgb(255, 242, 145)" textShadow="rgb(203, 176, 204) 3px 3px" fontSize="40px">COIN FLIP</Heading>
+          {gameInfo ? (
+            <Box>
+              <Box 
+                color="white"
+                background="#40434E"
+                border="1px solid black"
+                mx="30%"
+                my={"5%"}
+                borderRadius="md"
+              >
+                <Heading>
+                  Buy in Price: {parseInt(gameInfo.buyInPrice) / 10 ** 18} eth
+                </Heading>
+                {gameInfo.winner !==
+                "0x0000000000000000000000000000000000000000" ? (
+                  <Heading>Winner: {gameInfo.winner}</Heading>
+                ) : (
+                  <Box>
+                    {gameInfo.joineeAddress !==
+                    "0x0000000000000000000000000000000000000000" ? (
+                      <Box>
+                        <Heading fontSize="md">Processing Winner</Heading>
+                        <Box>
+                          <Heading className="CoinFlipViewer-Waiting-h6">
+                            <div className="lds-ellipsis">
+                              <div></div>
+                              <div></div>
+                              <div></div>
+                              <div></div>
+                            </div>
+                          </Heading>
+                        </Box>
+                      </Box>
+                    ) : (
+                      <Heading>Waiting for player</Heading>
+                    )}
+                  </Box>
+                )}
+              </Box>
+              <Flex justifyContent="center">
+                <Box 
+                  px="1%"
+                  color="white"
+                  border="1px wolid black"
+                  background="#40434E"
+                  borderRadius="10px"
+                >
+                  <Heading fontSize="sl">Creator:</Heading>
+                  <Heading fontSize="sl">{gameInfo.creatorAddress}</Heading>
+                </Box>
+                <Box >
+                  <Heading color="white">VS</Heading>
+                </Box>
+                {gameInfo.joineeAddress !==
+                "0x0000000000000000000000000000000000000000" ? (
+                  <Box 
+                    px="1%"
+                    color="white"
+                    background="#40434E"
+                    mx="5%"
+                    borderRadius="md"
                   >
-                    <TextField
-                      value={parseInt(gameInfo.buyInPrice) / 10 ** 18}
-                    ></TextField>
-                    {/* <Button type="submit">Deposit</Button> */}
-                  </form>
-                </div>
-              )}
-            </div>
-          </div>
-        ) : (
-          "GAME DOESN'T EXIST"
-        )}
-      </div>
-      <Footer />
-    </div>
+                    <Heading fontSize="sl">Joinee:</Heading>
+                    <Heading fontSize="sl">{gameInfo.joineeAddress}</Heading>
+                  </Box>
+                ) : (
+                  <Box 
+                    border="1px solid black"
+                    background="#40434E"
+                    borderRadius="md"
+                  >
+                    <Heading>Waiting for player</Heading>
+                    <form
+                      onSubmit={(e) => handleSubmit(e, coinFlipContractAddress)}
+                    >
+                      <Input
+                        value={parseInt(gameInfo.buyInPrice) / 10 ** 18}
+                      ></Input>
+                      <Button type="submit">Deposit</Button> 
+                    </form>
+                  </Box>
+                )}
+              </Flex>
+            </Box>
+          ) : (
+            "GAME DOESN'T EXIST"
+          )}
+        </Box>
+      </Box>
+    </BaseContainer>
   );
 };
 

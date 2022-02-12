@@ -8,10 +8,10 @@ import { _Raffle_abi } from "../interfaces/RaffleEscrow_Interface";
 import MenuItems from "../Components/MenuItems";
 import Footer from "../Components/Footer";
 import Messages from "../Components/Messages";
+import BaseContainer from "../Components/BaseContainers/BaseContainer";
+import { Grid, GridItem } from "@chakra-ui/react";
 
 import "./Raffles.css";
-import BaseContainer from "../Components/BaseContainers/BaseContainer";
-
 declare let window: any;
 const Raffles = () => {
   const [currentRaffles, setCurrentRaffles]: any = useState([]);
@@ -20,15 +20,15 @@ const Raffles = () => {
 
   useEffect(() => {
     document.title = "Raffles - Raffle House";
-    // const getAccount = async () => {
-    //   var accounts = await window.ethereum.send("eth_requestAccounts");
-    //   const account = accounts.result[0];
-    //   setAccount(account);
-    // };
-    // if (window.ethereum) {
-    //   getAccount();
-    //   getRaffles();
-    // }
+    const getAccount = async () => {
+      var accounts = await window.ethereum.send("eth_requestAccounts");
+      const account = accounts.result[0];
+      setAccount(account);
+    };
+    if (window.ethereum) {
+      getAccount();
+      getRaffles();
+    }
   }, []);
 
   const getRaffles = async () => {
@@ -82,40 +82,40 @@ const Raffles = () => {
         <div className="Raffles-title-container">
           <h1 className="Raffles-Title-h1">Current Raffles</h1>
         </div>
-        <div className="Raffles-Viewer-Main">
+        <Grid templateColumns='repeat(5, 1fr)' gap={2} className="Raffles-Viewer-Main">
           {/* <Grid container spacing={2}> */}
           {currentRaffles.map((raffle: any) => {
             return (
               <Link to={`raffle/${raffle["contractAddress"]}`}>
-                <div className="Raffle-Div-Main-Container">
+                <GridItem className="Raffle-Div-Main-Container">
                   {/* <Grid item xs={8}> */}
                   {/* <Raffle token={raffle} /> */}
                   {/* </Grid> */}
-                </div>
+                </GridItem>
               </Link>
             );
           })}
           {/* </Grid> */}
-        </div>
+        </Grid>
         <div></div>
-        <div className="PastRaffles-Viewer-Main">
           <div className="PastRaffles-title-container">
             <h1 className="PastRaffles-Title-h1">Past Raffles</h1>
           </div>
+        <Grid templateColumns='repeat(5, 1fr)' gap={2} className="PastRaffles-Viewer-Main">
           {/* <Grid className="PastRaffles-Grid-Container" container spacing={2}> */}
           {pastRaffles.map((raffle: any) => {
             return (
               <Link to={`raffle/${raffle["contractAddress"]}`}>
-                <div className="PastRaffle-Div-Main-Container">
+                <GridItem className="PastRaffle-Div-Main-Container">
                   {/* <Grid className="PastRaffle-Grid-Item" item xs={8}> */}
                   <Raffle token={raffle} />
                   {/* </Grid> */}
-                </div>
+                </GridItem>
               </Link>
             );
           })}
           {/* </Grid> */}
-        </div>
+        </Grid>
         {/* <Footer /> */}
       </div>
     </BaseContainer>

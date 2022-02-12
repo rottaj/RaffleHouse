@@ -57,7 +57,6 @@ const BaseContainer = ({
         <>
           <NavBar />
           <Box
-            h="100%"
             minH="100vh"
             pt={["56px", null, "84px"]}
             bgColor="#141114"

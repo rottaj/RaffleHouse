@@ -1,53 +1,26 @@
 import { ethers } from "ethers";
 import { _abi } from "../interfaces/Eyescream_Interface";
+import { _HighRoller_abi } from "../interfaces/HighRoller_Interface";
+import { useState, useEffect } from 'react';
 import {
   HighRollersAddress,
   _HighRollers_abi,
 } from "../interfaces/HighRollers_Interface";
-import { _HighRoller_abi } from "../interfaces/HighRoller_Interface";
-import { useState, useEffect } from 'react';
 import fetchNFTs from '../utils/HandleNFTs';
-
 import MenuItems from "../Components/MenuItems";
 import Messages from "../Components/Messages";
 import NFTSelector from "../Components/NFTSelector";
 import PlayerList from "../Components/PlayersList";
 import HighRollerDeposits from "../Components/HighRollerDeposits";
 import PastHighRollerGames from "./PastHighRollerGames";
-import Footer from "../Components/Footer";
-import Button from "@mui/material/Button";
-import "./HighRollers.css";
+//import Footer from "../Components/Footer";
 import BaseContainer from "../Components/BaseContainers/BaseContainer";
-
-const ETHERSCAN_API_NFT_TXN =
-  "https://api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=";
-const ETHERSCAN_API_ABI =
-  "https://api.etherscan.io/api?module=contract&action=getabi&address=";
-//&apikey=YourApiKeyToken
-const ETHERSCAN_API_KEY = "FS4Q2NK8JQJ7DPD73R3G1S1T948RPY3JSI";
-
-interface Token {
-  blockHash: string;
-  blockNumber: number;
-  confirmations: number;
-  contractAddress: string;
-  cumulativeGasUsed: number;
-  from: string;
-  gas: number;
-  gasPrice: number;
-  gasUsed: number;
-  hash: string;
-  image: string;
-  input: string;
-  nonce: number;
-  timeStamp: number;
-  to: string;
-  tokenDecimal: number;
-  tokenID: number;
-  tokenName: string;
-  tokenSymbol: string;
-  transactionIndex: number;
-}
+import "../styles/HighRollers/HighRollers.scss";
+import {
+    Button,
+    Box,
+    Heading
+} from "@chakra-ui/react";
 
 interface CurrentGame {
   contractAddress: string;
@@ -94,8 +67,6 @@ const HighRollers = () => {
         */
 
     }
-
-    // END OF DEPOSITS
 
 
     // START OF GAME INFO
@@ -173,42 +144,42 @@ const HighRollers = () => {
 
 
     return (
-        <div className="HighRollers-Div-Main">
-            {console.log("TESTING TOKENS", userTokens)}
-            <MenuItems account={account}/>
-            <Messages/>
-            <h3 className="HighRollers-Current-Game-h3">HIGH ROLLERS</h3>
-            {currentGame.contractAddress ?
-                <div>
-                    <h3 className="HighRollers-Current-Game-Address-h3">Current Game: {currentGame.contractAddress}</h3>
-                    {currentGame.winner !== "0x0000000000000000000000000000000000000000" ?
-                        <h3 className="HighRollers-Current-Game-Winner-Address-h3">Winner: {currentGame.winner}</h3>
-                    :    
-                        <div> 
-                            <h3 className="HighRollers-Current-Game-Winner-Address-h3">Game in Progress</h3>
-                            <h6 className="CoinFlip-Waiting-h6"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></h6>
-                        </div>
-                    }
-                    <h3 className="HighRollers-Current-Game-TimeLeft-h3"> {minutesLeft} Minutes {secondsLeft} Seconds </h3>
-                </div>
-            :
-                <h3 className="HighRollers-Current-Game-Address-h3">No Game</h3>
-            }
 
-            <div className="HighRollers-GameInfo-Container">
-                <HighRollerDeposits tokens={gameTokens}/>
-            </div>
+        <BaseContainer>
+            <Box textAlign='center'>
+                <Messages/>
+                <Heading color="#DE89BE" textShadow="#FDCFF3 3px 3px;" fontSize="40px">HIGH ROLLERS</Heading>
+                {currentGame.contractAddress ?
+                    <Box>
+                        <Heading color="#FDCFF3" fontSize="20px">Current Game: {currentGame.contractAddress}</Heading>
+                        {currentGame.winner !== "0x0000000000000000000000000000000000000000" ?
+                            <Heading color="#FDCFF3" fontSize="20px">Winner: {currentGame.winner}</Heading>
+                        :    
+                            <Box> 
+                                <Heading color="#FDCFF3" fontSize="20px">Game in Progress</Heading>
+                                <h6 className="CoinFlip-Waiting-h6"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></h6>
+                            </Box>
+                        }
+                        <h3 className="HighRollers-Current-Game-TimeLeft-h3"> {minutesLeft} Minutes {secondsLeft} Seconds </h3>
+                    </Box>
+                :
+                    <Heading color="#FDCFF3" fontSize="20px" >No Game</Heading>
+                }
 
-            <div className="HighRollers-PlayerList-Container">
-                <PlayerList players={players}/>
-            </div>
-            <Button onClick={() => handleDeposit() }variant="contained" type="submit" style={{maxHeight: '55px'}}>
-                Deposit 
-            </Button>
-            <NFTSelector tokens={userTokens}  />
-            <PastHighRollerGames/>
-            <Footer/>
-        </div>
+                <Box className="HighRollers-GameInfo-Container">
+                    <HighRollerDeposits tokens={gameTokens}/>
+                </Box>
+
+                <Box width="80%" marginLeft="30%">
+                    <PlayerList players={players}/>
+                </Box>
+                <Button onClick={() => handleDeposit() }variant="contained" type="submit" style={{maxHeight: '55px'}}>
+                    Deposit 
+                </Button>
+                <NFTSelector tokens={userTokens}  />
+                <PastHighRollerGames/>
+            </Box>
+        </BaseContainer>
     )
 }
 

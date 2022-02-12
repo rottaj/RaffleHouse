@@ -5,7 +5,9 @@ import Raffles from "./Containers/Raffles";
 import CoinFlips from "./Containers/CoinFlips";
 import HighRollers from "./Containers/HighRollers";
 import Host from "./Containers/Host";
-
+import HighRollerViewer from "./Containers/HighRollerViewer";
+import CoinFlipViewer from "./Containers/CoinFlipViewer";
+import RaffleViewer from "./Containers/RaffleViewer";
 import { MetaMaskUserContext } from "./utils/contexts";
 import { useToast } from "@chakra-ui/react";
 import { ethers } from "ethers";
@@ -76,13 +78,12 @@ function App() {
         <Route exact path="/coin-flips" component={CoinFlips} />
         <Route exact path="/high-rollers" component={HighRollers} />
         <Route exact path="/host" component={Host} />
-        {/*         
         <Route path="/raffle/:contractAddress" component={RaffleViewer} />
         <Route path="/coin-flip/:contractAddress" component={CoinFlipViewer} />
         <Route
           path="/high-roller/:contractAddress"
           component={HighRollerViewer}
-        /> */}
+        /> 
       </BrowserRouter>
     </MetaMaskUserContext.Provider>
   );

@@ -10,7 +10,7 @@ const Home = () => {
 
   return (
     <BaseContainer>
-      <Flex w="100%" minH="100vh" h="100%" justify="center" mt="220px">
+      <Flex w="100%" h="100%" justify="center" pt="220px">
         <div className="sign">
           <span className="fast-flicker">Raffle House</span>
         </div>
