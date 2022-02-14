@@ -21,6 +21,7 @@ declare let window: any;
 const RaffleCreator = () => {
 
   const [tokens, setTokens]: any = useState([]);
+  const [selectedToken, setSelectedToken]: any = useState({})
   const [RaffleFormOpen, setRaffleFormOpen] = useState(false);
 
   const handleRaffleForm = () => {
@@ -60,29 +61,33 @@ const RaffleCreator = () => {
       ); // connect to Raffles Contract
       // DEPLOY CONTRACT
       const account = accounts.result[0];
-      //const selectedToken = this.tokenSelector.state.selectedToken; // maybe remove?
-      /*
->>>>>>> chakra-refactor
-            const contract = await raffleFactory.deploy(
-                                                        parseInt(e.target[0].value),
-                                                        parseInt(e.target[1].value),
-                                                        selectedToken.image, 
-                                                        selectedToken.contractAddress,
-                                                        selectedToken.tokenName,
-                                                        selectedToken.tokenID
-                                                        );
-            await contract.deployed().then(async function (data) {
-                console.log(data);
-                const collectionContract = await new ethers.Contract(selectedToken.contractAddress, _abi, signer);
-                const sendingTxn = await collectionContract.transferFrom(account, contract.address, selectedToken.tokenID);
-            }).then(async function (dataTwo) {
-                console.log(dataTwo);
-                const addRaffleTxn = rafflesContract.addRaffle(selectedToken.image, contract.address, selectedToken.tokenName, selectedToken.tokenID)
-            })
-            */
+      const contract = await raffleFactory.deploy(
+                                                  parseInt(e.target[0].value),
+                                                  parseInt(e.target[1].value),
+                                                  selectedToken.image, 
+                                                  selectedToken.contractAddress,
+                                                  selectedToken.tokenName,
+                                                  selectedToken.tokenID
+                                                  );
+      await contract.deployed().then(async function (data) {
+          console.log(data);
+          const collectionContract = await new ethers.Contract(selectedToken.contractAddress, _abi, signer);
+          const sendingTxn = await collectionContract.transferFrom(account, contract.address, selectedToken.tokenID);
+      }).then(async function (dataTwo) {
+          console.log(dataTwo);
+          const addRaffleTxn = rafflesContract.addRaffle(selectedToken.image, contract.address, selectedToken.tokenName, selectedToken.tokenID)
+      })
     }
 
   };
+
+
+    const handleSelectedToken = (token: any) => {
+        console.log("TOKEN CLICKED ", token)
+        setSelectedToken(token)
+    }
+
+
 
   return (
     <Box height="auto" width="auto">
@@ -97,7 +102,7 @@ const RaffleCreator = () => {
         overflowY="scroll"
       >
         <Heading fontSize="40px" color="white">Create your Raffle!</Heading>
-        <NFTSelector tokens={tokens} />
+        <NFTSelector tokens={tokens} tokenHandler={handleSelectedToken}/>
         <Flex>
           <form  onSubmit={(e) => handleSubmit(e)}>
             <Heading fontSize="40px" color="white" marginTop="8%">Minimum Buy in: </Heading>

@@ -5,20 +5,10 @@ import { Grid, GridItem, Heading } from '@chakra-ui/react';
 
 type Props  = {
     tokens: Array<any>;
+    tokenHandler: any
 }
 
 const NFTSelector = (props:Props) => {
-
-    const [selectedToken, setSelectedToken]: any = useState({});
-
-    
-    const handleClick = (e: any) => { // Prob need to fix this.. whatever
-        console.log("TESTING TOKEN PRICE", selectedToken.tokenPrice);
-        e.tokenPrice = selectedToken.tokenPrice;
-        setSelectedToken(e);
-        console.log(e)
-    }
-
 
     return (
         <Grid 
@@ -27,7 +17,7 @@ const NFTSelector = (props:Props) => {
           mx="15%"
         >
             { props.tokens ?
-                props.tokens.map(token => {return (<GridItem className="NFT-Div-Container" onClick={() => handleClick(token)}><NFT token={token}></NFT></GridItem>)})
+                props.tokens.map(token => {return (<GridItem className="NFT-Div-Container" onClick={() => props.tokenHandler(token)}><NFT token={token}></NFT></GridItem>)})
                 :
                 <Heading fontSize="md">No Tokens</Heading>
             }

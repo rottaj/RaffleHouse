@@ -11,7 +11,7 @@ import fetchNFTs from '../utils/HandleNFTs';
 import Messages from "../Components/Messages";
 import NFTSelector from "../Components/NFTSelector";
 import PlayerList from "../Components/PlayersList";
-import HighRollerDeposits from "../Components/HighRollerDeposits";
+import HighRollersPot from "../Components/HighRollerPot";
 //import Footer from "../Components/Footer";
 import BaseContainer from "./BaseContainers/BaseContainer";
 import "../styles/HighRollers/HighRollers.scss";
@@ -34,6 +34,7 @@ const HighRollers = () => {
 
 
     const [userTokens, setUserTokens]:any = useState([]);
+    const [selectedToken, setSelectedToken]:any = useState({})
     const [gameTokens, setGameTokens]:any = useState([]);   
     const [players, setPlayers]:any = useState([]);
     const [currentGame, setCurrentGame] = useState({contractAddress: "", startTime: "", endTime: "", winner: ""});
@@ -47,7 +48,6 @@ const HighRollers = () => {
         const signer = provider.getSigner();
         var accounts = await window.ethereum.send('eth_requestAccounts');
         const account = accounts.result[0];
-        /*  // NEED TO REFACTOR TOKENSELECTOR
         const collectionContract = await new ethers.Contract(selectedToken.contractAddress, _abi, signer);
         const sendingTxn = await collectionContract.transferFrom(account, currentGame.contractAddress, selectedToken.tokenID);
         sendingTxn.wait();
@@ -63,8 +63,6 @@ const HighRollers = () => {
                 console.log(data)
             })
         }
-        */
-
     }
 
 
@@ -108,6 +106,11 @@ const HighRollers = () => {
             }
         }
 
+    }
+
+    const handleSelectedToken = (token: any) => {
+        console.log("TOKEN CLICKED ", token)
+        setSelectedToken(token)
     }
 
 
@@ -166,7 +169,7 @@ const HighRollers = () => {
                 }
 
                 <Box className="HighRollers-GameInfo-Container">
-                    <HighRollerDeposits tokens={gameTokens}/>
+                    <HighRollersPot tokens={gameTokens}/>
                 </Box>
 
                 <Box width="80%" marginLeft="30%">
@@ -175,7 +178,7 @@ const HighRollers = () => {
                 <Button onClick={() => handleDeposit() }variant="contained" type="submit" style={{maxHeight: '55px'}}>
                     Deposit 
                 </Button>
-                <NFTSelector tokens={userTokens}  />
+                <NFTSelector tokens={userTokens} tokenHandler={handleSelectedToken}  />
                 <PastHighRollerGames/>
             </Box>
         </BaseContainer>

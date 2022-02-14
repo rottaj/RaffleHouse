@@ -6,7 +6,7 @@ const OPENSEA_CONTRACT_URL = "https://testnets-api.opensea.io/api/v1/asset_contr
 const OPENSEA_ASSET_URL = "https://testnets-api.opensea.io/api/v1/asset/" // ContractAddress + '/' + id
 const OPENSEA_COLLECTION_URL = "https://testnets-api.opensea.io/api/v1/collection/" // collection-name + '/stats'
 
-interface Props {
+type Props = {
     token: any;
 }
 

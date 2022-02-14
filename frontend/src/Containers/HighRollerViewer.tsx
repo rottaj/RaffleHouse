@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import BaseContainer from './BaseContainers/BaseContainer';
-import HighRollerDeposits from '../Components/HighRollerDeposits';
+import HighRollersPot from '../Components/HighRollerPot';
 import PlayersList from '../Components/PlayersList';
 import Messages from "../Components/Messages";
 import fetchNFTs from '../utils/HandleNFTs';
@@ -79,7 +79,7 @@ const HighRollerViewer = () => {
                 <Messages/>
                 <Box marginTop="10%" height="100%">
                     <Box >
-                        <HighRollerDeposits tokens={gameTokens}/>
+                        <HighRollersPot tokens={gameTokens}/>
                     </Box>
 
                     <Box className="HighRollers-PlayerList-Container">

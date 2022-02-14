@@ -1,4 +1,3 @@
-import React from 'react';
 import NFT from "./NFT";
 import { Grid, GridItem, Heading } from "@chakra-ui/react"
 
@@ -7,7 +6,7 @@ interface Props {
     tokens: any
 }
 
-const HighRollerDeposits = (props:Props) => {
+const HighRollersPot = (props:Props) => {
 
 
     return (
@@ -29,4 +28,4 @@ const HighRollerDeposits = (props:Props) => {
     )
 }
 
-export default HighRollerDeposits;
+export default HighRollersPot;
