@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import BaseContainer from '../Components/BaseContainers/BaseContainer';
 import HighRollerDeposits from '../Components/HighRollerDeposits';
 import PlayersList from '../Components/PlayersList';
-import MenuItems from "../Components/MenuItems";
 import Messages from "../Components/Messages";
 import fetchNFTs from '../utils/HandleNFTs';
 import { _abi } from '../interfaces/Eyescream_Interface';

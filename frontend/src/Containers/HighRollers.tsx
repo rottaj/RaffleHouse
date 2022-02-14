@@ -6,13 +6,12 @@ import {
   HighRollersAddress,
   _HighRollers_abi,
 } from "../interfaces/HighRollers_Interface";
+import { Link } from 'react-router-dom';
 import fetchNFTs from '../utils/HandleNFTs';
-import MenuItems from "../Components/MenuItems";
 import Messages from "../Components/Messages";
 import NFTSelector from "../Components/NFTSelector";
 import PlayerList from "../Components/PlayersList";
 import HighRollerDeposits from "../Components/HighRollerDeposits";
-import PastHighRollerGames from "./PastHighRollerGames";
 //import Footer from "../Components/Footer";
 import BaseContainer from "../Components/BaseContainers/BaseContainer";
 import "../styles/HighRollers/HighRollers.scss";
@@ -184,3 +183,71 @@ const HighRollers = () => {
 }
 
 export default HighRollers;
+
+
+
+const PastHighRollerGames = () => {
+
+    const [pastGames, setPastGames]:any = useState([]);
+
+    const getPastGames = async () => {
+        if (window.ethereum) {
+            var provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+            const HighRollersContract = new ethers.Contract(HighRollersAddress, _HighRollers_abi, signer)
+            let pastGames = await HighRollersContract.getPastGames();
+            console.log("PAST GAMES", parseInt(pastGames))
+            for ( let i=0; i<= parseInt(pastGames)-1; i++ ) {
+                let tempGame = await HighRollersContract.getPastGameByIndex(i);
+                setPastGames((pastGames: any) => [...pastGames, tempGame])
+            }
+        }
+    }
+
+    useEffect(() => { 
+        getPastGames();
+    }, [])
+
+    return (
+        <Box marginTop="5%">
+            <Heading color="#FDCFF3" fontSize="30px">Past Games</Heading>
+            {pastGames.length !== 0 ? 
+                <Box>
+                    {pastGames.map( (game: any) => {
+                        return (
+                            <Link to={`high-roller/${game['contractAddress']}`}>
+                                <HighRollerGame winner={game.winner} tickets={parseInt(game.tickets)} contractAddress={game.contractAddress}/> 
+                            </Link>
+                        )
+                    })}
+                </Box>
+            : 
+                <Heading color="#FDCFF3" fontSize="30px">No Games</Heading>
+            }
+        </Box>
+    )
+}
+
+
+
+type HighRollerGameProps = {
+    winner: string
+    tickets: number,
+    contractAddress: string,
+}
+
+const HighRollerGame = (props:HighRollerGameProps) => {
+
+    return (
+        <Box
+            background="#40434E" 
+            py="1%%"
+            px="25%"
+            borderRadius="20px"
+        >
+            <Heading color="#FDCFF3" fontSize="30px">Winner: {props.winner}</Heading>
+            <Heading color="#FDCFF3" fontSize="30px">Tickets: {props.tickets}</Heading>
+            <Heading color="#FDCFF3" fontSize="20px">Contract: {props.contractAddress}</Heading>
+        </Box>
+    )
+}

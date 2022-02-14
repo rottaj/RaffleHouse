@@ -1,4 +1,3 @@
-import React from "react";
 import { ethers, ContractFactory } from "ethers";
 import {
   _CoinFlip_abi,
@@ -8,9 +7,13 @@ import {
   CoinFlipAddress,
   _CoinFlips_abi,
 } from "../interfaces/CoinFlips_Interface";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import "./CoinFlipCreator.css";
+import {
+  Box,
+  Flex,
+  Heading,
+  Input,
+  Button
+} from "@chakra-ui/react"
 
 declare let window: any;
 const CoinFlipCreator = () => {
@@ -54,29 +57,45 @@ const CoinFlipCreator = () => {
   };
 
   return (
-    <div className="CreateCoinFlipForm-Main">
-      <div className="PopUpCoinFlip-Form">
-        <h3 className="CreateCoinFlip-h3">Host a CoinFlip Game!</h3>
-        <div className="CreateCoinFlip-Form-Container">
-          <h3 className="MinimumCoinFlip-BuyIn-h3">Minimum Buy in: </h3>
+    <Box height="auto" width="auto">
+      <Box 
+        height="100%"
+        width="70%"
+        marginTop="5%"
+        marginLeft="10%"
+        borderRadius="20px"
+        background="#40434E"
+        overflowY="scroll"
+      >
+        <Heading 
+          paddingLeft="1%;"
+          color="rgb(255, 242, 145)"
+          textShadow="rgb(203, 176, 204) 3px 3px"
+          fontSize="40px" 
+        >
+          Host a CoinFlip Game!
+        </Heading>
+        <Flex >
+          <Heading 
+            paddingLeft="1%;"
+            color="rgb(255, 242, 145)"
+            textShadow="rgb(203, 176, 204) 3px 3px"
+            fontSize="40px" 
+          >
+            Minimum Buy in: 
+          </Heading>
           <form
             className="CreateCoinFlip-Form"
             onSubmit={(e) => handleSubmit(e)}
           >
-            {/* <TextField
-              className="CoinFlipForm-Minimum-Buyin"
+            <Input
               defaultValue="0.08"
-              id="filled-basic"
-              label="Deposit"
-              variant="filled"
-            ></TextField> */}
-            {/* <Button variant="contained" type="submit" style={{maxHeight: '55px'}}>
-                            Create Game
-                        </Button> */}
+            ></Input> 
+            <Button type="submit">Create Game</Button>
           </form>
-        </div>
-      </div>
-    </div>
+        </Flex>
+      </Box>
+    </Box>
   );
 };
 

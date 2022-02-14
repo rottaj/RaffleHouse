@@ -4,8 +4,6 @@ import { ethers } from "ethers";
 import { Link } from "react-router-dom";
 import { RafflesAddress, _abi_raffles } from "../interfaces/Raffles_Interface";
 import { _Raffle_abi } from "../interfaces/RaffleEscrow_Interface";
-// import { Grid } from "@mui/material";
-import MenuItems from "../Components/MenuItems";
 import Footer from "../Components/Footer";
 import Messages from "../Components/Messages";
 import BaseContainer from "../Components/BaseContainers/BaseContainer";

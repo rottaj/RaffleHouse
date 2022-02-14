@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import MenuItems from "../Components/MenuItems";
 import { ethers } from "ethers";
 import { _CoinFlip_abi } from "../interfaces/CoinFlip_Interface";
 import Messages from "../Components/Messages";
@@ -65,8 +64,6 @@ const CoinFlipViewer = () => {
   return (
     <BaseContainer>
       <Box textAlign="center" alignItems="center">
-        {/* <Header/> */}
-        <MenuItems account={account} />
         <Messages />
         <Box>
           <Heading color="rgb(255, 242, 145)" textShadow="rgb(203, 176, 204) 3px 3px" fontSize="40px">COIN FLIP</Heading>

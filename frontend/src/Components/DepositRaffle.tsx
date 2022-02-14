@@ -1,9 +1,11 @@
-import React from "react";
 import { ethers } from "ethers";
 import { _Raffle_abi } from "../interfaces/RaffleEscrow_Interface";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import "./Deposit.css";
+import {
+  Box,
+  Input,
+  Button,
+  Heading
+} from "@chakra-ui/react"
 
 interface Props {
   isDepositOpen: boolean;
@@ -38,28 +40,26 @@ const RaffleDeposit = (props: Props) => {
   };
 
   return (
-    <div className="Deposit-Container-Main">
-      {props.isDepositOpen && (
-        <div className="Deposit-PopUp-Form">
-          <h3 className="Deposit-To-Win-h3">
-            Deposit to win {props.tokenMetaData.tokenName} #
-            {props.tokenMetaData.tokenID}!
-          </h3>
-          <form className="Deposit-Form" onSubmit={(e) => handleSubmit(e)}>
-            <TextField
-              defaultValue="0.08"
-              id="filled-basic"
-              label="Deposit"
-              variant="outlined"
-              sx={{ input: { color: "white" } }}
-            ></TextField>
-            {/* <Button variant="contained" type="submit" style={{maxHeight: '55px'}}>
-                            Submit Deposit
-                        </Button> */}
-          </form>
-        </div>
-      )}
-    </div>
+    <Box>
+      <Box>
+        <Heading 
+          color="rgb(255, 242, 145)"
+          textShadow="rgb(203, 176, 204) 3px 3px"
+          fontSize="20px"
+        >
+          Deposit to win {props.tokenMetaData.tokenName} #
+          {props.tokenMetaData.tokenID}!
+        </Heading>
+        <form  onSubmit={(e) => handleSubmit(e)}>
+          <Input
+            defaultValue="0.08"
+            id="filled-basic"
+            sx={{ input: { color: "white" } }}
+          ></Input>
+          <Button sx={{maxHeight: '55px'}}>Submit Deposit</Button>
+        </form>
+        </Box>
+    </Box>
   );
 };
 

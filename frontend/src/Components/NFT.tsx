@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import './NFT.css';
+import { useState, useEffect } from 'react';
+import { Box, Heading, Image } from '@chakra-ui/react';
 
 
 const OPENSEA_CONTRACT_URL = "https://testnets-api.opensea.io/api/v1/asset_contract/";
@@ -35,17 +35,6 @@ const NFT = (props:Props) => {
                                 console.log(data)
                                 let price = String(data['collection']['stats']['average_price'].toFixed(2));
                                 setTokenPrice(price);
-                                //if (JSON.parse(sessionStorage.userTokens).hasOwnProperty(`token_${token.contractAddress}_${token.tokenID}`) !== true) {
-                                    /*
-                                    console.log("HELLLLO")
-                                    let userTokens = JSON.parse(sessionStorage.userTokens)
-                                    console.log("TESTING", userTokens)
-                                    */
-                                    //userTokens[`token_${token.contractAddress}_${token.tokenID}`] = `${price}`;
-                                    //console.log(userTokens)
-                                    //sessionStorage.setItem('userTokens', userTokens)
-                                    //sessionStorage.setItem('userTokens', `{"token_${token.contractAddress}_${token.tokenID}": ${price}}`)
-                                //}
                                 i = -1;
                             }
 
@@ -70,18 +59,25 @@ const NFT = (props:Props) => {
 
 
     return (
-        <div className="NFT-Main-Container">
+        <Box height="100%" width="100%">
             {props.token ?
-                <img className="NFT-Img"src={props.token.image}></img>
+                <Image 
+                    borderRadius="20px"
+                    padding="5px"
+                    width="100%"
+                    height="100%"
+                    src={props.token.image}
+                >
+                </Image>
                 :
                 undefined
             }
             {tokenPrice != "Loading" ?
-                <h5 className="NFT-Price">Price: {tokenPrice} eth</h5>
+                <Heading color="white" fontSize="md">Price: {tokenPrice} eth</Heading>
             :
-                <h5 className="NFT-Price">{tokenPrice} Price </h5>
+                <Heading color="white" fontSize="md">{tokenPrice} Price </Heading>
             }
-        </div>
+        </Box>
     )
 }
 

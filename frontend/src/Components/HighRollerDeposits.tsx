@@ -1,26 +1,31 @@
 import React from 'react';
 import NFT from "./NFT";
-import "./HighRollerDeposits.css";
+import { Grid, GridItem, Heading } from "@chakra-ui/react"
 
 
 interface Props {
     tokens: any
 }
 
-declare let window: any;
 const HighRollerDeposits = (props:Props) => {
 
 
     return (
-        <div className="HighRollerDeposits-Main-Div">
+        <Grid
+            templateColumns='repeat(5, 1fr)' 
+            gap={2} 
+            width="75%" 
+            borderRadius="20px"
+            mx="15%"
+        >
 
             {props.tokens.length != 0 ?
 
-            props.tokens.map((token:any) => {return (<div className="NFT-Div-Container" ><NFT token={token}></NFT></div>)})
+            props.tokens.map((token:any) => {return (<GridItem className="NFT-Div-Container" ><NFT token={token}></NFT></GridItem>)})
             :
-            <h5>No Tokens</h5>
+            <Heading color="white" fontSize="30px">No Tokens</Heading>
             }
-        </div>
+        </Grid>
     )
 }
 

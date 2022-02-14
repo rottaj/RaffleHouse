@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import CoinFlip from "../Components/CoinFlip";
-import MenuItems from "../Components/MenuItems";
 import Messages from "../Components/Messages";
 import { Link } from "react-router-dom";
 import { ethers } from "ethers";

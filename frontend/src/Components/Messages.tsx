@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from "react";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import {
   MessagesAddress,
   _Messages_abi,
 } from "../interfaces/Messages_interface";
-import "./Messages.css";
+import {
+  Box,
+  Heading,
+  Input,
+  Button
+} from "@chakra-ui/react"
 
 declare let window: any;
 const Messages = () => {
@@ -54,26 +57,40 @@ const Messages = () => {
   };
 
   return (
-    <div className="Messages-Main-Div-Container">
-      <h1>Messages </h1>
-      <div>
-        <div>
+    <Box 
+      backgroundColor="#0d0b0"
+      zIndex="9000"
+      textAlign="center"
+      position="fixed"
+      width="15%"
+      float="right"
+      color="white"
+      right="10px"
+      fontFamily="Arial, Helvetica, sans-serif"
+      height="100%"
+      overflowY="scroll"
+      borderRadius="30px"
+      opacity="83%"
+    >
+      <Heading fontSize="lg">Messages </Heading>
+      <Box>
+        <Box>
           {messages.map((message: any) => {
             return (
-              <div>
-                <h6>
+              <Box>
+                <Heading fontSize="sm">
                   {message.messager === myAddress[myAddress.length - 1]
                     ? "You" + ": "
                     : message.messager.substring(0, 6) +
                       "..." +
                       message.messager.substring(36, 40) +
                       ": "}
-                </h6>
-                <h6>{message.message}</h6>
-              </div>
+                </Heading>
+                <Heading fontSize="sm">{message.message}</Heading>
+              </Box>
             );
           })}
-          <div className="Messages-Message-Form-Container">
+          <Box height="100%" minHeight="200px">
             <form
               className="CreateMessage-Form"
               onSubmit={(e) => handleSubmit(e)}
@@ -94,10 +111,10 @@ const Messages = () => {
                         Send Message
                     </Button> */}
             </form>
-          </div>
-        </div>
-      </div>
-    </div>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

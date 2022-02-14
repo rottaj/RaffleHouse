@@ -1,5 +1,10 @@
-import React from 'react';
-import "./CoinFlip.css";
+import BaseContainer from "./BaseContainers/BaseContainer"
+import {
+    Box,
+    Flex,
+    Heading
+} from "@chakra-ui/react"
+import "../styles/CoinFlips/CoinFlip.scss"
 
 interface Props {
     coinFlip: any
@@ -7,21 +12,30 @@ interface Props {
 
 const CoinFlip = (props: Props) => {
     return (
-        <div className="CoinFlip-Div-Main">
-            <h6 className="CoinFlip-Creator-h6">{props.coinFlip.creatorAddress}</h6>
-            {props.coinFlip.winner !== "0x0000000000000000000000000000000000000000" ?
-            <h6 className="CoinFlip-Winner-h6">{props.coinFlip.winner}</h6>
-            :
-                <div>
-                {props.coinFlip.joineeAddress !== "0x0000000000000000000000000000000000000000" ? 
-                    <h6 className="CoinFlip-Waiting-h6"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></h6>
+        <BaseContainer>
+            <Flex 
+                overflow="auto"
+                border="1px solid black"
+                background="#40434E"
+                color="white"
+                mx="20%"
+                borderRadius="20px" 
+            >
+                <Heading mx="5%">{props.coinFlip.creatorAddress}</Heading>
+                {props.coinFlip.winner !== "0x0000000000000000000000000000000000000000" ?
+                <Heading >{props.coinFlip.winner}</Heading>
                 :
-                    <h6 className="CoinFlip-Waiting-h6">Waiting for player</h6>
+                    <Box>
+                    {props.coinFlip.joineeAddress !== "0x0000000000000000000000000000000000000000" ? 
+                        <Heading className="CoinFlip-Waiting-h6"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></Heading>
+                    :
+                        <Heading className="CoinFlip-Waiting-h6">Waiting for player</Heading>
+                    }
+                    </Box>
                 }
-                </div>
-            }
-            <h6 className="CoinFlip-BuyIn-h6">{props.coinFlip.buyInPrice} eth </h6>
-        </div>
+                <Heading className="CoinFlip-BuyIn-h6">{props.coinFlip.buyInPrice} eth </Heading>
+            </Flex>
+        </BaseContainer>
     )
 }
 
