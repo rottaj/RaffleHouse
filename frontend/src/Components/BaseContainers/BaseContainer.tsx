@@ -3,8 +3,7 @@ import { Box, Button, Center, Flex, Spinner } from "@chakra-ui/react";
 import NavBar from "../Nav/NavBar";
 import "./BaseContainer";
 import { MetaMaskUserContext } from "../../utils/contexts";
-import "../../Containers/Home.css";
-
+import "../../styles/Home/Home.scss";
 type BaseContainerProps = {
   showMessages?: boolean;
   children: React.ReactNode;

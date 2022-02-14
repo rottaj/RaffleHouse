@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
-
-import "./Home.css";
-import BaseContainer from "../Components/BaseContainers/BaseContainer";
+import { useEffect } from "react";
 import { Flex } from "@chakra-ui/react";
+import BaseContainer from "../Components/BaseContainers/BaseContainer";
+import "../styles/Home/Home.scss";
+
 const Home = () => {
   useEffect(() => {
     document.title = "Raffle House";

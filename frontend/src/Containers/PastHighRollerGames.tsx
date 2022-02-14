@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import HighRollerGame from '../Components/HighRollerGame';
 import { ethers } from 'ethers';
 import { HighRollersAddress, _HighRollers_abi } from '../interfaces/HighRollers_Interface';
 import { Link } from 'react-router-dom';
-import "./PastHighRollerGames.css";
+import { Box, Heading } from "@chakra-ui/react";
 
 declare let window: any;
 const PastHighRollerGames = () => {
@@ -29,10 +29,10 @@ const PastHighRollerGames = () => {
     }, [])
 
     return (
-        <div className="PastHighRoller-Games-Main-Div">
-            <h1 className="PastHighRoller-Games-h1">Past Games</h1>
+        <Box marginTop="5%">
+            <Heading color="#FDCFF3" fontSize="30px">Past Games</Heading>
             {pastGames.length !== 0 ? 
-                <div>
+                <Box>
                     {pastGames.map( (game: any) => {
                         return (
                             <Link to={`high-roller/${game['contractAddress']}`}>
@@ -40,11 +40,11 @@ const PastHighRollerGames = () => {
                             </Link>
                         )
                     })}
-                </div>
+                </Box>
             : 
-                <h3 className="PastGames-Header-h3">No Games</h3>
+                <Heading color="#FDCFF3" fontSize="30px">No Games</Heading>
             }
-        </div>
+        </Box>
     )
 }
 

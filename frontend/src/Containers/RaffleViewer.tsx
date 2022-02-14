@@ -1,15 +1,18 @@
+import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { _abi } from "../interfaces/Eyescream_Interface";
 import { _Raffle_abi } from "../interfaces/RaffleEscrow_Interface";
-import React, { useState, useEffect } from "react";
-import MenuItems from "../Components/MenuItems";
+import BaseContainer from "../Components/BaseContainers/BaseContainer";
 import RaffleDeposit from "../Components/Deposit";
 import PlayersList from "../Components/PlayersList";
 import Messages from "../Components/Messages";
-import Button from "@mui/material/Button";
-import Footer from "../Components/Footer";
+import {
+  Box,
+  Heading,
+  Flex,
+  Image
+} from "@chakra-ui/react"
 
-import "./RaffleViewer.css";
 const ETHERSCAN_API_NFT_TXN =
   "https://api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=";
 const ETHERSCAN_API_KEY = "JPARDRW9CAVF9ZKISWVC3YYM6RP93JNQUC";
@@ -157,39 +160,39 @@ const RaffleViewer = () => {
   }, []);
 
   return (
-    <div className="RaffleViewer-Div-Main">
-      {/* <Header/> */}
-      <MenuItems account={account} />
-      <Messages />
-      <div className="WinnerBox-Main-Div">
-        <h3 className="Title-Raffle-Winner">Raffle Winner:</h3>
-        {gameInfo.winner !== "0x0000000000000000000000000000000000000000" ? (
-          <h3>{gameInfo.winner}</h3>
-        ) : (
-          <h3>Winner not picked</h3>
-        )}
-        {/*    // Will add later
-            <h3 className="Title-Raffle-Total-Pot">Total</h3> 
-            <h3 className="Title-Raffle-Chance">Chance</h3>
-            */}
-      </div>
-      <div className="RaffleViewer-Viewer-Container">
-        <div className="Token-Image-Div">
-          <img className="Token-Image" src={tokenMetaData.image}></img>
-          {/* <Button onClick={handleDepositClicked} variant="contained" type="submit" style={{maxHeight: '55px'}}>
-                        Deposit
-                    </Button> */}
-          <RaffleDeposit
-            tokenMetaData={tokenMetaData}
-            isDepositOpen={isDepositOpen}
-            raffleContractAddress={raffleContractAddress}
-          />
-        </div>
+    <BaseContainer>
+      <Box>
+        <Messages />
+        <Flex
+          paddingLeft="3%"
+          color="white"
+          background="#211c1c"
+          marginTop="8%"
+          mx="30%"
+          border="1px solid black"
+          borderRadius="20px" /* or 50% */
+        >
+          <Heading fontSize="sl">Raffle Winner:</Heading>
+          {gameInfo.winner !== "0x0000000000000000000000000000000000000000" ? (
+            <Heading fontSize="sl">{gameInfo.winner}</Heading>
+          ) : (
+            <Heading fontSize="sl">Winner not picked</Heading>
+          )}
+        </Flex>
+        <Flex mx="3%" marginTop="5%">
+          <Box height="25%" width="25%" px="1%">
+            <Image borderRadius="20px" src={tokenMetaData.image}></Image>
+            <RaffleDeposit
+              tokenMetaData={tokenMetaData}
+              isDepositOpen={isDepositOpen}
+              raffleContractAddress={raffleContractAddress}
+            />
+          </Box>
 
-        <PlayersList players={players} />
-      </div>
-      <Footer />
-    </div>
+          <PlayersList players={players} />
+        </Flex>
+      </Box>
+  </BaseContainer>
   );
 };
 

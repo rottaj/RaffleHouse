@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import BaseContainer from '../Components/BaseContainers/BaseContainer';
 import HighRollerDeposits from '../Components/HighRollerDeposits';
 import PlayersList from '../Components/PlayersList';
 import MenuItems from "../Components/MenuItems";
@@ -7,43 +8,9 @@ import fetchNFTs from '../utils/HandleNFTs';
 import { _abi } from '../interfaces/Eyescream_Interface';
 import { _HighRoller_abi } from '../interfaces/HighRoller_Interface';
 import { ethers } from 'ethers';
-import "./HighRollerViewer.css";
-
-
-
-
-const ETHERSCAN_API_NFT_TXN = 'https://api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=';
-const ETHERSCAN_API_ABI = 'https://api.etherscan.io/api?module=contract&action=getabi&address='
-//&apikey=YourApiKeyToken
-const ETHERSCAN_API_KEY = 'FS4Q2NK8JQJ7DPD73R3G1S1T948RPY3JSI';
-
-
-
-
-
-interface Token {
-    blockHash: string;
-    blockNumber: number;
-    confirmations: number;
-    contractAddress: string; 
-    cumulativeGasUsed: number;
-    from: string;
-    gas: number;
-    gasPrice: number;
-    gasUsed: number; 
-    hash: string;
-    image: string;
-    input: string;
-    nonce: number;
-    timeStamp: number;
-    to: string;
-    tokenDecimal: number;
-    tokenID: number;
-    tokenName: string;
-    tokenSymbol: string;
-    transactionIndex: number;
-}
-
+import {
+    Box
+} from "@chakra-ui/react"
 
 
 declare let window: any;
@@ -108,20 +75,21 @@ const HighRollerViewer = () => {
 
 
     return (
-        <div className="HighRollerViewer-Main-Container">
-            <MenuItems account={account}/>
-            <Messages/>
-            <div className="HighRollerViewer-Game-Container">
-                <div className="HighRollers-GameInfo-Container">
-                    <HighRollerDeposits tokens={gameTokens}/>
-                </div>
+        <BaseContainer>
+            <Box>
+                <Messages/>
+                <Box marginTop="10%" height="100%">
+                    <Box >
+                        <HighRollerDeposits tokens={gameTokens}/>
+                    </Box>
 
-                <div className="HighRollers-PlayerList-Container">
-                    <PlayersList players={players}/>
-                </div>
-            </div>
+                    <Box className="HighRollers-PlayerList-Container">
+                        <PlayersList players={players}/>
+                    </Box>
+                </Box>
 
-        </div>
+            </Box>
+        </BaseContainer>
     )
 }
 

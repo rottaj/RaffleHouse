@@ -9,9 +9,16 @@ import MenuItems from "../Components/MenuItems";
 import Footer from "../Components/Footer";
 import Messages from "../Components/Messages";
 import BaseContainer from "../Components/BaseContainers/BaseContainer";
-import { Grid, GridItem } from "@chakra-ui/react";
+import {
+  Grid, 
+  GridItem,
+  Box,
+  Image,
+  Flex,
+  Heading,
+} from "@chakra-ui/react";
+import {CheckIcon} from "@chakra-ui/icons"
 
-import "./Raffles.css";
 declare let window: any;
 const Raffles = () => {
   const [currentRaffles, setCurrentRaffles]: any = useState([]);
@@ -74,50 +81,61 @@ const Raffles = () => {
 
   return (
     <BaseContainer>
-      <div className="Raffles-container-main">
-        {/* <Header/> */}
-        {console.log("TESTING", currentRaffles.length)}
-        {/* <MenuItems account={account} /> */}
+      <Box className="Raffles-container-main">
         <Messages />
-        <div className="Raffles-title-container">
-          <h1 className="Raffles-Title-h1">Current Raffles</h1>
-        </div>
-        <Grid templateColumns='repeat(5, 1fr)' gap={2} className="Raffles-Viewer-Main">
-          {/* <Grid container spacing={2}> */}
+        <Box px="20%" fontFamily="Courier New, Monospace">
+          <Heading 
+            color="#DE89BE"
+            textShadow="rgb(203, 176, 204) 3px 3px"
+            fontSize="40px"
+          >
+            Current Raffles
+          </Heading>
+        </Box>
+        <Grid 
+          templateColumns='repeat(5, 1fr)' 
+          gap={2} 
+          width="75%" 
+          mx="15%"
+        >
           {currentRaffles.map((raffle: any) => {
             return (
               <Link to={`raffle/${raffle["contractAddress"]}`}>
-                <GridItem className="Raffle-Div-Main-Container">
-                  {/* <Grid item xs={8}> */}
-                  {/* <Raffle token={raffle} /> */}
-                  {/* </Grid> */}
+                <GridItem >
+                  <Raffle token={raffle}/>
                 </GridItem>
               </Link>
             );
           })}
-          {/* </Grid> */}
         </Grid>
-        <div></div>
-          <div className="PastRaffles-title-container">
-            <h1 className="PastRaffles-Title-h1">Past Raffles</h1>
-          </div>
-        <Grid templateColumns='repeat(5, 1fr)' gap={2} className="PastRaffles-Viewer-Main">
-          {/* <Grid className="PastRaffles-Grid-Container" container spacing={2}> */}
+        <Box></Box>
+          <Box px="20%">
+            <Heading 
+              color="#DE89BE"
+              textShadow="rgb(203, 176, 204) 3px 3px"
+              fontSize="40px"
+            >
+              Past Raffles
+            </Heading>
+          </Box>
+        <Grid 
+          templateColumns='repeat(5, 1fr)' 
+          gap={2} 
+          width="75%" 
+          mx="15%"
+        >
           {pastRaffles.map((raffle: any) => {
             return (
               <Link to={`raffle/${raffle["contractAddress"]}`}>
-                <GridItem className="PastRaffle-Div-Main-Container">
-                  {/* <Grid className="PastRaffle-Grid-Item" item xs={8}> */}
+                <GridItem >
                   <Raffle token={raffle} />
-                  {/* </Grid> */}
                 </GridItem>
               </Link>
             );
           })}
-          {/* </Grid> */}
         </Grid>
         {/* <Footer /> */}
-      </div>
+      </Box>
     </BaseContainer>
   );
 };
@@ -129,19 +147,34 @@ interface Props {
 
 const Raffle = (props: Props) => {
   return (
-    <div className="Raffle-Div-Main">
-      <img className="Raffle-Img" src={props.token.tokenImage}></img>
-      <div className="Raffle-Div-Info">
-        <div className="Raffle-Collection-Div">
-          <h3 className="Raffle-CollionName-h3">
+    <Box
+      height="100%"
+      width="100%"
+      margin="3%" 
+      textAlign="center"
+    >
+      <Image 
+        height="200px"
+        width="200px"
+        borderRadius="30px"
+        src={props.token.tokenImage}
+      ></Image>
+      <Box 
+        alignItems="center"
+        color="white"
+      >
+        <Flex>
+          <Heading 
+            fontSize="20px"
+          >
             {props.token.collectionName}
-          </h3>
+          </Heading>
           <h3> #</h3>
           <h3>{props.token.tokenID}</h3>
-          {/* <CheckCircleIcon className="Verified-Icon" /> */}
-        </div>
-        <h5>BUY IN PRICE: {props.token.buyInPrice} eth</h5>
-      </div>
-    </div>
+          <CheckIcon color="#00acee" marginLeft="20px"></CheckIcon>
+        </Flex>
+        <Heading fontSize="md">BUY IN PRICE: {props.token.buyInPrice} eth</Heading>
+      </Box>
+    </Box>
   );
 };

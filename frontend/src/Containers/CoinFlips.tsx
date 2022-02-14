@@ -12,9 +12,13 @@ import {
   _CoinFlip_abi,
   _CoinFlip_bytecode,
 } from "../interfaces/CoinFlip_Interface";
-import "./CoinFlips.css";
 import Footer from "../Components/Footer";
 import BaseContainer from "../Components/BaseContainers/BaseContainer";
+import {
+  Box,
+  Flex,
+  Heading
+} from '@chakra-ui/react'
 
 declare let window: any;
 const CoinFlips = () => {
@@ -78,35 +82,50 @@ const CoinFlips = () => {
 
   return (
     <BaseContainer>
-      <div className="CoinFlips-Container-Main">
-        {/* <Header/> */}
-        {/* <MenuItems account={account}/> */}
+      <Box textAlign='center'>
         <Messages />
-        <div className="CoinFlips-Games-Container">
-          <div className="CurrentCoinFlips-Container">
-            <h2 className="CoinFlips-Current-CoinFlips-h2">COIN FLIPS</h2>
-            <div className="CoinFlips-Games-Header">
-              <h3 className="CoinFlips-Creator-h3">Creator</h3>
-              <h3 className="CoinFlips-BuyIn-h3">Buy in Price</h3>
-            </div>
-            {pastCoinFlips.map((coinFlip: any) => {
-              return (
-                <Link to={`coin-flip/${coinFlip["contractAddress"]}`}>
-                  <CoinFlip coinFlip={coinFlip}></CoinFlip>
-                </Link>
-              );
-            })}
-          </div>
-          {/* // Work on this
-                <div className="PastCoinFlips-Container">
-                    <div className="PastCoinFlips-Games-Header">
-                        <h3 className="PastCoinFlips-Creator-h3">Creator</h3>
-                        <h3 className="PastCoinFlips-Winner-h3">Winner</h3>
-                        <h3 className="PastCoinFlips-BuyIn-h3">Buy in Price</h3>
-                    </div>
-                </div>
-                */}
-          <h2 className="CoinFlips-Current-CoinFlips-h2">PAST GAMES</h2>
+        <Box textAlign="center">
+          <Heading 
+            marginBottom="2%"
+            color="#DE89BE"
+            textShadow="rgb(203, 176, 204) 3px 3px"
+            fontSize="40px"
+          >
+            COIN FLIPS
+          </Heading>
+          <Flex
+            my="md"
+          >
+            <Heading
+              paddingLeft="25%"
+              color="#DE89BE"
+              fontSize="30px"
+            >
+              Creator
+            </Heading>
+            <Heading 
+              paddingLeft="30%"
+              color="#DE89BE"
+              fontSize="30px"
+            >
+              Buy in Price
+            </Heading>
+          </Flex>
+          {pastCoinFlips.map((coinFlip: any) => {
+            return (
+              <Link to={`coin-flip/${coinFlip["contractAddress"]}`}>
+                <CoinFlip coinFlip={coinFlip}></CoinFlip>
+              </Link>
+            );
+          })}
+          <Heading
+            marginBottom="2%"
+            color="#DE89BE"
+            textShadow="rgb(203, 176, 204) 3px 3px"
+            fontSize="40px"
+          >
+            PAST GAMES
+          </Heading>
           {currentCoinFlips.map((coinFlip: any) => {
             return (
               <Link to={`coin-flip/${coinFlip["contractAddress"]}`}>
@@ -114,9 +133,8 @@ const CoinFlips = () => {
               </Link>
             );
           })}
-        </div>
-        {/* <Footer /> */}
-      </div>
+        </Box>
+      </Box>
     </BaseContainer>
   );
 };
