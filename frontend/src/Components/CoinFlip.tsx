@@ -1,4 +1,4 @@
-import BaseContainer from "./BaseContainers/BaseContainer"
+import BaseContainer from "../Containers/BaseContainers/BaseContainer"
 import {
     Box,
     Flex,
@@ -12,30 +12,30 @@ interface Props {
 
 const CoinFlip = (props: Props) => {
     return (
-        <BaseContainer>
-            <Flex 
-                overflow="auto"
-                border="1px solid black"
-                background="#40434E"
-                color="white"
-                mx="20%"
-                borderRadius="20px" 
-            >
-                <Heading mx="5%">{props.coinFlip.creatorAddress}</Heading>
-                {props.coinFlip.winner !== "0x0000000000000000000000000000000000000000" ?
-                <Heading >{props.coinFlip.winner}</Heading>
+        <Flex 
+            overflow="auto"
+            border="1px solid black"
+            background="#40434E"
+            color="white"
+            mx="20%"
+            my="1%"
+            py="1%"
+            borderRadius="20px" 
+        >
+            <Heading fontSize="md" >{props.coinFlip.creatorAddress}</Heading>
+            {props.coinFlip.winner !== "0x0000000000000000000000000000000000000000" ?
+            <Heading fontSize="md" px="5%">{props.coinFlip.winner}</Heading>
+            :
+                <Box>
+                {props.coinFlip.joineeAddress !== "0x0000000000000000000000000000000000000000" ? 
+                    <Heading className="CoinFlip-Waiting-h6"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></Heading>
                 :
-                    <Box>
-                    {props.coinFlip.joineeAddress !== "0x0000000000000000000000000000000000000000" ? 
-                        <Heading className="CoinFlip-Waiting-h6"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></Heading>
-                    :
-                        <Heading className="CoinFlip-Waiting-h6">Waiting for player</Heading>
-                    }
-                    </Box>
+                    <Heading fontSize="md" px="15%">Waiting for player</Heading>
                 }
-                <Heading className="CoinFlip-BuyIn-h6">{props.coinFlip.buyInPrice} eth </Heading>
-            </Flex>
-        </BaseContainer>
+                </Box>
+            }
+            <Heading fontSize="md">{props.coinFlip.buyInPrice} eth </Heading>
+        </Flex>
     )
 }
 

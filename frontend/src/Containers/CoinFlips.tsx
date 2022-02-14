@@ -12,7 +12,7 @@ import {
   _CoinFlip_bytecode,
 } from "../interfaces/CoinFlip_Interface";
 import Footer from "../Components/Footer";
-import BaseContainer from "../Components/BaseContainers/BaseContainer";
+import BaseContainer from "./BaseContainers/BaseContainer";
 import {
   Box,
   Flex,

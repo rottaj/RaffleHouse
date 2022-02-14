@@ -13,7 +13,7 @@ import NFTSelector from "../Components/NFTSelector";
 import PlayerList from "../Components/PlayersList";
 import HighRollerDeposits from "../Components/HighRollerDeposits";
 //import Footer from "../Components/Footer";
-import BaseContainer from "../Components/BaseContainers/BaseContainer";
+import BaseContainer from "./BaseContainers/BaseContainer";
 import "../styles/HighRollers/HighRollers.scss";
 import {
     Button,
@@ -242,7 +242,8 @@ const HighRollerGame = (props:HighRollerGameProps) => {
         <Box
             background="#40434E" 
             py="1%%"
-            px="25%"
+            mx="20%"
+            my="2%"
             borderRadius="20px"
         >
             <Heading color="#FDCFF3" fontSize="30px">Winner: {props.winner}</Heading>

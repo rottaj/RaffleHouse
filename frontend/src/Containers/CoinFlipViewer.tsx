@@ -12,7 +12,7 @@ import {
   Button
 } from "@chakra-ui/react"
 import "../styles/CoinFlips/CoinFlipViewer.scss";
-import BaseContainer from "../Components/BaseContainers/BaseContainer";
+import BaseContainer from "./BaseContainers/BaseContainer";
 
 declare let window: any;
 const CoinFlipViewer = () => {

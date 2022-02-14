@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import BaseContainer from '../Components/BaseContainers/BaseContainer';
+import BaseContainer from './BaseContainers/BaseContainer';
 import HighRollerDeposits from '../Components/HighRollerDeposits';
 import PlayersList from '../Components/PlayersList';
 import Messages from "../Components/Messages";

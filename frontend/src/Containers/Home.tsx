@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Flex } from "@chakra-ui/react";
-import BaseContainer from "../Components/BaseContainers/BaseContainer";
+import BaseContainer from "./BaseContainers/BaseContainer";
 import "../styles/Home/Home.scss";
 
 const Home = () => {

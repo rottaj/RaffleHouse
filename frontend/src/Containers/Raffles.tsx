@@ -6,7 +6,7 @@ import { RafflesAddress, _abi_raffles } from "../interfaces/Raffles_Interface";
 import { _Raffle_abi } from "../interfaces/RaffleEscrow_Interface";
 import Footer from "../Components/Footer";
 import Messages from "../Components/Messages";
-import BaseContainer from "../Components/BaseContainers/BaseContainer";
+import BaseContainer from "./BaseContainers/BaseContainer";
 import {
   Grid, 
   GridItem,

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Box, Button, Center, Flex, Spinner } from "@chakra-ui/react";
-import NavBar from "../Nav/NavBar";
+import NavBar from "../../Components/Nav/NavBar";
 import "./BaseContainer";
 import { MetaMaskUserContext } from "../../utils/contexts";
 import "../../styles/Home/Home.scss";

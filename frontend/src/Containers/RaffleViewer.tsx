@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { _abi } from "../interfaces/Eyescream_Interface";
 import { _Raffle_abi } from "../interfaces/RaffleEscrow_Interface";
-import BaseContainer from "../Components/BaseContainers/BaseContainer";
+import BaseContainer from "./BaseContainers/BaseContainer";
 import RaffleDeposit from "../Components/DepositRaffle";
 import PlayersList from "../Components/PlayersList";
 import Messages from "../Components/Messages";
