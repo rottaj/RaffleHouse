@@ -84,21 +84,37 @@ const CoinFlips = () => {
       <Box>
         <Box 
           width="65%"
-          border="1px solid red"
+          //border="1px solid red"
+          background="#141414"
           my="5%"
+
         >
-          <Box alignItems="center">
-            <Heading 
-              border="1px solid blue"
-              marginBottom="2%"
-              color="#DE89BE"
-              textShadow="rgb(203, 176, 204) 3px 3px"
-              fontSize="30px"
-              py="2%"
-              paddingLeft="3%"
-            >
-              ACTIVE GAMES
-            </Heading>
+          <Box 
+            alignItems="center"
+            borderBottom="4px dotted green"
+          >
+            <Flex>
+              <Heading 
+                //border="1px solid blue"
+                marginBottom="2%"
+                color="white"
+                fontSize="30px"
+                py="2%"
+                paddingLeft="3%"
+              >
+                ACTIVE
+              </Heading>
+              <Heading 
+                //border="1px solid blue"
+                marginBottom="2%"
+                color="green"
+                fontSize="30px"
+                py="2%"
+                paddingLeft="6px"
+              >
+                GAMES
+              </Heading>
+            </Flex>
           </Box>
           <Flex 
               overflow="auto"
@@ -126,21 +142,35 @@ const CoinFlips = () => {
           </Box>
           <Box
             width="65%"
-            border="1px solid red"
+            //border="1px solid red"
             my="5%"
           >
-            <Box alignItems="center">
-              <Heading
+            <Box 
+              alignItems="center"
+              borderBottom="4px dotted green"
+            >
+            <Flex>
+              <Heading 
+                //border="1px solid blue"
                 marginBottom="2%"
-                color="#DE89BE"
-                textShadow="rgb(203, 176, 204) 3px 3px"
+                color="white"
                 fontSize="30px"
                 py="2%"
                 paddingLeft="3%"
-                borderBottom="4px dotted blue"
               >
-                PAST GAMES
+                PAST
               </Heading>
+              <Heading 
+                //border="1px solid blue"
+                marginBottom="2%"
+                color="green"
+                fontSize="30px"
+                py="2%"
+                paddingLeft="6px"
+              >
+                GAMES
+              </Heading>
+            </Flex>
             </Box>
             <Flex 
                 overflow="auto"
@@ -180,7 +210,7 @@ const CoinFlip = (props: Props) => {
       <Flex 
           overflow="auto"
           border="1px solid black"
-          background="#40434E"
+          background="#16120F"
           color="white"
           my="1%"
           py="1%"
@@ -197,7 +227,13 @@ const CoinFlip = (props: Props) => {
               {props.coinFlip.joineeAddress !== "0x0000000000000000000000000000000000000000" ? 
                   <Heading fontSize="md" >In Progress</Heading>
               :
-                  <Heading fontSize="md" paddingRight="25px">Joinable</Heading>
+                  <Heading 
+                    color="green" 
+                    fontSize="md" 
+                    paddingRight="25px"
+                  >
+                    Joinable
+                  </Heading>
               }
               </Flex>
           }

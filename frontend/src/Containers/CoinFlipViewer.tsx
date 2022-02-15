@@ -192,7 +192,7 @@ const DepositModal = (props: ModalProps) => {
     console.log("MODAL SUBMIT", contractAddress, e.target[0].value)
   }
 
-  const {isOpen, onOpen, onClose} = useDisclosure()
+  const {isOpen, onOpen, onClose} = useDisclosure({isOpen:true})
   return (
     <Modal 
       isOpen={isOpen} 
