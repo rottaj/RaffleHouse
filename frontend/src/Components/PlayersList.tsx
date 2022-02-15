@@ -1,54 +1,98 @@
 import {
-    Box,
-    Flex,
-    Heading
-} from "@chakra-ui/react"
+  Flex,
+  Skeleton,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
 
-type PlayerInterface  = {
-    address: string;
-    tickets: number;
-    totalEth: number;
-    chance: number;
-}
+type PlayerInterface = {
+  address: string;
+  tickets: number;
+  totalEth: number;
+  chance: number;
+};
 
 type PropsPlayersList = {
-    players: PlayerInterface[];
-}
+  players: PlayerInterface[];
+};
 
-const PlayersList = (props:PropsPlayersList) => {
-    return (
-        <Box width="50%">
-            <Flex color="white">
-                <Heading fontSize="md">Player</Heading>
-                <Heading fontSize="md" marginLeft="48%">Tickets</Heading>
-                <Heading fontSize="md" marginLeft="13%">Total Eth</Heading>
-                <Heading fontSize="md" marginLeft="5%">Chance</Heading>
-            </Flex>
-            {props.players.map(player => {return <Player player={player}/>})}
-        </Box>
-    )
-}
-
+const PlayersList = (props: PropsPlayersList) => {
+  return (
+    <Flex w="100%" align="center" mt={12} flexDir="column">
+      <Text color="white" fontSize="2xl">
+        Current Players
+      </Text>
+      <Table variant="unstyled" maxW="60%">
+        <Thead>
+          <Tr
+            color="white"
+            borderBottomWidth="1px"
+            borderBottomColor="lightslategray"
+          >
+            <Th>Player</Th>
+            <Th>Tickets</Th>
+            <Th>Total Eth</Th>
+            <Th>Chance</Th>
+          </Tr>
+        </Thead>
+        <Tbody w="100%">
+          {props.players.length === 0 ? (
+            <Tr
+              color="white"
+              borderBottomWidth="1px"
+              borderBottomColor="lightslategrey"
+              w="100%"
+            >
+              <Td fontSize="md">
+                <Skeleton>000000000000000000000000000000000000</Skeleton>
+              </Td>
+              <Td fontSize="md" marginLeft="6%">
+                <Skeleton> tickets</Skeleton>
+              </Td>
+              <Td fontSize="md" marginLeft="18%">
+                <Skeleton> eth</Skeleton>
+              </Td>
+              <Td fontSize="md" marginLeft="5%">
+                <Skeleton> tickets</Skeleton>{" "}
+              </Td>
+            </Tr>
+          ) : (
+            <>
+              {props.players.map((player) => {
+                return <Player player={player} />;
+              })}
+            </>
+          )}
+        </Tbody>
+      </Table>
+    </Flex>
+  );
+};
 
 interface Props {
-    player: PlayerInterface;
+  player: PlayerInterface;
 }
 
-const Player = (props:Props) => {
-    return (
-        <Flex 
-            background="#40434"
-            borderRadius="20px"
-            color="white"
-            marginBottom="1%"
-        >
-                <Heading fontSize="md" >{props.player.address}</Heading>
-                <Heading fontSize="md" marginLeft="6%">{props.player.tickets}</Heading>
-                <Heading fontSize="md" marginLeft="18%">{props.player.totalEth}</Heading>
-                <Heading fontSize="md" marginLeft="5%">{props.player.chance}</Heading>
-        </Flex>
-    )
-}
-
+const Player = (props: Props) => {
+  return (
+    <Tr color="white">
+      <Td fontSize="md">{props.player.address}</Td>
+      <Td fontSize="md" marginLeft="6%">
+        {props.player.tickets}
+      </Td>
+      <Td fontSize="md" marginLeft="18%">
+        {props.player.totalEth}
+      </Td>
+      <Td fontSize="md" marginLeft="5%">
+        {props.player.chance}
+      </Td>
+    </Tr>
+  );
+};
 
 export default PlayersList;

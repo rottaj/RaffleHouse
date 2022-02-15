@@ -13,7 +13,8 @@ const BaseContainer = ({
   showMessages = false,
   children,
 }: BaseContainerProps) => {
-  const { user, setUser, isLoadingUser } = useContext(MetaMaskUserContext);
+  const { user, setUser, isLoadingUser, setIsLoadingUser } =
+    useContext(MetaMaskUserContext);
   const [isLoadingConnect, setIsLoadingConnect] = useState(false);
 
   const getUser = async () => {
@@ -24,6 +25,7 @@ const BaseContainer = ({
     });
     const account = accounts[0];
     setUser(account);
+    setIsLoadingUser(false);
   };
 
   return (
@@ -55,11 +57,7 @@ const BaseContainer = ({
       ) : (
         <>
           <NavBar />
-          <Box
-            minH="100vh"
-            pt={["56px", null, "84px"]}
-            bgColor="#141114"
-          >
+          <Box minH="100vh" pt={["56px", null, "84px"]} bgColor="#141114">
             {children}
           </Box>
         </>

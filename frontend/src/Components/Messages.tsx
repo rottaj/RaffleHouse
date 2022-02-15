@@ -4,24 +4,20 @@ import {
   MessagesAddress,
   _Messages_abi,
 } from "../interfaces/Messages_interface";
-import {
-  Box,
-  Heading,
-  Input,
-  Button
-} from "@chakra-ui/react"
+import { Box, Heading } from "@chakra-ui/react";
+import { useContext } from "react";
+import { MetaMaskUserContext } from "../utils/contexts";
 
 declare let window: any;
 const Messages = () => {
   const [messages, setMessages]: any = useState([]);
-  const [myAddress, setMyAddress] = useState("");
+
+  const { user: myAddress } = useContext(MetaMaskUserContext);
 
   const getMessages = async () => {
     if (window.ethereum) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
-      const myAddress = await signer.getAddress();
-      setMyAddress(myAddress);
       const messagesContract = await new ethers.Contract(
         MessagesAddress,
         _Messages_abi,
@@ -57,7 +53,7 @@ const Messages = () => {
   };
 
   return (
-    <Box 
+    <Box
       backgroundColor="#0d0b0"
       zIndex="9000"
       textAlign="center"
@@ -75,9 +71,9 @@ const Messages = () => {
       <Heading fontSize="lg">Messages </Heading>
       <Box>
         <Box>
-          {messages.map((message: any) => {
+          {messages.map((message: any, index: number) => {
             return (
-              <Box>
+              <Box key={index}>
                 <Heading fontSize="sm">
                   {message.messager === myAddress[myAddress.length - 1]
                     ? "You" + ": "

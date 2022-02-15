@@ -1,167 +1,182 @@
-import { useState, useEffect } from 'react';
-import { 
-    Box, 
-    Flex,
-    Heading, 
-    Button,
-    Image,
-    Modal,
-    ModalOverlay,
-    ModalBody,
-    ModalContent,
-    useDisclosure,
-    tokenToCSSVar,
-} from '@chakra-ui/react';
+import { useState, useEffect } from "react";
+import {
+  Box,
+  Flex,
+  Button,
+  Image,
+  Modal,
+  ModalOverlay,
+  ModalBody,
+  ModalContent,
+  useDisclosure,
+  Text,
+  ModalHeader,
+  Skeleton,
+} from "@chakra-ui/react";
 
+const OPENSEA_CONTRACT_URL =
+  "https://testnets-api.opensea.io/api/v1/asset_contract/";
+const OPENSEA_ASSET_URL = "https://testnets-api.opensea.io/api/v1/asset/"; // ContractAddress + '/' + id
+const OPENSEA_COLLECTION_URL =
+  "https://testnets-api.opensea.io/api/v1/collection/"; // collection-name + '/stats'
 
-const OPENSEA_CONTRACT_URL = "https://testnets-api.opensea.io/api/v1/asset_contract/";
-const OPENSEA_ASSET_URL = "https://testnets-api.opensea.io/api/v1/asset/" // ContractAddress + '/' + id
-const OPENSEA_COLLECTION_URL = "https://testnets-api.opensea.io/api/v1/collection/" // collection-name + '/stats'
+type NFTProps = {
+  token: any;
+};
 
-type Props = {
-    token: any;
-}
+const NFT = ({ token }: NFTProps) => {
+  const [tokenPrice, setTokenPrice] = useState("");
+  const [isTokenPriceLoading, setIsTokenPriceLoading] = useState(true);
 
+  const getOpenSeaPrice = async (token: any) => {
+    let i = 0;
+    console.log("TOKEN", token);
 
-const NFT = (props:Props) => {
-
-    const [tokenPrice, setTokenPrice] = useState("Loading");
-
-
-    const getOpenSeaPrice = async (token: any) => {
-        let i =0;
-        console.log("TOKEN", token)
-
-        var interval = setInterval(() => {
-            if (token !== undefined && token !== 'undefined' && i >=0) {
-                //let tokens = [...this.state.userTokens];
-                if (token !== undefined && token !== 'undefined') {
-                    //console.log(token)
-                    let assetUrl = OPENSEA_ASSET_URL + token.contractAddress + '/' + token.tokenID
-                    let collectionUrl = OPENSEA_COLLECTION_URL + token.tokenName + '/stats' 
-                    try {
-                    fetch(assetUrl).then(res => {
-                        return res.json();
-                    }).then((data) => {
-                        if (data !== undefined && data !== 'undefined' && token != undefined) {
-                            if (data.collection !== undefined && data.collection !== 'undefined' && data.collection['payment_tokens'].length !== 0) {
-                                console.log(data)
-                                let price = String(data['collection']['stats']['average_price'].toFixed(2));
-                                setTokenPrice(price);
-                                i = -1;
-                            }
-
-                        }
-
-                    })
-                    } catch(err) {}
-                } else if (i >= 5) {
-                    i = -1; // pretty shitty way but whatever ( will prob delete later )
+    var interval = setInterval(() => {
+      if (token !== undefined && token !== "undefined" && i >= 0) {
+        //let tokens = [...this.state.userTokens];
+        if (token !== undefined && token !== "undefined") {
+          //console.log(token)
+          let assetUrl =
+            OPENSEA_ASSET_URL + token.contractAddress + "/" + token.tokenID;
+          let collectionUrl =
+            OPENSEA_COLLECTION_URL + token.tokenName + "/stats";
+          try {
+            fetch(assetUrl)
+              .then((res) => {
+                return res.json();
+              })
+              .then((data) => {
+                if (
+                  data !== undefined &&
+                  data !== "undefined" &&
+                  token !== undefined
+                ) {
+                  if (
+                    data.collection !== undefined &&
+                    data.collection !== "undefined" &&
+                    data.collection["payment_tokens"].length !== 0
+                  ) {
+                    console.log(data);
+                    let price = String(
+                      data["collection"]["stats"]["average_price"].toFixed(2)
+                    );
+                    setTokenPrice(price);
+                    setIsTokenPriceLoading(false);
+                    i = -1;
+                  }
                 }
-                i++;
-            } else {
-                clearInterval(interval)
-            }
-        }, 3000)
+              });
+          } catch (err) {}
+        } else if (i >= 5) {
+          i = -1; // pretty shitty way but whatever ( will prob delete later )
+        }
+        i++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 3000);
+  };
 
-    }
+  useEffect(() => {
+    getOpenSeaPrice(token);
+  }, []);
 
-    useEffect(() => {
-        getOpenSeaPrice(props.token);
-    }, [])
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  console.log("tokennnnn", token);
 
-    const {isOpen, onOpen, onClose} = useDisclosure()
+  return (
+    <Box height="100%" width="100%">
+      {token?.image ? (
+        <>
+          <Image
+            cursor="pointer"
+            borderRadius="20px"
+            objectFit="contain"
+            onClick={onOpen}
+            src={token.image}
+            _hover={{ transform: "scale(1.05)" }}
+            transition="transform .2s"
+          />
 
-    return (
-        <Box height="100%" width="100%">
-            {props.token ?
-                <Image 
-                    borderRadius="20px"
-                    padding="5px"
-                    width="100%"
-                    height="100%"
-                    src={props.token.image}
-                >
-                </Image>
-                :
-                undefined
-            }
-            {tokenPrice != "Loading" ?
-                <Box onClick={onOpen}>
-                    <Button onClick={onOpen}>Deposit</Button>
-                    {/*<TokenModal token={props.token} tokenPrice={tokenPrice} isOpen={isOpen} onClose={onClose}/> */}
-                    <Modal
-                        isOpen={isOpen}
-                        onClose={onClose}
-                        isCentered
-                    >
-                        <ModalOverlay/>
-                        <ModalContent
-                            mx="25%"
-                            textAlign="center"
+          <Box>
+            <Button
+              mt={2}
+              isFullWidth
+              bgColor="#3a0ca3"
+              color="white"
+              _hover={{ bgColor: "#4361ee" }}
+              _active={{ bgColor: "#390099" }}
+              onClick={onOpen}
+            >
+              Deposit
+            </Button>
+            <Modal
+              isOpen={isOpen}
+              onClose={onClose}
+              isCentered
+              size="lg"
+              preserveScrollBarGap
+            >
+              <ModalOverlay />
+              <ModalContent bgColor="#1c191c" color="white" pb={12}>
+                <ModalHeader>{token.tokenName}</ModalHeader>
+
+                <ModalBody>
+                  <Flex>
+                    <Image
+                      width="200px"
+                      height="200px"
+                      src={token.image}
+                      objectFit="contain"
+                    />
+                    <Flex ml={4} fontSize="3xl" w="100%" flexDir="column">
+                      <Text>Token ID: {token.tokenID}</Text>
+                      <Text>Price: {tokenPrice}</Text>
+                      <Flex h="full">
+                        <Button
+                          alignSelf="flex-end"
+                          bgColor="#3a0ca3"
+                          w="140px"
+                          color="white"
+                          _hover={{ bgColor: "#4361ee" }}
+                          _active={{ bgColor: "#390099" }}
+                          mr={4}
                         >
-                            <ModalBody>
-                                <Flex>
-                                    <Image width="200px" height="200px"src={props.token.image}></Image>
-                                    <Box>
-                                        <Heading>{props.token.tokenName}</Heading>
-                                        <Heading>#{props.token.tokenID}</Heading>
-                                    </Box>
-                                </Flex>
-
-                                <Heading>Price: {tokenPrice}</Heading>
-                                <Button>Deposit</Button>
-                            </ModalBody>
-                        </ModalContent>
-
-                    </Modal>
-                    <Heading color="white" fontSize="md">Price: {tokenPrice} eth</Heading>
-                </Box>
-            :
-                <Heading color="white" fontSize="md">{tokenPrice} Price </Heading>
-            }
-        </Box>
-
-    )
-}
+                          Deposit
+                        </Button>
+                        <Button
+                          onClick={onClose}
+                          color="red"
+                          alignSelf="flex-end"
+                        >
+                          Cancel
+                        </Button>
+                      </Flex>
+                    </Flex>
+                  </Flex>
+                </ModalBody>
+              </ModalContent>
+            </Modal>
+            <Flex>
+              {isTokenPriceLoading ? (
+                <Flex align="center" justify="center">
+                  <Text color="white" fontSize="md" mr={1}>
+                    Price:
+                  </Text>
+                  <Skeleton h="80%">0.03 eth</Skeleton>
+                </Flex>
+              ) : (
+                <Text color="white" fontSize="md">
+                  Price: {tokenPrice} eth
+                </Text>
+              )}
+            </Flex>
+          </Box>
+        </>
+      ) : null}
+    </Box>
+  );
+};
 
 export default NFT;
-
-
-type ModalProps = {
-    token: any
-    tokenPrice: string
-    //isOpen: any
-    //onClose: any
-}
-
-const TokenModal = (props: ModalProps) => {
-
-
-
-    const {isOpen, onOpen, onClose} = useDisclosure()
-
-    return (
-        <Modal
-            isOpen={isOpen}
-            onClose={onClose}
-            isCentered
-        >
-            <ModalOverlay/>
-            <ModalContent
-                mx="25%"
-                textAlign="center"
-            >
-                <ModalBody>
-                    <Box>
-                        <Image width="200px" height="200px"src={props.token.image}></Image>
-                    </Box>
-                </ModalBody>
-            </ModalContent>
-
-        </Modal>
-    )
-}
-
-
-

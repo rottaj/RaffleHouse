@@ -1,31 +1,34 @@
 import NFT from "./NFT";
-import { Grid, GridItem, Heading } from "@chakra-ui/react"
-
+import { Flex, Grid, GridItem, Heading } from "@chakra-ui/react";
 
 interface Props {
-    tokens: any
+  tokens: any;
 }
 
-const HighRollersPot = (props:Props) => {
-
-
-    return (
+const HighRollersPot = (props: Props) => {
+  return (
+    <Flex w="100%" h="100%">
+      {props.tokens.length !== 0 ? (
         <Grid
-            templateColumns='repeat(5, 1fr)' 
-            gap={2} 
-            width="75%" 
-            borderRadius="20px"
-            mx="15%"
+          templateColumns="repeat(5, 1fr)"
+          gap={2}
+          width="75%"
+          borderRadius="20px"
+          mx="15%"
         >
-
-            {props.tokens.length != 0 ?
-
-            props.tokens.map((token:any) => {return (<GridItem className="NFT-Div-Container" ><NFT token={token}></NFT></GridItem>)})
-            :
-            <Heading color="white" fontSize="30px">No Tokens</Heading>
-            }
+          {props.tokens.map((token: any) => {
+            return <GridItem>{/* <NFT token={token}></NFT> */}</GridItem>;
+          })}
         </Grid>
-    )
-}
+      ) : (
+        <Flex w="full" justify="center" pt={4}>
+          <Heading color="white" fontSize="30px">
+            No Tokens
+          </Heading>
+        </Flex>
+      )}
+    </Flex>
+  );
+};
 
 export default HighRollersPot;
