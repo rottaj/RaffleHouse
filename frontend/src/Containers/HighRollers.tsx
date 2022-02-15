@@ -18,7 +18,13 @@ import "../styles/HighRollers/HighRollers.scss";
 import {
     Button,
     Box,
-    Heading
+    Heading,
+    Modal,
+    Image,
+    ModalOverlay,
+    ModalBody,
+    ModalContent,
+    useDisclosure,
 } from "@chakra-ui/react";
 
 interface CurrentGame {
@@ -186,7 +192,6 @@ const HighRollers = () => {
 }
 
 export default HighRollers;
-
 
 
 const PastHighRollerGames = () => {

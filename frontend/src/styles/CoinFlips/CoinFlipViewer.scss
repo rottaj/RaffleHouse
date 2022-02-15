@@ -11,7 +11,7 @@ lds-ellipsis {
     width: 13px;
     height: 13px;
     border-radius: 50%;
-    background: #fff;
+    background: pink;
     animation-timing-function: cubic-bezier(0, 1, 1, 0);
   }
   .lds-ellipsis div:nth-child(1) {
@@ -52,5 +52,82 @@ lds-ellipsis {
     }
     100% {
       transform: translate(24px, 0);
+    }
+  }
+
+  // COIN STATIC 
+
+
+  #coinStatic {
+    position: relative;
+    margin: 0 auto;
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    transition: transform 1s ease-in;
+    transform-style: preserve-3d;
+  }
+
+  .static_heads {
+    background-color: rgb(203, 176, 204);
+    z-index: 10;
+  }
+  .static_tails {
+    background-color: rgb(255, 242, 145);
+    z-index: 10
+  }
+
+
+  // COIN FLIP ANIMATIONS
+  h1 {
+    text-align: center;
+  }
+  #coin {
+    position: relative;
+    margin: 0 auto;
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    transition: transform 1s ease-in;
+    transform-style: preserve-3d;
+  }
+  .side {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: absolute;
+    backface-visibility: hidden;
+  }
+  .head {
+    background-color: rgb(203, 176, 204);
+    z-index: 10;
+  }
+  .tail {
+    background-color: rgb(255, 242, 145);
+    transform: rotateX(-180deg);
+  }
+
+  .flipHead {
+    animation: resultHead 2s ease-out forwards;
+  }
+  .flipTail {
+    animation: resultTail 2s ease-out forwards;
+  }
+
+  @keyframes resultHead {
+    from {
+      transform: rotateX(0);
+    }
+    to {
+      transform: rotateX(1800deg);
+    }
+  }
+
+  @keyframes resultTail {
+    from {
+      transform: rotateX(0);
+    }
+    to {
+      transform: rotateX(1980deg);
     }
   }

@@ -89,8 +89,9 @@ const CoinFlips = () => {
             color="#DE89BE"
             textShadow="rgb(203, 176, 204) 3px 3px"
             fontSize="40px"
+            paddingTop="5%"
           >
-            COIN FLIPS
+            ACTIVE GAMES
           </Heading>
           <Flex
             my="md"

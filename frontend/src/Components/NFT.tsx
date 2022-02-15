@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Box, Heading, Image } from '@chakra-ui/react';
+import { 
+    Box, 
+    Heading, 
+    Image,
+    Modal,
+    ModalOverlay,
+    ModalBody,
+    ModalContent,
+    useDisclosure,
+} from '@chakra-ui/react';
 
 
 const OPENSEA_CONTRACT_URL = "https://testnets-api.opensea.io/api/v1/asset_contract/";
@@ -14,6 +23,8 @@ type Props = {
 const NFT = (props:Props) => {
 
     const [tokenPrice, setTokenPrice] = useState("Loading");
+
+    const {isOpen, onOpen, onClose} = useDisclosure()
 
     const getOpenSeaPrice = async (token: any) => {
         let i =0;
@@ -57,7 +68,6 @@ const NFT = (props:Props) => {
         getOpenSeaPrice(props.token);
     }, [])
 
-
     return (
         <Box height="100%" width="100%">
             {props.token ?
@@ -73,12 +83,53 @@ const NFT = (props:Props) => {
                 undefined
             }
             {tokenPrice != "Loading" ?
-                <Heading color="white" fontSize="md">Price: {tokenPrice} eth</Heading>
+                <Box>
+                    <TokenModal token={props.token} tokenPrice={tokenPrice} isOpen={isOpen} onClose={onClose}/>
+                    <Heading color="white" fontSize="md">Price: {tokenPrice} eth</Heading>
+                </Box>
             :
                 <Heading color="white" fontSize="md">{tokenPrice} Price </Heading>
             }
         </Box>
+
     )
 }
 
 export default NFT;
+
+
+type ModalProps = {
+    token: any
+    tokenPrice: string
+    isOpen: any
+    onClose: any
+}
+
+const TokenModal = (props: ModalProps) => {
+
+
+
+    return (
+        <Modal
+            isOpen={props.isOpen}
+            onClose={props.onClose}
+            isCentered
+        >
+            <ModalOverlay/>
+            <ModalContent
+                mx="25%"
+                textAlign="center"
+            >
+                <ModalBody>
+                    <Box>
+                        <Image width="200px" height="200px"src={props.token.image}></Image>
+                    </Box>
+                </ModalBody>
+            </ModalContent>
+
+        </Modal>
+    )
+}
+
+
+

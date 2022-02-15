@@ -1,7 +1,18 @@
 import { useEffect, useState } from 'react';
 import { _abi, address} from '../interfaces/Eyescream_Interface'; // FOR TESTING
 import NFT from '../Components/NFT';
-import { Grid, GridItem, Heading } from '@chakra-ui/react';
+import { 
+    Grid, 
+    GridItem, 
+    Heading,
+    Box,
+    Modal,
+    Image,
+    ModalOverlay,
+    ModalBody,
+    ModalContent,
+    useDisclosure,
+} from '@chakra-ui/react';
 
 type Props  = {
     tokens: Array<any>;

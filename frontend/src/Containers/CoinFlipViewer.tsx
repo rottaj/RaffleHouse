@@ -9,10 +9,16 @@ import {
   Flex,
   Heading,
   Input,
-  Button
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalBody,
+  ModalContent,
+  useDisclosure
 } from "@chakra-ui/react"
 import "../styles/CoinFlips/CoinFlipViewer.scss";
 import BaseContainer from "./BaseContainers/BaseContainer";
+import { isBoxedPrimitive } from "util/types";
 
 declare let window: any;
 const CoinFlipViewer = () => {
@@ -61,95 +67,106 @@ const CoinFlipViewer = () => {
     }
   };
 
+
+  const handleCoinAnimation = () => {
+    let coin = document.getElementById("coin");
+    var flipResult = Math.random();
+    if (flipResult < 0.5) {
+      coin.className = "flipHead";
+    } else {
+      coin.className = "flipTail";
+    }
+  }
+
+
   return (
     <BaseContainer>
       <Box textAlign="center" alignItems="center">
         <Messages />
+
+        <DepositModal coinFlipContractAddress={coinFlipContractAddress} gameInfo={gameInfo}/>
         <Box>
-          <Heading color="rgb(255, 242, 145)" textShadow="rgb(203, 176, 204) 3px 3px" fontSize="40px">COIN FLIP</Heading>
+          <Box paddingTop="2%">
+            <Heading color="rgb(255, 242, 145)" textShadow="rgb(203, 176, 204) 3px 3px" fontSize="40px">COIN FLIP</Heading>
+          </Box>
           {gameInfo ? (
             <Box>
-              <Box 
-                color="white"
-                background="#40434E"
-                border="1px solid black"
-                mx="30%"
-                my={"5%"}
-                borderRadius="md"
-              >
-                <Heading>
-                  Buy in Price: {parseInt(gameInfo.buyInPrice) / 10 ** 18} eth
-                </Heading>
-                {gameInfo.winner !==
-                "0x0000000000000000000000000000000000000000" ? (
-                  <Heading>Winner: {gameInfo.winner}</Heading>
-                ) : (
-                  <Box>
-                    {gameInfo.joineeAddress !==
-                    "0x0000000000000000000000000000000000000000" ? (
-                      <Box>
-                        <Heading fontSize="md">Processing Winner</Heading>
-                        <Box>
-                          <Heading className="CoinFlipViewer-Waiting-h6">
-                            <div className="lds-ellipsis">
-                              <div></div>
-                              <div></div>
-                              <div></div>
-                              <div></div>
-                            </div>
-                          </Heading>
-                        </Box>
-                      </Box>
-                    ) : (
-                      <Heading>Waiting for player</Heading>
-                    )}
-                  </Box>
-                )}
-              </Box>
-              <Flex justifyContent="center">
-                <Box 
-                  px="1%"
-                  color="white"
-                  border="1px wolid black"
-                  background="#40434E"
-                  borderRadius="10px"
-                >
-                  <Heading fontSize="sl">Creator:</Heading>
-                  <Heading fontSize="sl">{gameInfo.creatorAddress}</Heading>
-                </Box>
-                <Box >
-                  <Heading color="white">VS</Heading>
-                </Box>
-                {gameInfo.joineeAddress !==
-                "0x0000000000000000000000000000000000000000" ? (
+              <Flex justifyContent="center" marginTop="10%">
+                <Box>
+                  <div id="coinStatic" >
+                    <div className="side static_heads"></div>
+                  </div>
                   <Box 
+                    py="1%"
                     px="1%"
-                    color="white"
-                    background="#40434E"
+                    my="1%" 
                     mx="5%"
-                    borderRadius="md"
-                  >
-                    <Heading fontSize="sl">Joinee:</Heading>
-                    <Heading fontSize="sl">{gameInfo.joineeAddress}</Heading>
-                  </Box>
-                ) : (
-                  <Box 
+                    color="white"
                     border="1px solid black"
                     background="#40434E"
                     borderRadius="md"
                   >
-                    <Heading>Waiting for player</Heading>
-                    <form
-                      onSubmit={(e) => handleSubmit(e, coinFlipContractAddress)}
-                    >
-                      <Input
-                        value={parseInt(gameInfo.buyInPrice) / 10 ** 18}
-                      ></Input>
-                      <Button type="submit">Deposit</Button> 
-                    </form>
+                    <Heading fontSize="sl">Creator:</Heading>
+                    <Heading fontSize="sl">{gameInfo.creatorAddress}</Heading>
                   </Box>
+                </Box>
+                <Box paddingTop="5.5%">
+                  
+                  <Heading color="rgb(255, 242, 145)" textShadow="rgb(203, 176, 204) 3px 3px" fontSize="40px">VS</Heading>
+                </Box>
+                
+                <Box>
+                <div id="coinStatic" >
+                  <div className="side static_tails"></div>
+                </div>
+                {/*}
+                {gameInfo.joineeAddress !==
+                "0x0000000000000000000000000000000000000000" ? ( */}
+
+                    <Box 
+                      px="1%"
+                      py="1%"
+                      my="1%"
+                      mx="5%"
+                      color="white"
+                      border="1px solid black"
+                      background="#40434E"
+                      borderRadius="md"
+                    >
+                      <Heading fontSize="sl">Joinee:</Heading>
+                      <Heading fontSize="sl">{gameInfo.joineeAddress}</Heading>
+                    </Box>
+
+                {/*
+                ) : (
+
+                    <Box>
+                      <Box 
+                        px="1%"
+                        py="1%"
+                        my="1%"
+                        mx="5%"
+                        color="white"
+                        border="1px solid black"
+                        background="#40434E"
+                        borderRadius="md"
+                      >
+                        <Heading fontSize="sl">Joinee:</Heading>
+                        <Heading fontSize="sl">Waiting for player</Heading>
+                      </Box>
+                    </Box>
+
                 )}
+
+                    */}
+                </Box>
               </Flex>
+              
+              <div id="coin" onClick={handleCoinAnimation}>
+                <div className="side head"></div>
+                <div className="side tail"></div>
+              </div>
+
             </Box>
           ) : (
             "GAME DOESN'T EXIST"
@@ -161,3 +178,49 @@ const CoinFlipViewer = () => {
 };
 
 export default CoinFlipViewer;
+
+type ModalProps = {
+  coinFlipContractAddress: any
+  gameInfo: any
+}
+
+const DepositModal = (props: ModalProps) => {
+
+  const handleSubmit = (e, contractAddress) => {
+    console.log("MODAL SUBMIT", contractAddress, e.target[0].value)
+  }
+
+  const {isOpen, onOpen, onClose} = useDisclosure({isOpen: true})
+  return (
+    <Modal 
+      isOpen={isOpen} 
+      onClose={onClose}
+      isCentered
+    >
+      <ModalOverlay
+        textAlign="center"
+      />
+      <ModalContent
+        mx="25%"
+        textAlign="center"
+      >
+        <ModalBody
+        >
+          <Heading>Waiting for player</Heading>
+          <Box paddingLeft="13%">
+            <Heading fontSize="60px"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></Heading>
+          </Box>
+          <form
+            onSubmit={(e) => handleSubmit(e, props.coinFlipContractAddress)}
+          >
+
+            <Button type="submit">Buy In</Button> 
+          </form>
+          <Button marginTop="10%" variant='ghost' onClick={onClose}>
+            Watch Game
+          </Button>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  )
+}
