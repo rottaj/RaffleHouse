@@ -81,7 +81,7 @@ const CoinFlips = () => {
   return (
     <BaseContainer>
       <Messages />
-      <Box>
+      <Box pb="100px">
         <Box 
           width="65%"
           //border="1px solid red"
@@ -99,7 +99,7 @@ const CoinFlips = () => {
                 marginBottom="2%"
                 color="white"
                 fontSize="30px"
-                py="2%"
+                //py="2%"
                 paddingLeft="3%"
               >
                 ACTIVE
@@ -109,7 +109,7 @@ const CoinFlips = () => {
                 marginBottom="2%"
                 color="green"
                 fontSize="30px"
-                py="2%"
+                //py="2%"
                 paddingLeft="6px"
               >
                 GAMES
@@ -143,7 +143,7 @@ const CoinFlips = () => {
           <Box
             width="65%"
             //border="1px solid red"
-            my="5%"
+            //my="5%"
           >
             <Box 
               alignItems="center"
@@ -155,7 +155,7 @@ const CoinFlips = () => {
                 marginBottom="2%"
                 color="white"
                 fontSize="30px"
-                py="2%"
+                //py="2%"
                 paddingLeft="3%"
               >
                 PAST
@@ -165,7 +165,7 @@ const CoinFlips = () => {
                 marginBottom="2%"
                 color="green"
                 fontSize="30px"
-                py="2%"
+                //py="2%"
                 paddingLeft="6px"
               >
                 GAMES
