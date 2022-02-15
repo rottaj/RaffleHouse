@@ -99,35 +99,10 @@ const RaffleCreator = () => {
         marginLeft="10%"
         borderRadius="20px"
         background="#40434E"
-        overflowY="scroll"
       >
         <Heading fontSize="40px" color="white">Create your Raffle!</Heading>
         <NFTSelector tokens={tokens} tokenHandler={handleSelectedToken}/>
-        <Flex>
-          <form  onSubmit={(e) => handleSubmit(e)}>
-            <Heading fontSize="40px" color="white" marginTop="8%">Minimum Buy in: </Heading>
-            <Input
-              color="white"
-              paddingTop="30px"
-              width="25%"
-              defaultValue="0.08"
-              id="filled-basic"
-              variant="filled"
-            ></Input>
-            <Heading fontSize="40px" color="white">
-              Minimum Tickets: (1 ticket = 0.01)
-            </Heading>
-            <Input
-              width="25%"
-              defaultValue="16"
-              id="filled-basic"
-              variant="filled"
-            ></Input>
-            <Button variant="contained" type="submit" color="white" style={{maxHeight: '55px'}}>
-                  Create Raffle
-            </Button>
-          </form>
-        </Flex>
+
       </Box>
     </Box>
   );

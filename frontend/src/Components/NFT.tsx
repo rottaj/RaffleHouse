@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { 
     Box, 
+    Flex,
     Heading, 
+    Button,
     Image,
     Modal,
     ModalOverlay,
     ModalBody,
     ModalContent,
     useDisclosure,
+    tokenToCSSVar,
 } from '@chakra-ui/react';
 
 
@@ -24,7 +27,6 @@ const NFT = (props:Props) => {
 
     const [tokenPrice, setTokenPrice] = useState("Loading");
 
-    const {isOpen, onOpen, onClose} = useDisclosure()
 
     const getOpenSeaPrice = async (token: any) => {
         let i =0;
@@ -68,6 +70,8 @@ const NFT = (props:Props) => {
         getOpenSeaPrice(props.token);
     }, [])
 
+    const {isOpen, onOpen, onClose} = useDisclosure()
+
     return (
         <Box height="100%" width="100%">
             {props.token ?
@@ -83,8 +87,34 @@ const NFT = (props:Props) => {
                 undefined
             }
             {tokenPrice != "Loading" ?
-                <Box>
-                    <TokenModal token={props.token} tokenPrice={tokenPrice} isOpen={isOpen} onClose={onClose}/>
+                <Box onClick={onOpen}>
+                    <Button onClick={onOpen}>Deposit</Button>
+                    {/*<TokenModal token={props.token} tokenPrice={tokenPrice} isOpen={isOpen} onClose={onClose}/> */}
+                    <Modal
+                        isOpen={isOpen}
+                        onClose={onClose}
+                        isCentered
+                    >
+                        <ModalOverlay/>
+                        <ModalContent
+                            mx="25%"
+                            textAlign="center"
+                        >
+                            <ModalBody>
+                                <Flex>
+                                    <Image width="200px" height="200px"src={props.token.image}></Image>
+                                    <Box>
+                                        <Heading>{props.token.tokenName}</Heading>
+                                        <Heading>#{props.token.tokenID}</Heading>
+                                    </Box>
+                                </Flex>
+
+                                <Heading>Price: {tokenPrice}</Heading>
+                                <Button>Deposit</Button>
+                            </ModalBody>
+                        </ModalContent>
+
+                    </Modal>
                     <Heading color="white" fontSize="md">Price: {tokenPrice} eth</Heading>
                 </Box>
             :
@@ -101,18 +131,20 @@ export default NFT;
 type ModalProps = {
     token: any
     tokenPrice: string
-    isOpen: any
-    onClose: any
+    //isOpen: any
+    //onClose: any
 }
 
 const TokenModal = (props: ModalProps) => {
 
 
 
+    const {isOpen, onOpen, onClose} = useDisclosure()
+
     return (
         <Modal
-            isOpen={props.isOpen}
-            onClose={props.onClose}
+            isOpen={isOpen}
+            onClose={onClose}
             isCentered
         >
             <ModalOverlay/>
