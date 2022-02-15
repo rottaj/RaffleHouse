@@ -14,11 +14,13 @@ import {
   ModalOverlay,
   ModalBody,
   ModalContent,
+  ModalCloseButton,
   useDisclosure
 } from "@chakra-ui/react"
 import "../styles/CoinFlips/CoinFlipViewer.scss";
 import BaseContainer from "./BaseContainers/BaseContainer";
 import { isBoxedPrimitive } from "util/types";
+import { ConstructorFragment } from "ethers/lib/utils";
 
 declare let window: any;
 const CoinFlipViewer = () => {
@@ -190,7 +192,7 @@ const DepositModal = (props: ModalProps) => {
     console.log("MODAL SUBMIT", contractAddress, e.target[0].value)
   }
 
-  const {isOpen, onOpen, onClose} = useDisclosure({isOpen: true})
+  const {isOpen, onOpen, onClose} = useDisclosure()
   return (
     <Modal 
       isOpen={isOpen} 
@@ -206,6 +208,7 @@ const DepositModal = (props: ModalProps) => {
       >
         <ModalBody
         >
+
           <Heading>Waiting for player</Heading>
           <Box paddingLeft="13%">
             <Heading fontSize="60px"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></Heading>

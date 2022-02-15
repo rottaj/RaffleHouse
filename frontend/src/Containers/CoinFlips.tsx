@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import CoinFlip from "../Components/CoinFlip";
 import Messages from "../Components/Messages";
 import { Link } from "react-router-dom";
 import { ethers } from "ethers";
@@ -65,13 +64,13 @@ const CoinFlips = () => {
         tempCoinFlip["joineeAddress"] = gameInfo["joineeAddress"];
         tempCoinFlip["winner"] = gameInfo["winner"];
         if (gameInfo.winner !== "0x0000000000000000000000000000000000000000") {
-          setCurrentCoinFlips((currentCoinFlips: any) => [
-            ...currentCoinFlips,
+          setPastCoinFlips((pastCoinFlips: any) => [
+            ...pastCoinFlips,
             tempCoinFlip,
           ]);
         } else {
-          setPastCoinFlips((pastCoinFlips: any) => [
-            ...pastCoinFlips,
+          setCurrentCoinFlips((currentCoinFlips: any) => [
+            ...currentCoinFlips,
             tempCoinFlip,
           ]);
         }
@@ -81,62 +80,130 @@ const CoinFlips = () => {
 
   return (
     <BaseContainer>
-      <Box textAlign='center'>
-        <Messages />
-        <Box textAlign="center">
-          <Heading 
-            marginBottom="2%"
-            color="#DE89BE"
-            textShadow="rgb(203, 176, 204) 3px 3px"
-            fontSize="40px"
-            paddingTop="5%"
-          >
-            ACTIVE GAMES
-          </Heading>
-          <Flex
-            my="md"
-          >
-            <Heading
-              paddingLeft="25%"
-              color="#DE89BE"
-              fontSize="30px"
-            >
-              Creator
-            </Heading>
+      <Messages />
+      <Box>
+        <Box 
+          width="65%"
+          border="1px solid red"
+          my="5%"
+        >
+          <Box alignItems="center">
             <Heading 
-              paddingLeft="30%"
+              border="1px solid blue"
+              marginBottom="2%"
               color="#DE89BE"
+              textShadow="rgb(203, 176, 204) 3px 3px"
               fontSize="30px"
+              py="2%"
+              paddingLeft="3%"
             >
-              Buy in Price
+              ACTIVE GAMES
             </Heading>
-          </Flex>
-          {pastCoinFlips.map((coinFlip: any) => {
-            return (
-              <Link to={`coin-flip/${coinFlip["contractAddress"]}`}>
-                <CoinFlip coinFlip={coinFlip}></CoinFlip>
-              </Link>
-            );
-          })}
-          <Heading
-            marginBottom="2%"
-            color="#DE89BE"
-            textShadow="rgb(203, 176, 204) 3px 3px"
-            fontSize="40px"
+          </Box>
+          <Flex 
+              overflow="auto"
+              border="1px solid black"
+              color="white"
+              my="1%"
+              py="1%"
           >
-            PAST GAMES
-          </Heading>
-          {currentCoinFlips.map((coinFlip: any) => {
-            return (
-              <Link to={`coin-flip/${coinFlip["contractAddress"]}`}>
-                <CoinFlip coinFlip={coinFlip}></CoinFlip>
-              </Link>
-            );
-          })}
-        </Box>
+            <Flex flexGrow="1" paddingLeft="12%">
+              <Heading fontSize="md" >Player</Heading>
+            </Flex>
+            <Flex flexGrow="1" paddingLeft="5%">
+                <Heading fontSize="md">Status</Heading>
+            </Flex>
+              <Heading fontSize="md" paddingRight="3%"> Buy In</Heading>
+          </Flex>
+
+            {currentCoinFlips.map((coinFlip: any) => {
+              return (
+                <Link to={`coin-flip/${coinFlip["contractAddress"]}`}>
+                  <CoinFlip coinFlip={coinFlip}></CoinFlip>
+                </Link>
+              );
+            })}
+          </Box>
+          <Box
+            width="65%"
+            border="1px solid red"
+            my="5%"
+          >
+            <Box alignItems="center">
+              <Heading
+                marginBottom="2%"
+                color="#DE89BE"
+                textShadow="rgb(203, 176, 204) 3px 3px"
+                fontSize="30px"
+                py="2%"
+                paddingLeft="3%"
+                borderBottom="4px dotted blue"
+              >
+                PAST GAMES
+              </Heading>
+            </Box>
+            <Flex 
+                overflow="auto"
+                border="1px solid black"
+                color="white"
+                my="1%"
+                py="1%"
+            >
+              <Flex flexGrow="1" paddingLeft="12%">
+                <Heading fontSize="md" >Creator</Heading>
+              </Flex>
+              <Flex flexGrow="1" paddingLeft="5%">
+                  <Heading fontSize="md">Winner</Heading>
+              </Flex>
+                <Heading fontSize="md" paddingRight="3%"> Buy In</Heading>
+            </Flex>
+              {pastCoinFlips.map((coinFlip: any) => {
+                return (
+                  <Link to={`coin-flip/${coinFlip["contractAddress"]}`}>
+                    <CoinFlip coinFlip={coinFlip}></CoinFlip>
+                  </Link>
+                );
+              })}
+          </Box>
       </Box>
     </BaseContainer>
   );
 };
 
 export default CoinFlips;
+interface Props {
+  coinFlip: any
+}
+
+const CoinFlip = (props: Props) => {
+  return (
+      <Flex 
+          overflow="auto"
+          border="1px solid black"
+          background="#40434E"
+          color="white"
+          my="1%"
+          py="1%"
+      >
+        <Flex flexGrow="1" paddingLeft="1%">
+          <Heading fontSize="md" >{props.coinFlip.creatorAddress.slice(0, 23) + '...'}</Heading>
+        </Flex>
+          {props.coinFlip.winner !== "0x0000000000000000000000000000000000000000" ?
+          <Flex flexGrow="1">
+            <Heading fontSize="md">{props.coinFlip.winner.slice(0, 23) + '...'}</Heading>
+          </Flex>
+          :
+              <Flex flexGrow="1" paddingRight="4%">
+              {props.coinFlip.joineeAddress !== "0x0000000000000000000000000000000000000000" ? 
+                  <Heading fontSize="md" >In Progress</Heading>
+              :
+                  <Heading fontSize="md" paddingRight="25px">Joinable</Heading>
+              }
+              </Flex>
+          }
+          <Heading fontSize="md" paddingRight="1%">{props.coinFlip.buyInPrice} eth </Heading>
+      </Flex>
+  )
+}
+
+                  /*<Heading className="CoinFlip-Waiting-h6"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></Heading> */
