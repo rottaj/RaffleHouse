@@ -55,12 +55,18 @@ const BaseContainer = ({
           </Flex>
         </Box>
       ) : (
-        <>
+        <Box bgColor="#141114">
           <NavBar />
-          <Box minH="100vh" pt={["56px", null, "84px"]} bgColor="#141114">
+          <Box
+            minH="100vh"
+            maxW="1440px"
+            marginLeft="auto"
+            marginRight="auto"
+            pt={["56px", null, "84px"]}
+          >
             {children}
           </Box>
-        </>
+        </Box>
       )}
     </Box>
   );

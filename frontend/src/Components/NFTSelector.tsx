@@ -15,7 +15,7 @@ const NFTSelector = ({ tokens, tokenHandler }: NftSelectorProps) => {
       <Text mb={4} color="#31B67E">
         Deposit an NFT to play!
       </Text>
-      <SimpleGrid minChildWidth="100px" spacing="40px" mx="120px">
+      <SimpleGrid minChildWidth="100px" spacing="40px" px="120px">
         {tokens.map((token, index) => (
           <Box key={index}>
             <NFT token={token}></NFT>

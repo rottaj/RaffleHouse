@@ -30,7 +30,6 @@ const NFT = ({ token }: NFTProps) => {
 
   const getOpenSeaPrice = async (token: any) => {
     let i = 0;
-    console.log("TOKEN", token);
 
     var interval = setInterval(() => {
       if (token !== undefined && token !== "undefined" && i >= 0) {
@@ -57,7 +56,6 @@ const NFT = ({ token }: NFTProps) => {
                     data.collection !== "undefined" &&
                     data.collection["payment_tokens"].length !== 0
                   ) {
-                    console.log(data);
                     let price = String(
                       data["collection"]["stats"]["average_price"].toFixed(2)
                     );
@@ -83,10 +81,9 @@ const NFT = ({ token }: NFTProps) => {
   }, []);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  console.log("tokennnnn", token);
 
   return (
-    <Box height="100%" width="100%">
+    <Box height="100%" width="100%" maxW="250px">
       {token?.image ? (
         <>
           <Image
