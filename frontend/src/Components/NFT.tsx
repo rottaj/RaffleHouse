@@ -106,6 +106,7 @@ const NFT = ({ token }: NFTProps) => {
               _hover={{ bgColor: "#4361ee" }}
               _active={{ bgColor: "#390099" }}
               onClick={onOpen}
+              isLoading={isTokenPriceLoading}
             >
               Deposit
             </Button>
@@ -140,6 +141,7 @@ const NFT = ({ token }: NFTProps) => {
                           _hover={{ bgColor: "#4361ee" }}
                           _active={{ bgColor: "#390099" }}
                           mr={4}
+                          isLoading={isTokenPriceLoading}
                         >
                           Deposit
                         </Button>
@@ -165,17 +167,14 @@ const NFT = ({ token }: NFTProps) => {
                   <Skeleton h="80%">0.03 eth</Skeleton>
                 </Flex>
               ) : (
-
                 <Text color="white" fontSize="md">
                   <Flex letterSpacing="1px">
-                    Price: {tokenPrice} 
+                    Price: {tokenPrice}
                     <Box pt="3px">
-                      <FaEthereum/>
+                      <FaEthereum />
                     </Box>
                   </Flex>
-
                 </Text>
-
               )}
             </Flex>
           </Box>
