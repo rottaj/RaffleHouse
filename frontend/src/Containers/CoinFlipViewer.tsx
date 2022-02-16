@@ -265,6 +265,7 @@ const DepositModal = (props: ModalProps) => {
                 mt="10px"
                 color="black" 
                 type="submit"
+                bgColor="green"
               >
                 Buy In
               </Button> 
