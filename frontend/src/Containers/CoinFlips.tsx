@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import Messages from "../Components/Messages";
-import { Link } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { ethers } from "ethers";
 import {
   CoinFlipAddress,
@@ -28,18 +28,20 @@ import {
   SliderTrack,
   SliderFilledTrack,
   Tooltip,
-  SliderThumb
+  SliderThumb,
+  Spinner
 } from '@chakra-ui/react'
 import { FaEthereum } from 'react-icons/fa';
-import CreateCoinFlipGame from "../utils/CreateCoinFlipGame";
+import  { createCoinFlipGame, sendTransactionToCoinFlips, addCoinFlipToGames } from "../utils/CreateCoinFlipGame";
 import { MetaMaskUserContext } from "../utils/contexts";
+//import { MetaMaskDataContext} from "../utils/contexts/UserDataContext";
 
 
 declare let window: any;
 const CoinFlips = () => {
   const [currentCoinFlips, setCurrentCoinFlips]: any = useState([]);
   const [pastCoinFlips, setPastCoinFlips]: any = useState([]);
-  const { /*provider: provider, */ user: account, isLoadingUser } = useContext(MetaMaskUserContext);
+  //const { provider } = useContext(MetaMaskDataContext);
 
   useEffect(() => {
     document.title = "Coin Flips - Raffle House";
@@ -284,11 +286,27 @@ const CreateGameModal = (props: ModalProps) => {
   const [balance, setBalance]:any = useState(0)
   const [sliderValue, setSliderValue]:any = useState(0.1)
   const [showTooltip, setShowTooltip] = useState(false)
-
+  const [isLoading, setLoading] = useState(false)
+  const [txnNumber, setTxnNumber] = useState(0)
+  const [isCreated, setCreated] = useState(false)
+  const [contract, setContract]:any = useState()
 
   const handleSubmit = () => {
     console.log(parseFloat(sliderValue))
-    CreateCoinFlipGame(parseFloat(sliderValue))
+    setLoading(true)
+
+    setTxnNumber(1)
+    createCoinFlipGame(parseFloat(sliderValue)).then((contract) => {
+      setContract(contract)
+      setTxnNumber(2)
+      sendTransactionToCoinFlips(contract, parseFloat(sliderValue)).then(() => {
+        setTxnNumber(3)
+        addCoinFlipToGames(contract, parseFloat(sliderValue)).then(() => {
+          //setLoading(false);
+          setCreated(true) 
+        });
+      });
+    });
   }
 
   useEffect(() => {
@@ -303,6 +321,10 @@ const CreateGameModal = (props: ModalProps) => {
   }, [])
 
   return (
+    <Box>
+      {isCreated &&
+        <Redirect to={`/coin-flip/${contract.address}`}/>
+      }
     <Modal
       isOpen={props.isOpen} 
       onClose={props.onClose}
@@ -316,7 +338,8 @@ const CreateGameModal = (props: ModalProps) => {
         textAlign="center"
         alignContent="center"
       >
-        <ModalBody>
+          {isLoading != true ?
+          <ModalBody>
           <Heading pb="30%">Host A Coin Flip!</Heading>
           <Flex margin="0" height="100%" width="100%" justifyContent="center" alignItems="center">
             <Text width="auto">Your Balance: {balance}</Text>
@@ -391,8 +414,37 @@ const CreateGameModal = (props: ModalProps) => {
         <Box pt="30%" pb="10%">
           <Button bgColor="green" color="white" onClick={() => handleSubmit()}>Create Game!</Button>
         </Box>
+
         </ModalBody>
+
+        :
+            // LOADING SCREEN
+          <ModalBody>
+            <Heading>Waiting for Metamask Transaction </Heading>
+            {txnNumber == 1 && 
+              <Box>
+                <Text>Creating Game Contract</Text>  
+                <Spinner size='lg' />
+              </Box>
+
+            }
+            {txnNumber == 2 &&
+              <Box>
+                <Text>Sending Ethereum to Game</Text>
+                <Spinner size='lg' />
+              </Box>
+            }
+            {txnNumber == 3 && 
+              <Box>
+                <Text>Adding Game to Coin Flips</Text>
+                <Spinner size='lg' />
+              </Box>
+            }
+
+          </ModalBody>
+        }
       </ModalContent>
     </Modal>
+    </Box>
   )
 }

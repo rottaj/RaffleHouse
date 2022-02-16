@@ -15,7 +15,7 @@ import {
   SliderThumb
 } from "@chakra-ui/react"
 import { FaEthereum } from "react-icons/fa"
-import CreateCoinFlipGame from "../utils/CreateCoinFlipGame"
+import { createCoinFlipGame } from "../utils/CreateCoinFlipGame"
 import { MetaMaskUserContext } from "../utils/contexts";
 
 declare let window: any;
@@ -29,7 +29,7 @@ const CoinFlipCreator = () => {
 
   const handleSubmit = () => {
     console.log(parseFloat(sliderValue))
-    CreateCoinFlipGame(parseFloat(sliderValue))
+    createCoinFlipGame(parseFloat(sliderValue))
   }
 
   useEffect(() => {

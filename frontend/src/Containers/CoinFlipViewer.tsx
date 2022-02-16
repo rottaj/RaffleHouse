@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { ethers } from "ethers";
 import { _CoinFlip_abi } from "../interfaces/CoinFlip_Interface";
 import Messages from "../Components/Messages";
@@ -21,6 +21,7 @@ import "../styles/CoinFlips/CoinFlipViewer.scss";
 import BaseContainer from "./BaseContainers/BaseContainer";
 import { isBoxedPrimitive } from "util/types";
 import { ConstructorFragment } from "ethers/lib/utils";
+import { MetaMaskUserContext } from "../utils/contexts";
 
 declare let window: any;
 const CoinFlipViewer = () => {
@@ -201,7 +202,7 @@ type ModalProps = {
 }
 
 const DepositModal = (props: ModalProps) => {
-
+  const {user} = useContext(MetaMaskUserContext)
   const handleSubmit = async (contractAddress: any) => {
     if (window.ethereum) {
       var provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -220,7 +221,9 @@ const DepositModal = (props: ModalProps) => {
 
 
   console.log("FOOBERA", props.gameInfo)
-  const {isOpen, onOpen, onClose} = useDisclosure({defaultIsOpen: props.gameInfo.joineeAddress == "0x0000000000000000000000000000000000000000"})
+  console.log(user.toUpperCase(), props.gameInfo.creatorAddress)
+  const {isOpen, onOpen, onClose} = useDisclosure(
+    {defaultIsOpen: props.gameInfo.joineeAddress == "0x0000000000000000000000000000000000000000" && String(user.toUpperCase()) !== String(props.gameInfo.creatorAddress)})
   return (
     <Modal 
       isOpen={isOpen} 
@@ -233,6 +236,7 @@ const DepositModal = (props: ModalProps) => {
       <ModalContent
         bgColor="#1c191c"
         color="white"
+        background="#141414"
         mx="25%"
         textAlign="center"
         alignContent="center"
@@ -240,13 +244,20 @@ const DepositModal = (props: ModalProps) => {
         <ModalBody
         >
 
-          <Heading>Play Coin Flip</Heading>
+          <Heading>Join Game</Heading>
           <Box paddingLeft="13%">
             <Heading fontSize="60px"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></Heading>
           </Box>
-            <Flex>
-              <Heading>Buy in: {(parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2)} </Heading>
-              <Heading pt="3px"><FaEthereum/></Heading>
+            <Flex
+              py="5%"
+              px="22%"
+              pl="150px"
+              margin="0" 
+              height="100%" 
+              justifyContent="center" 
+            >
+              <Heading>{(parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2)} </Heading>
+              <Heading pt="1%" pr="25%"><FaEthereum/></Heading>
             </Flex>
             <Box>
               <Button 

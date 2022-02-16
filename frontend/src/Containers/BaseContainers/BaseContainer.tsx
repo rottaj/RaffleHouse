@@ -5,6 +5,8 @@ import NavBar from "../../Components/Nav/NavBar";
 import "./BaseContainer";
 import { MetaMaskUserContext } from "../../utils/contexts";
 import "../../styles/Home/Home.scss";
+import { userInfo } from "os";
+import { MetaMaskDataContext } from "../../utils/contexts/UserDataContext";
 type BaseContainerProps = {
   showMessages?: boolean;
   children: React.ReactNode;
@@ -28,10 +30,7 @@ const BaseContainer = ({
     setIsLoadingUser(false);
   };
 
-  useEffect(() => {
-      const etherProvider = new ethers.providers.Web3Provider(window.ethereum)
-      setProvider(etherProvider);
-  }, [])
+  //const {connectWallet: getUser, isLoadingUser, isLoadingConnect, user, provider}  = useContext(MetaMaskDataContext)
 
   return (
     <Box>

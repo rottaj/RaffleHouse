@@ -11,6 +11,8 @@ import RaffleViewer from "./Containers/RaffleViewer";
 import { MetaMaskUserContext } from "./utils/contexts";
 import { useToast } from "@chakra-ui/react";
 import { ethers } from "ethers";
+import { useContext } from "react";
+import { MetaMaskDataContext } from "./utils/contexts/UserDataContext";
 
 declare global {
   interface Window {
@@ -23,7 +25,8 @@ function App() {
   const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
   const [provider, setProvider] = useState<any>(null);
 
-  const value = { user, setUser, provider, setProvider, isLoadingUser, setIsLoadingUser };
+  const value = { user, setUser, provider, setProvider, isLoadingUser, setIsLoadingUser }; 
+
   const toast = useToast();
 
   const checkConnectedUser = async () => {
@@ -37,6 +40,8 @@ function App() {
     setIsLoadingUser(false);
   };
 
+  //const { user } = useContext(MetaMaskDataContext);
+
   useEffect(() => {
     if (typeof window.ethereum != undefined) {
       checkConnectedUser();
@@ -45,6 +50,8 @@ function App() {
       window.ethereum.on("accountsChanged", (accounts: string[]) => {
         setUser(accounts[0]);
       });
+
+    console.log(user)
     } else {
       toast({
         title: "Metamask is not installed",
@@ -69,7 +76,7 @@ function App() {
   }, [user]);
 
   return (
-    <MetaMaskUserContext.Provider value={value}>
+    <MetaMaskUserContext.Provider value={value}> 
       <BrowserRouter>
         <Route exact path="/" component={Home} />
         <Route exact path="/raffles" component={Raffles} />
@@ -83,7 +90,7 @@ function App() {
           component={HighRollerViewer}
         /> 
       </BrowserRouter>
-    </MetaMaskUserContext.Provider>
+    </MetaMaskUserContext.Provider> 
   );
 }
 
