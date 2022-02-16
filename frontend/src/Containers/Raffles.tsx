@@ -16,6 +16,7 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import {CheckIcon} from "@chakra-ui/icons"
+import { FaEthereum } from "react-icons/fa"
 
 declare let window: any;
 const Raffles = () => {
@@ -161,7 +162,7 @@ const Raffle = (props: Props) => {
         alignItems="center"
         color="white"
       >
-        <Flex>
+        <Flex pl="16px">
           <Heading 
             fontSize="20px"
           >
@@ -171,7 +172,10 @@ const Raffle = (props: Props) => {
           <h3>{props.token.tokenID}</h3>
           <CheckIcon color="#00acee" marginLeft="20px"></CheckIcon>
         </Flex>
-        <Heading fontSize="md">BUY IN PRICE: {props.token.buyInPrice} eth</Heading>
+        <Flex pl="19px">
+          <Heading fontSize="md">BUY IN: {props.token.buyInPrice} eth</Heading>
+          <FaEthereum/>
+        </Flex>
       </Box>
     </Box>
   );

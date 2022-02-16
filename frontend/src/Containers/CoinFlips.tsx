@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Messages from "../Components/Messages";
 import { Link } from "react-router-dom";
 import { ethers } from "ethers";
@@ -15,22 +15,36 @@ import BaseContainer from "./BaseContainers/BaseContainer";
 import {
   Box,
   Flex,
-  Heading
+  Text,
+  Heading,
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
+  useDisclosure,
+  Slider,
+  SliderMark,
+  SliderTrack,
+  SliderFilledTrack,
+  Tooltip,
+  SliderThumb
 } from '@chakra-ui/react'
+import { FaEthereum } from 'react-icons/fa';
+import CreateCoinFlipGame from "../utils/CreateCoinFlipGame";
+import { MetaMaskUserContext } from "../utils/contexts";
+
 
 declare let window: any;
 const CoinFlips = () => {
   const [currentCoinFlips, setCurrentCoinFlips]: any = useState([]);
   const [pastCoinFlips, setPastCoinFlips]: any = useState([]);
-  const [account, setAccount] = useState("");
+  const { /*provider: provider, */ user: account, isLoadingUser } = useContext(MetaMaskUserContext);
 
   useEffect(() => {
     document.title = "Coin Flips - Raffle House";
-
     const mountCoinFlipData = async () => {
-      var accounts = await window.ethereum.send("eth_requestAccounts");
-      const account = accounts.result[0];
-      setAccount(account);
+
       getCoinFlips();
     };
     if (window.ethereum) {
@@ -40,12 +54,12 @@ const CoinFlips = () => {
 
   const getCoinFlips = async () => {
     if (window.ethereum) {
+      //const signer = provider.getSigner();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
       const coinFlipContract = await new ethers.Contract(
         CoinFlipAddress,
         _CoinFlips_abi,
-        signer
+        provider
       );
       let coinFlipLength = await coinFlipContract.getCoinFlips();
       for (let i = 0; i <= coinFlipLength - 1; i++) {
@@ -54,12 +68,12 @@ const CoinFlips = () => {
         const coinFlipInstance = await new ethers.Contract(
           coinFlip.contractAddress,
           _CoinFlip_abi,
-          signer
+          provider
         );
         const gameInfo = await coinFlipInstance.getGameInfo();
         tempCoinFlip["contractAddress"] = coinFlip["contractAddress"];
         tempCoinFlip["buyInPrice"] =
-          parseInt(gameInfo["buyInPrice"]) / 10 ** 18;
+        (parseInt(gameInfo["buyInPrice"]) * 0.1 ** 18).toFixed(2);
         tempCoinFlip["creatorAddress"] = gameInfo["creatorAddress"];
         tempCoinFlip["joineeAddress"] = gameInfo["joineeAddress"];
         tempCoinFlip["winner"] = gameInfo["winner"];
@@ -78,22 +92,28 @@ const CoinFlips = () => {
     }
   };
 
+  const {isOpen, onOpen, onClose} = useDisclosure();
+
   return (
     <BaseContainer>
       <Messages />
+      <CreateGameModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
       <Box pb="100px">
         <Box 
-          width="65%"
           //border="1px solid red"
+          py="5%"
+          px="22%"
           background="#141414"
-          my="5%"
-
+          margin="0" 
+          height="100%" 
+          justifyContent="center" 
         >
           <Box 
             alignItems="center"
             borderBottom="4px dotted green"
+
           >
-            <Flex>
+            <Flex >
               <Heading 
                 //border="1px solid blue"
                 marginBottom="2%"
@@ -114,6 +134,9 @@ const CoinFlips = () => {
               >
                 GAMES
               </Heading>
+              <Box alignSelf="right" marginLeft="auto">
+                <Button bgColor="green" color="white" onClick={onOpen}>Create Game</Button>
+              </Box>
             </Flex>
           </Box>
           <Flex 
@@ -141,9 +164,12 @@ const CoinFlips = () => {
             })}
           </Box>
           <Box
-            width="65%"
-            //border="1px solid red"
-            //my="5%"
+            py="5%"
+            px="22%"
+            background="#141414"
+            margin="0" 
+            height="100%" 
+            justifyContent="center" 
           >
             <Box 
               alignItems="center"
@@ -237,9 +263,136 @@ const CoinFlip = (props: Props) => {
               }
               </Flex>
           }
-          <Heading fontSize="md" paddingRight="1%">{props.coinFlip.buyInPrice} eth </Heading>
+          <Flex>
+            <Heading fontSize="md" paddingRight="1%">{props.coinFlip.buyInPrice} </Heading>
+            <FaEthereum/>
+          </Flex>
       </Flex>
   )
 }
 
-                  /*<Heading className="CoinFlip-Waiting-h6"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></Heading> */
+
+type ModalProps = {
+  isOpen: boolean
+  onOpen: () => void
+  onClose: () => void
+}
+
+const CreateGameModal = (props: ModalProps) => {
+
+  const {user: account} = useContext(MetaMaskUserContext);
+  const [balance, setBalance]:any = useState(0)
+  const [sliderValue, setSliderValue]:any = useState(0.1)
+  const [showTooltip, setShowTooltip] = useState(false)
+
+
+  const handleSubmit = () => {
+    console.log(parseFloat(sliderValue))
+    CreateCoinFlipGame(parseFloat(sliderValue))
+  }
+
+  useEffect(() => {
+    const getBalance = async () => {
+      const provider = new ethers.providers.Web3Provider(window.ethereum)
+      const balance = await provider.getBalance(account);
+      setBalance((parseInt(String(balance)) * 0.1 ** 18).toFixed(2))
+    }
+     if (window.ethereum) {
+       getBalance();
+     }
+  }, [])
+
+  return (
+    <Modal
+      isOpen={props.isOpen} 
+      onClose={props.onClose}
+      isCentered
+    >
+      <ModalOverlay textAlign="center" ></ModalOverlay>
+      <ModalContent
+        bgColor="#1c191c"
+        color="white"
+        pt="2%"
+        textAlign="center"
+        alignContent="center"
+      >
+        <ModalBody>
+          <Heading pb="30%">Host A Coin Flip!</Heading>
+          <Flex margin="0" height="100%" width="100%" justifyContent="center" alignItems="center">
+            <Text width="auto">Your Balance: {balance}</Text>
+            <FaEthereum/>
+          </Flex>
+
+
+        <Slider
+          id='slider'
+          defaultValue={5}
+          min={0}
+          max={100}
+          colorScheme='green'
+          onChange={(v) => setSliderValue((balance * (v * 0.01)).toFixed(2))}
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+        >
+          <SliderMark value={0} mt='1' ml='-2.5' fontSize='sm'>
+            <Flex>
+              <Text>{0}</Text>
+              <Box pt="3px">
+                <FaEthereum/>
+              </Box>
+            </Flex> 
+          </SliderMark>
+          <SliderMark value={25} mt='1' ml='-2.5' fontSize='sm'>
+            <Flex>
+              <Text>{balance * .25}</Text>
+              <Box pt="3px">
+                <FaEthereum/>
+              </Box>
+            </Flex> 
+          </SliderMark>
+          <SliderMark value={50} mt='1' ml='-2.5' fontSize='sm'>
+            <Flex>
+              <Text>{balance * .50}</Text>
+              <Box pt="3px">
+                <FaEthereum/>
+              </Box>
+            </Flex> 
+          </SliderMark>
+          <SliderMark value={75} mt='1' ml='-2.5' fontSize='sm'>
+            <Flex>
+              <Text>{balance * .75}</Text>
+              <Box pt="3px">
+                <FaEthereum/>
+              </Box>
+            </Flex> 
+          </SliderMark>
+          <SliderMark value={100} mt='1' ml='-2.5' fontSize='sm'>
+            <Flex>
+              <Text>{balance}</Text>
+              <Box pt="3px">
+                <FaEthereum/>
+              </Box>
+            </Flex> 
+          </SliderMark>
+          <SliderTrack>
+            <SliderFilledTrack />
+          </SliderTrack>
+          <Tooltip
+            hasArrow
+            bg='teal.500'
+            color='white'
+            placement='top'
+            isOpen={showTooltip}
+            label={`${sliderValue} eth`}
+          >
+            <SliderThumb />
+          </Tooltip>
+        </Slider>
+        <Box pt="30%" pb="10%">
+          <Button bgColor="green" color="white" onClick={() => handleSubmit()}>Create Game!</Button>
+        </Box>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  )
+}

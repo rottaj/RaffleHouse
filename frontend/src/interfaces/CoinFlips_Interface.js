@@ -1,4 +1,4 @@
-export const CoinFlipAddress = "0x94cC6c65eD8c41a7FA4F492840A4dCC610AAcE7A"
+export const CoinFlipAddress = "0x6b7f0dd2136557d6Aba5e879Cf9029d158120470"
 
 export const _CoinFlips_abi = 
 [

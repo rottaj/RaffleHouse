@@ -13,6 +13,7 @@ import {
   ModalHeader,
   Skeleton,
 } from "@chakra-ui/react";
+import { FaEthereum } from "react-icons/fa";
 
 const OPENSEA_CONTRACT_URL =
   "https://testnets-api.opensea.io/api/v1/asset_contract/";
@@ -155,7 +156,7 @@ const NFT = ({ token }: NFTProps) => {
                 </ModalBody>
               </ModalContent>
             </Modal>
-            <Flex>
+            <Flex pl="8px">
               {isTokenPriceLoading ? (
                 <Flex align="center" justify="center">
                   <Text color="white" fontSize="md" mr={1}>
@@ -164,9 +165,17 @@ const NFT = ({ token }: NFTProps) => {
                   <Skeleton h="80%">0.03 eth</Skeleton>
                 </Flex>
               ) : (
+
                 <Text color="white" fontSize="md">
-                  Price: {tokenPrice} eth
+                  <Flex letterSpacing="1px">
+                    Price: {tokenPrice} 
+                    <Box pt="3px">
+                      <FaEthereum/>
+                    </Box>
+                  </Flex>
+
                 </Text>
+
               )}
             </Flex>
           </Box>

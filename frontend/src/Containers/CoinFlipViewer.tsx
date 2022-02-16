@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { _CoinFlip_abi } from "../interfaces/CoinFlip_Interface";
 import Messages from "../Components/Messages";
 import Footer from "../Components/Footer";
-
+import { FaEthereum } from "react-icons/fa";
 import {
   Box,
   Flex,
@@ -50,6 +50,13 @@ const CoinFlipViewer = () => {
     if (window.ethereum) {
       mountCoinFlipGame();
     }
+    if (gameInfo.winner === "0x0000000000000000000000000000000000000000" && gameInfo.joineeAddress !== "0x0000000000000000000000000000000000000000") {
+      setInterval(() => {
+      let coin = document.getElementById("coin");
+      coin.className="flipHead"
+      coin.className="flipTail"
+      }, 500)
+    }
   }, []);
 
   const handleSubmit = async (e: any, contractAddress: any) => {
@@ -63,7 +70,7 @@ const CoinFlipViewer = () => {
         signer
       );
       let depositTxn = await contract.deposit({
-        value: ethers.utils.parseEther(e.target[0].value).toString(),
+        value: ethers.utils.parseEther(String((parseInt(gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2))).toString(),
       });
       console.log(depositTxn);
     }
@@ -85,11 +92,18 @@ const CoinFlipViewer = () => {
     <BaseContainer>
       <Box textAlign="center" alignItems="center">
         <Messages />
-
-        <DepositModal coinFlipContractAddress={coinFlipContractAddress} gameInfo={gameInfo}/>
+        {gameInfo.joineeAddress != undefined &&
+          <DepositModal coinFlipContractAddress={coinFlipContractAddress} gameInfo={gameInfo}/>
+        }
         <Box>
           <Box paddingTop="2%">
-            <Heading color="rgb(255, 242, 145)" textShadow="rgb(203, 176, 204) 3px 3px" fontSize="40px">COIN FLIP</Heading>
+            <Heading color="white" textShadow="green 3px 3px" fontSize="40px">COIN FLIP</Heading>
+            <Heading color="white" fontSize="20px">{coinFlipContractAddress}</Heading>
+            {gameInfo.winner != "0x0000000000000000000000000000000000000000" ?
+              <Heading color="white" fontSize="20px">Winner: {gameInfo.winner}</Heading>           
+            :
+              <Heading color="white" fontSize="20px">Winner not selected.</Heading>           
+            }
           </Box>
           {gameInfo ? (
             <Box>
@@ -114,7 +128,7 @@ const CoinFlipViewer = () => {
                 </Box>
                 <Box paddingTop="5.5%">
                   
-                  <Heading color="rgb(255, 242, 145)" textShadow="rgb(203, 176, 204) 3px 3px" fontSize="40px">VS</Heading>
+                  <Heading color="white" textShadow="green 3px 3px" fontSize="40px">VS</Heading>
                 </Box>
                 
                 <Box>
@@ -188,11 +202,25 @@ type ModalProps = {
 
 const DepositModal = (props: ModalProps) => {
 
-  const handleSubmit = (e, contractAddress) => {
-    console.log("MODAL SUBMIT", contractAddress, e.target[0].value)
-  }
+  const handleSubmit = async (contractAddress: any) => {
+    if (window.ethereum) {
+      var provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        contractAddress,
+        _CoinFlip_abi,
+        signer
+      );
+      let depositTxn = await contract.deposit({
+        value: ethers.utils.parseEther(String((parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2))).toString(),
+      });
+      console.log(depositTxn);
+    }
+  };
 
-  const {isOpen, onOpen, onClose} = useDisclosure({isOpen:true})
+
+  console.log("FOOBERA", props.gameInfo)
+  const {isOpen, onOpen, onClose} = useDisclosure({defaultIsOpen: props.gameInfo.joineeAddress == "0x0000000000000000000000000000000000000000"})
   return (
     <Modal 
       isOpen={isOpen} 
@@ -203,22 +231,34 @@ const DepositModal = (props: ModalProps) => {
         textAlign="center"
       />
       <ModalContent
+        bgColor="#1c191c"
+        color="white"
         mx="25%"
         textAlign="center"
+        alignContent="center"
       >
         <ModalBody
         >
 
-          <Heading>Waiting for player</Heading>
+          <Heading>Play Coin Flip</Heading>
           <Box paddingLeft="13%">
             <Heading fontSize="60px"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></Heading>
           </Box>
-          <form
-            onSubmit={(e) => handleSubmit(e, props.coinFlipContractAddress)}
-          >
+            <Flex>
+              <Heading>Buy in: {(parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2)} </Heading>
+              <Heading pt="3px"><FaEthereum/></Heading>
+            </Flex>
+            <Box>
+              <Button 
+                onClick={() => handleSubmit(props.coinFlipContractAddress)}
+                mt="10px"
+                color="black" 
+                type="submit"
+              >
+                Buy In
+              </Button> 
+            </Box>
 
-            <Button type="submit">Buy In</Button> 
-          </form>
           <Button marginTop="10%" variant='ghost' onClick={onClose}>
             Watch Game
           </Button>

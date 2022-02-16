@@ -9,6 +9,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import { FaEthereum } from "react-icons/fa";
 
 type PlayerInterface = {
   address: string;
@@ -36,7 +37,7 @@ const PlayersList = (props: PropsPlayersList) => {
           >
             <Th>Player</Th>
             <Th>Tickets</Th>
-            <Th>Total Eth</Th>
+            <Th><Flex><Text pr="3px">Total</Text><Text pt="1px"><FaEthereum/></Text></Flex></Th>
             <Th>Chance</Th>
           </Tr>
         </Thead>

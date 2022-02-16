@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Box, Button, Center, Flex, Spinner } from "@chakra-ui/react";
+import { ethers } from 'ethers';
 import NavBar from "../../Components/Nav/NavBar";
 import "./BaseContainer";
 import { MetaMaskUserContext } from "../../utils/contexts";
@@ -13,20 +14,24 @@ const BaseContainer = ({
   showMessages = false,
   children,
 }: BaseContainerProps) => {
-  const { user, setUser, isLoadingUser, setIsLoadingUser } =
+  const { user, setUser, provider, setProvider, isLoadingUser, setIsLoadingUser } =
     useContext(MetaMaskUserContext);
   const [isLoadingConnect, setIsLoadingConnect] = useState(false);
 
   const getUser = async () => {
     setIsLoadingConnect(true);
-    const provider = window.ethereum;
-    const accounts = await provider.request({
+    const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
     const account = accounts[0];
     setUser(account);
     setIsLoadingUser(false);
   };
+
+  useEffect(() => {
+      const etherProvider = new ethers.providers.Web3Provider(window.ethereum)
+      setProvider(etherProvider);
+  }, [])
 
   return (
     <Box>

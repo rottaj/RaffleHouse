@@ -25,11 +25,24 @@ const main = async() => {
   const RafflesContract = await rafflesContractFactory.deploy(LinkInterface.linkAddress);
   await RafflesContract.deployed();
   console.log("RAFFLES CONTRACT DEPLOYED TO: ", RafflesContract.address);
+
   const coinFlipsContractFactory = await hre.ethers.getContractFactory("CoinFlips");
   const CoinFlipsContract = await coinFlipsContractFactory.deploy(LinkInterface.linkAddress);
   await CoinFlipsContract.deployed();
   console.log("\n\nCOIN FLIPS CONTRACT DEPLOYED TO: ", CoinFlipsContract.address);
+  const ether_tx_CoinFlips = { 
+    from: signer.address,
+    to: CoinFlipsContract.address,
+    value: ethers.utils.parseEther ( "0.2" ) ,
+    gasLimit: ethers.utils.hexlify( 2100000 ) , // 100000 
+    gasPrice: 8000000000 ,
+  };
+  const ethTxn_CoinFlips = await signer.sendTransaction ( ether_tx_CoinFlips ).then( ( transaction ) => {  
+    console.log("\nSENT ETHER TO COINFLIPS")
+  });
 
+  const chainLinkTxn_CoinFlips = await ChainLinkContract.transfer(CoinFlipsContract.address, ethers.utils.parseUnits("1"));
+  console.log("\n SENT ETHER TO COINFLIPS")
 
   const highRollersContractFactory = await hre.ethers.getContractFactory("HighRollers");
   const HighRollersContract = await highRollersContractFactory.deploy(LinkInterface.linkAddress);
@@ -37,7 +50,7 @@ const main = async() => {
   console.log("\n\nHIGH ROLLERS CONTRACT DEPLOYED TO: ", HighRollersContract.address);
 
   // SEND ETH AND LINK TO HIGHROLLERS CONTRACT
-  const ether_tx = { 
+  const ether_tx_HighRollers = { 
     from: signer.address,
     to: HighRollersContract.address,
     value: ethers.utils.parseEther ( "0.2" ) ,
@@ -48,11 +61,11 @@ const main = async() => {
 
   console.log("SIGNER ADDRESS", signer.address);
   console.log("HIGH ROLLER ADDRESS", HighRollersContract.address);
-  const ethTxn = await signer.sendTransaction ( ether_tx ).then( ( transaction ) => {  
+  const ethTxn = await signer.sendTransaction ( ether_tx_HighRollers ).then( ( transaction ) => {  
     console.log("SENT ETHER TO HIGHROLLERS")
   });
 
-  const chainLinkTxn_One = await ChainLinkContract.transfer(HighRollersContract.address, ethers.utils.parseUnits("0.2"));
+  const chainLinkTxn_HighRollers = await ChainLinkContract.transfer(HighRollersContract.address, ethers.utils.parseUnits("1"));
   //chainLinkTxn_One.wait();
 
 

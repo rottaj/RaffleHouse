@@ -21,14 +21,13 @@ declare global {
 function App() {
   const [user, setUser] = useState<string>(null);
   const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
-  const [signer, setSigner] = useState<any>(null);
+  const [provider, setProvider] = useState<any>(null);
 
-  const value = { user, setUser, signer, isLoadingUser, setIsLoadingUser };
+  const value = { user, setUser, provider, setProvider, isLoadingUser, setIsLoadingUser };
   const toast = useToast();
 
   const checkConnectedUser = async () => {
-    const provider = window.ethereum;
-    const accounts = await provider.request({
+    const accounts = await window.ethereum.request({
       method: "eth_accounts",
     });
     if (accounts.length > 0) {
@@ -41,6 +40,8 @@ function App() {
   useEffect(() => {
     if (typeof window.ethereum != undefined) {
       checkConnectedUser();
+      const etherProvider = new ethers.providers.Web3Provider(window.ethereum)
+      setProvider(etherProvider);
       window.ethereum.on("accountsChanged", (accounts: string[]) => {
         setUser(accounts[0]);
       });
@@ -57,9 +58,6 @@ function App() {
 
   useEffect(() => {
     if (user) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const sign = provider.getSigner();
-      setSigner(sign);
       toast({
         title: "Metamask is connected",
         description: "Enjoy our games",
