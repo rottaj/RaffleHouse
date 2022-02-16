@@ -255,7 +255,9 @@ const HighRollers = () => {
           Deposit
         </Button> */}
 
-        <NFTSelector tokens={userTokens} tokenHandler={handleSelectedToken} />
+        <Box px="120px">
+          <NFTSelector tokens={userTokens} tokenHandler={handleSelectedToken} />
+        </Box>
 
         <PlayerList players={players} />
 
