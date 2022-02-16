@@ -65,7 +65,7 @@ const CoinFlipCreator = () => {
         </SliderMark>
         <SliderMark value={25} mt="1" ml="-2.5" fontSize="sm">
           <Flex>
-            <Text>{balance * 0.25}</Text>
+            <Text>{(balance * 0.25).toFixed(2)}</Text>
             <Box pt="3px">
               <FaEthereum />
             </Box>
@@ -73,7 +73,7 @@ const CoinFlipCreator = () => {
         </SliderMark>
         <SliderMark value={50} mt="1" ml="-2.5" fontSize="sm">
           <Flex>
-            <Text>{balance * 0.5}</Text>
+            <Text>{(balance * 0.5).toFixed(2)}</Text>
             <Box pt="3px">
               <FaEthereum />
             </Box>
@@ -81,7 +81,7 @@ const CoinFlipCreator = () => {
         </SliderMark>
         <SliderMark value={75} mt="1" ml="-2.5" fontSize="sm">
           <Flex>
-            <Text>{balance * 0.75}</Text>
+            <Text>{(balance * 0.75).toFixed(2)}</Text>
             <Box pt="3px">
               <FaEthereum />
             </Box>
