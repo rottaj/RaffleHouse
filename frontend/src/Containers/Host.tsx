@@ -3,7 +3,7 @@ import RaffleCreator from "../Components/RaffleCreator";
 import CoinFlipCreator from "../Components/CoinFlipCreator";
 import Messages from "../Components/Messages";
 import BaseContainer from "./BaseContainers/BaseContainer";
-import { Box } from "@chakra-ui/react"
+import { Box, Flex } from "@chakra-ui/react";
 
 const Host = () => {
   const [account, setAccount] = useState("");
@@ -14,12 +14,12 @@ const Host = () => {
 
   return (
     <BaseContainer>
-      <Box textAlign="center">
+      <Box textAlign="center" w="100%">
         <Messages />
-        <Box paddingLeft="10%" width="100%">
+        <Flex align="center" flexDir="column" w="100%" pt="40px">
           <RaffleCreator />
           <CoinFlipCreator />
-        </Box>
+        </Flex>
 
         {/* <Footer /> */}
       </Box>

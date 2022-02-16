@@ -193,19 +193,19 @@ const HighRollers = () => {
         </Heading>
         {!gameIsLoaded ? (
           <Flex flexDir="column" align="center">
-            <Skeleton mb={1}>
+            <Skeleton h="24px" mb="4px">
               <Text color="white" fontSize="20px">
                 Game Address: loading game dddress
               </Text>
             </Skeleton>
 
-            <Skeleton mb={1}>
+            <Skeleton h="24px" mb="4px">
               <Text color="#31B67E" fontSize="20px">
                 Game in Progress
               </Text>
             </Skeleton>
 
-            <Skeleton>
+            <Skeleton h="24px">
               <Text color="white">0 Minutes 0 Seconds</Text>
             </Skeleton>
           </Flex>
@@ -255,7 +255,9 @@ const HighRollers = () => {
           Deposit
         </Button> */}
 
-        <NFTSelector tokens={userTokens} tokenHandler={handleSelectedToken} />
+        <Box px="120px">
+          <NFTSelector tokens={userTokens} tokenHandler={handleSelectedToken} />
+        </Box>
 
         <PlayerList players={players} />
 
