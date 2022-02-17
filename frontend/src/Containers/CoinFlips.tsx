@@ -137,7 +137,7 @@ const CoinFlips = () => {
               </Box>
             </Flex>
           </Box>
-          <Table>
+          <Table color="white">
             <Thead w="100%">
               <Tr>
                 <Th>Creator</Th>
