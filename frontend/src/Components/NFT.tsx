@@ -15,72 +15,81 @@ import {
 } from "@chakra-ui/react";
 import { FaEthereum } from "react-icons/fa";
 
+import { useQuery, QueryClient } from "react-query";
+
 const OPENSEA_CONTRACT_URL =
   "https://testnets-api.opensea.io/api/v1/asset_contract/";
-const OPENSEA_ASSET_URL = "https://testnets-api.opensea.io/api/v1/asset/"; // ContractAddress + '/' + id
+const OPENSEA_ASSET_URL = 
+  "https://testnets-api.opensea.io/api/v1/asset/"; // ContractAddress + '/' + id
 const OPENSEA_COLLECTION_URL =
-  "https://testnets-api.opensea.io/api/v1/collection/"; // collection-name + '/stats'
+ "https://testnets-api.opensea.io/api/v1/collection/"; // collection-name + '/stats'
+ 
+
 
 type NFTProps = {
   token: any;
+  queryClient: any;
 };
 
-const NFT = ({ token }: NFTProps) => {
-  const [tokenPrice, setTokenPrice] = useState("");
-  const [isTokenPriceLoading, setIsTokenPriceLoading] = useState(true);
+function TokenPrice(props) {
 
-  const getOpenSeaPrice = async (token: any) => {
-    let i = 0;
+  const invalidQueries = async () => {
+    await props.queryClient.invalidateQueries(`${props.token.tokenName}_${props.token.tokenID}`);
+  }
 
-    var interval = setInterval(() => {
-      if (token !== undefined && token !== "undefined" && i >= 0) {
-        //let tokens = [...this.state.userTokens];
-        if (token !== undefined && token !== "undefined") {
-          //console.log(token)
-          let assetUrl =
-            OPENSEA_ASSET_URL + token.contractAddress + "/" + token.tokenID;
-          let collectionUrl =
-            OPENSEA_COLLECTION_URL + token.tokenName + "/stats";
-          try {
-            fetch(assetUrl)
-              .then((res) => {
-                return res.json();
-              })
-              .then((data) => {
-                if (
-                  data !== undefined &&
-                  data !== "undefined" &&
-                  token !== undefined
-                ) {
-                  if (
-                    data.collection !== undefined &&
-                    data.collection !== "undefined" &&
-                    data.collection["payment_tokens"].length !== 0
-                  ) {
-                    let price = String(
-                      data["collection"]["stats"]["average_price"].toFixed(2)
-                    );
-                    setTokenPrice(price);
-                    setIsTokenPriceLoading(false);
-                    i = -1;
-                  }
-                }
-              });
-          } catch (err) {}
-        } else if (i >= 5) {
-          i = -1; // pretty shitty way but whatever ( will prob delete later )
+  let assetUrl = OPENSEA_ASSET_URL + props.token.contractAddress + "/" + props.token.tokenID
+  const fetchPrice = async () => await fetch(assetUrl).then((res) => res.json());
+  const {
+    isLoading,
+    isError,
+    error,
+    data,
+    isFetching,
+    isRefetching,
+    isPreviousData,
+  } = useQuery(`${props.token.tokenName}_${props.token.tokenID}`, () => fetchPrice(), { 
+      keepPreviousData : true,
+      retry:5,
+      onSuccess: data => {
+        if (data.detail == "Request was throttled. Expected available in 1 second.") {
+          invalidQueries()
         }
-        i++;
-      } else {
-        clearInterval(interval);
       }
-    }, 3000);
-  };
 
-  useEffect(() => {
-    getOpenSeaPrice(token);
-  }, []);
+  })
+  return (
+    <Box>
+      {isFetching || isRefetching ? (
+        <Flex align="center" justify="center">
+          <Text color="white" fontSize="md" mr={1}>
+            Loading
+          </Text>
+          <Skeleton h="80%">0.03 eth</Skeleton>
+        </Flex>
+      ) : (
+        <Text color="white" fontSize="md">
 
+          {data.detail == undefined &&
+          <Flex letterSpacing="1px">
+            {console.log("DATA", data)}
+              <Text>
+                Price: {data['collection']['stats']['average_price'].toFixed(2)}
+              </Text>
+            <Box pt="3px">
+              <FaEthereum/>
+            </Box>
+          </Flex>
+        }
+        </Text>
+
+      )}
+    </Box>
+  )
+
+}
+
+
+const NFT = ({ token, queryClient }: NFTProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -106,7 +115,6 @@ const NFT = ({ token }: NFTProps) => {
               _hover={{ bgColor: "#4361ee" }}
               _active={{ bgColor: "#390099" }}
               onClick={onOpen}
-              isLoading={isTokenPriceLoading}
             >
               Deposit
             </Button>
@@ -131,7 +139,8 @@ const NFT = ({ token }: NFTProps) => {
                     />
                     <Flex ml={4} fontSize="3xl" w="100%" flexDir="column">
                       <Text>Token ID: {token.tokenID}</Text>
-                      <Text>Price: {tokenPrice}</Text>
+
+                      <TokenPrice token={token} queryClient={queryClient}/>
                       <Flex h="full">
                         <Button
                           alignSelf="flex-end"
@@ -141,7 +150,6 @@ const NFT = ({ token }: NFTProps) => {
                           _hover={{ bgColor: "#4361ee" }}
                           _active={{ bgColor: "#390099" }}
                           mr={4}
-                          isLoading={isTokenPriceLoading}
                         >
                           Deposit
                         </Button>
@@ -159,23 +167,7 @@ const NFT = ({ token }: NFTProps) => {
               </ModalContent>
             </Modal>
             <Flex pl="8px">
-              {isTokenPriceLoading ? (
-                <Flex align="center" justify="center">
-                  <Text color="white" fontSize="md" mr={1}>
-                    Price:
-                  </Text>
-                  <Skeleton h="80%">0.03 eth</Skeleton>
-                </Flex>
-              ) : (
-                <Text color="white" fontSize="md">
-                  <Flex letterSpacing="1px">
-                    Price: {tokenPrice}
-                    <Box pt="3px">
-                      <FaEthereum />
-                    </Box>
-                  </Flex>
-                </Text>
-              )}
+              <TokenPrice token={token} queryClient={queryClient}/>
             </Flex>
           </Box>
         </>

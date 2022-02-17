@@ -13,7 +13,8 @@ import { useToast } from "@chakra-ui/react";
 import { ethers } from "ethers";
 import { useContext } from "react";
 import { MetaMaskDataContext } from "./utils/contexts/UserDataContext";
-
+import { ReactQueryDevtools } from "react-query/devtools";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 declare global {
   interface Window {
     ethereum: any;
@@ -24,8 +25,10 @@ function App() {
   const [user, setUser] = useState<string>(null);
   const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
   const [provider, setProvider] = useState<any>(null);
+  const queryClient = new QueryClient()
+  //const { queryClient } = useContext(MetaMaskUserContext);
 
-  const value = { user, setUser, provider, setProvider, isLoadingUser, setIsLoadingUser }; 
+  const value = { user, setUser, provider, setProvider, isLoadingUser, setIsLoadingUser, queryClient}; 
 
   const toast = useToast();
 
@@ -76,7 +79,8 @@ function App() {
   }, [user]);
 
   return (
-    <MetaMaskUserContext.Provider value={value}> 
+    <QueryClientProvider client={queryClient}> 
+    <MetaMaskUserContext.Provider value={value}>  
       <BrowserRouter>
         <Route exact path="/" component={Home} />
         <Route exact path="/raffles" component={Raffles} />
@@ -91,6 +95,7 @@ function App() {
         /> 
       </BrowserRouter>
     </MetaMaskUserContext.Provider> 
+  </QueryClientProvider> 
   );
 }
 
