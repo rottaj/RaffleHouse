@@ -162,7 +162,6 @@ const RaffleViewer = () => {
   return (
     <BaseContainer>
       <Box>
-        <Messages />
         <Flex
           paddingLeft="3%"
           color="white"
