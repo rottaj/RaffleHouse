@@ -100,3 +100,39 @@ const getMetaData = async (tokens: any) => {
 };
 
 export default fetchNFTs;
+
+export const fetchHighRollersPot = async (address: string) => {
+  const url =
+    ETHERSCAN_API_NFT_TXN +
+    address +
+    "&startblock=0&endblock=999999999&sort=asc&apikey=" +
+    ETHERSCAN_API_KEY;
+  var tokens: Token[] = [];
+  await fetch(url)
+    .then((res) => {
+      return res.json();
+    })
+    .then((data) => {
+      for (let i = 0; i <= data.result.length; i++) {
+        if (tokens.length > 0) {
+          if (data.result[i]) {
+            let index = tokens.findIndex(
+              (temp) =>
+                temp["tokenID"] === data.result[i]["tokenID"] &&
+                temp["contractAddress"] === data.result[i]["contractAddress"]
+            );
+            if (index === -1) {
+              tokens.push(data.result[i]);
+            }
+          }
+        } else {
+          tokens.push(data.result[i]);
+        }
+      }
+    });
+
+  const data = await getMetaData(tokens);
+
+  return data;
+};
+

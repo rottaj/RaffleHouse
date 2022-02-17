@@ -29,8 +29,8 @@ const NavLink = ({ text, href }: NavLinkProps) => {
   return (
     <Link to={href}>
       <Text
-        color={isActive ? "lightpink" : "white"}
-        _hover={{ color: "lightpink" }}
+        color={isActive ? "green" : "white"}
+        _hover={{ color: "green" }}
         fontSize="16px"
         fontFamily="sans-serif"
       >

@@ -9,7 +9,7 @@ import HighRollerViewer from "./Containers/HighRollerViewer";
 import CoinFlipViewer from "./Containers/CoinFlipViewer";
 import RaffleViewer from "./Containers/RaffleViewer";
 import { MetaMaskUserContext } from "./utils/contexts";
-import { useToast } from "@chakra-ui/react";
+import { StylesProvider, useToast, useStyles, ChakraProvider, extendTheme,} from "@chakra-ui/react";
 import { ethers } from "ethers";
 import { useContext } from "react";
 import { MetaMaskDataContext } from "./utils/contexts/UserDataContext";
@@ -31,7 +31,7 @@ function App() {
   const value = { user, setUser, provider, setProvider, isLoadingUser, setIsLoadingUser, queryClient}; 
 
   const toast = useToast();
-
+  //const styles = useStyles()
   const checkConnectedUser = async () => {
     const accounts = await window.ethereum.request({
       method: "eth_accounts",
@@ -78,9 +78,20 @@ function App() {
     }
   }, [user]);
 
+  const theme = extendTheme({
+    colors: {
+      greyIsh: {
+      100: "#696969",
+      900: "#1c191c"
+      }
+    }
+  })
+
   return (
     <QueryClientProvider client={queryClient}> 
+    {/*<StylesProvider value={styles}> */}
     <MetaMaskUserContext.Provider value={value}>  
+    <ChakraProvider theme={theme}>
       <BrowserRouter>
         <Route exact path="/" component={Home} />
         <Route exact path="/raffles" component={Raffles} />
@@ -94,7 +105,9 @@ function App() {
           component={HighRollerViewer}
         /> 
       </BrowserRouter>
+    </ChakraProvider>
     </MetaMaskUserContext.Provider> 
+    {/*</StylesProvider> */}
   </QueryClientProvider> 
   );
 }

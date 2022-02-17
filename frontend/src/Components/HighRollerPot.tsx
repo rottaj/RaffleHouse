@@ -1,11 +1,15 @@
+import {useContext} from "react"
 import NFT from "./NFT";
 import { Flex, Grid, GridItem, Heading } from "@chakra-ui/react";
-
+import {MetaMaskUserContext} from "../utils/contexts"
 interface Props {
   tokens: any;
 }
 
 const HighRollersPot = (props: Props) => {
+
+  const {queryClient} = useContext(MetaMaskUserContext)
+
   return (
     <Flex w="100%" h="100%">
       {props.tokens.length !== 0 ? (
@@ -17,7 +21,7 @@ const HighRollersPot = (props: Props) => {
           mx="15%"
         >
           {props.tokens.map((token: any) => {
-            return <GridItem>{/* <NFT token={token}></NFT> */}</GridItem>;
+            return <GridItem>{<NFT token={token} queryClient={queryClient}></NFT>}</GridItem>;
           })}
         </Grid>
       ) : (

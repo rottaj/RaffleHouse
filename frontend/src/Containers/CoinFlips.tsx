@@ -12,6 +12,7 @@ import {
 import Footer from "../Components/Footer";
 import BaseContainer from "./BaseContainers/BaseContainer";
 import {
+
   Box,
   Flex,
   Text,
@@ -28,7 +29,15 @@ import {
   SliderFilledTrack,
   Tooltip,
   SliderThumb,
-  Spinner
+  Spinner,
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
 } from '@chakra-ui/react'
 import { FaEthereum } from 'react-icons/fa';
 import  { createCoinFlipGame, sendTransactionToCoinFlips, addCoinFlipToGames } from "../utils/CreateCoinFlipGame";
@@ -42,17 +51,14 @@ const CoinFlips = () => {
 
   useEffect(() => {
     document.title = "Coin Flips - Raffle House";
-    const mountCoinFlipData = async () => {
-      getCoinFlips();
-    };
     if (window.ethereum) {
-      mountCoinFlipData();
+      getCoinFlips()
     }
   }, []);
 
   const getCoinFlips = async () => {
-    const tempPastCoinFlips = [];
-    const tempCurrentCoinFlips = [];
+    //const tempPastCoinFlips = [];
+    //const tempCurrentCoinFlips = [];
     if (window.ethereum) {
       //const signer = provider.getSigner();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -80,13 +86,15 @@ const CoinFlips = () => {
         tempCoinFlip["joineeAddress"] = gameInfo["joineeAddress"];
         tempCoinFlip["winner"] = gameInfo["winner"];
         if (gameInfo.winner !== "0x0000000000000000000000000000000000000000") {
-          tempPastCoinFlips.push(tempCoinFlip);
+          setPastCoinFlips((pastCoinFlips:any) => [...pastCoinFlips, tempCoinFlip]);
+          //tempPastCoinFlips.push(tempCoinFlip);
         } else {
-          tempCurrentCoinFlips.push(tempCoinFlip);
+          setCurrentCoinFlips((currentCoinFlips:any) => [...currentCoinFlips, tempCoinFlip])
+          //tempCurrentCoinFlips.push(tempCoinFlip);
         }
       }
-      setPastCoinFlips(tempPastCoinFlips);
-      setCurrentCoinFlips(tempCurrentCoinFlips);
+      //setPastCoinFlips(tempPastCoinFlips);
+      //setCurrentCoinFlips(tempCurrentCoinFlips);
     }
   };
 
@@ -122,32 +130,24 @@ const CoinFlips = () => {
               </Box>
             </Flex>
           </Box>
-          <Flex
-            overflow="auto"
-            border="1px solid black"
-            color="white"
-            my="1%"
-            py="1%"
-          >
-            <Flex flexGrow="1" paddingLeft="12%">
-              <Heading fontSize="md">Player</Heading>
-            </Flex>
-            <Flex flexGrow="1" paddingLeft="5%">
-              <Heading fontSize="md">Status</Heading>
-            </Flex>
-            <Heading fontSize="md" paddingRight="3%">
-              {" "}
-              Buy In
-            </Heading>
-          </Flex>
-
-          {currentCoinFlips.map((coinFlip: any) => {
-            return (
-              <Link to={`coin-flip/${coinFlip["contractAddress"]}`}>
-                <CoinFlip coinFlip={coinFlip}></CoinFlip>
-              </Link>
-            );
-          })}
+          <Table mr="5%" variant="striped" maxW="60%">
+            <Thead>
+              <Tr>
+                <Th>Creator</Th>
+                <Th>Winner</Th>
+                <Th>Buy In</Th>
+              </Tr>
+            </Thead> 
+          <Tbody>
+            {currentCoinFlips.map((coinFlip: any) => {
+              return (
+                <Link to={`coin-flip/${coinFlip["contractAddress"]}`}>
+                  <CoinFlip coinFlip={coinFlip}></CoinFlip>
+                </Link>
+              );
+            })}
+          </Tbody>
+          </Table>
         </Box>
         <Box py="5%" px="22%" margin="0" height="100%" justifyContent="center">
           <Box alignItems="center" borderBottom="4px dotted green">
@@ -174,31 +174,24 @@ const CoinFlips = () => {
               </Heading>
             </Flex>
           </Box>
-          <Flex
-            overflow="auto"
-            border="1px solid black"
-            color="white"
-            my="1%"
-            py="1%"
-          >
-            <Flex flexGrow="1" paddingLeft="12%">
-              <Heading fontSize="md">Creator</Heading>
-            </Flex>
-            <Flex flexGrow="1" paddingLeft="5%">
-              <Heading fontSize="md">Winner</Heading>
-            </Flex>
-            <Heading fontSize="md" paddingRight="3%">
-              {" "}
-              Buy In
-            </Heading>
-          </Flex>
-          {pastCoinFlips.map((coinFlip: any) => {
-            return (
-              <Link to={`coin-flip/${coinFlip["contractAddress"]}`}>
-                <CoinFlip coinFlip={coinFlip}></CoinFlip>
-              </Link>
-            );
-          })}
+          <Table mr="5%" variant="striped" >
+            <Thead width="100%">
+              <Tr>
+                <Th>Creator</Th>
+                <Th>Winner</Th>
+                <Th>Buy In</Th>
+              </Tr>
+            </Thead>
+            <Tbody w="100%"> 
+              {pastCoinFlips.map((coinFlip: any) => {
+                return (
+                  <Link to={`coin-flip/${coinFlip["contractAddress"]}`}>
+                  <CoinFlip coinFlip={coinFlip}></CoinFlip>
+                </Link>
+                )
+              })}
+            </Tbody> 
+          </Table> 
         </Box>
       </Box>
     </BaseContainer>
@@ -211,46 +204,37 @@ interface Props {
 }
 
 const CoinFlip = (props: Props) => {
+
+
+
   return (
-    <Flex
-      overflow="auto"
-      border="1px solid black"
-      background="#16120F"
-      color="white"
-      my="1%"
-      py="1%"
-    >
-      <Flex flexGrow="1" paddingLeft="1%">
-        <Heading fontSize="md">
-          {props.coinFlip.creatorAddress.slice(0, 23) + "..."}
-        </Heading>
-      </Flex>
-      {props.coinFlip.winner !==
-      "0x0000000000000000000000000000000000000000" ? (
-        <Flex flexGrow="1">
-          <Heading fontSize="md">
-            {props.coinFlip.winner.slice(0, 23) + "..."}
-          </Heading>
-        </Flex>
-      ) : (
-        <Flex flexGrow="1" paddingRight="4%">
-          {props.coinFlip.joineeAddress !==
-          "0x0000000000000000000000000000000000000000" ? (
-            <Heading fontSize="md">In Progress</Heading>
-          ) : (
-            <Heading color="green" fontSize="md" paddingRight="25px">
-              Joinable
-            </Heading>
-          )}
-        </Flex>
-      )}
-      <Flex>
-        <Heading fontSize="md" paddingRight="1%">
-          {props.coinFlip.buyInPrice}{" "}
-        </Heading>
-        <FaEthereum />
-      </Flex>
-    </Flex>
+    <Box width="100%">
+    <Tr fontSize="13px" width="100%">
+      {props.coinFlip.winner != "0x0000000000000000000000000000000000000000"? 
+      <Box>
+        <Td >{props.coinFlip.creatorAddress.split(20)}</Td>
+        <Td >{props.coinFlip.winner.split(20)}</Td>
+        <Td ><Flex>{props.coinFlip.buyInPrice} <Box pl="3px" pt="3px"><FaEthereum/></Box></Flex></Td>
+      </Box>
+      :
+      <Box>
+        {props.coinFlip.joineeAddress != "0x0000000000000000000000000000000000000000" ?
+        <Box>
+          <Td >{props.coinFlip.creatorAddress.split(20)}</Td>
+          <Td >In Progress</Td>
+          <Td ><Flex>{props.coinFlip.buyInPrice} <Box pl="3px" pt="3px"><FaEthereum/></Box></Flex></Td>
+        </Box>
+        :
+        <Box>
+          <Td >{props.coinFlip.creatorAddress.split(20)}</Td>
+          <Td color="green">Joinable</Td>
+          <Td ><Flex>{props.coinFlip.buyInPrice} <Box pl="3px" pt="3px"><FaEthereum/></Box></Flex></Td>
+        </Box>
+        }
+      </Box>
+      }
+    </Tr>
+    </Box>
   );
 };
 

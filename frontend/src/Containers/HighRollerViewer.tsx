@@ -3,7 +3,7 @@ import BaseContainer from "./BaseContainers/BaseContainer";
 import HighRollerPot from "../Components/HighRollerPot";
 import PlayersList from "../Components/PlayersList";
 import Messages from "../Components/Messages";
-import fetchNFTs from "../utils/HandleNFTs";
+import { fetchHighRollersPot } from "../utils/HandleNFTs";
 import { _abi } from "../interfaces/Eyescream_Interface";
 import { _HighRoller_abi } from "../interfaces/HighRoller_Interface";
 import { ethers } from "ethers";
@@ -69,7 +69,8 @@ const HighRollerViewer = () => {
       );
       console.log(contract);
 
-      await fetchNFTs(contractAddress).then((data) => {
+      await fetchHighRollersPot(contractAddress).then((data) => {
+        console.log("HIGHROLLERS FOOBAR", data)
         setGameTokens(data);
       }); // FETCHES GAME TOKENS
       const currentHighRollerContract = new ethers.Contract(
