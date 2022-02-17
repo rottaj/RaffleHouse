@@ -92,7 +92,6 @@ const CoinFlipViewer = () => {
   return (
     <BaseContainer>
       <Box textAlign="center" alignItems="center">
-        <Messages />
         {gameInfo.joineeAddress != undefined &&
           <DepositModal coinFlipContractAddress={coinFlipContractAddress} gameInfo={gameInfo}/>
         }
