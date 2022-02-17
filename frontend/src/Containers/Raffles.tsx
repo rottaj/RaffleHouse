@@ -80,14 +80,21 @@ const Raffles = () => {
   return (
     <BaseContainer>
       <Box className="Raffles-container-main">
-        <Box px="20%" fontFamily="Courier New, Monospace">
-          <Heading 
-            color="#DE89BE"
-            textShadow="rgb(203, 176, 204) 3px 3px"
-            fontSize="40px"
-          >
-            Current Raffles
-          </Heading>
+        <Box alignItems="center" px="20%" fontFamily="Courier New, Monospace">
+            <Flex>
+              <Heading
+                color="white"
+                fontSize="40px"
+              >
+                Current&nbsp;
+              </Heading>
+              <Heading
+                color="green"
+                fontSize="40px"
+              >
+                Raffles
+              </Heading>
+          </Flex>
         </Box>
         <Grid 
           templateColumns='repeat(5, 1fr)' 
@@ -107,13 +114,20 @@ const Raffles = () => {
         </Grid>
         <Box></Box>
           <Box px="20%">
-            <Heading 
-              color="#DE89BE"
-              textShadow="rgb(203, 176, 204) 3px 3px"
-              fontSize="40px"
-            >
-              Past Raffles
-            </Heading>
+            <Flex>
+                <Heading
+                  color="white"
+                  fontSize="40px"
+                >
+                  Past&nbsp;
+                </Heading>
+                <Heading
+                  color="green"
+                  fontSize="40px"
+                >
+                  Raffles
+                </Heading>
+            </Flex>
           </Box>
         <Grid 
           templateColumns='repeat(5, 1fr)' 
