@@ -13,7 +13,7 @@ import Messages from "../Messages";
 import { MdOutlineMessage } from "react-icons/md";
 
 const DrawerComponent = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: true });
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
