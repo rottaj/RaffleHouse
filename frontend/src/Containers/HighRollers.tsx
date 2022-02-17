@@ -186,9 +186,20 @@ const HighRollers = () => {
   return (
     <BaseContainer>
       <Box mt={6} textAlign="center">
-        <Heading color="white" fontSize="40px">
-          HIGH ROLLERS
-        </Heading>
+          <Flex position="relative" left={620}>
+              <Heading
+                color="white"
+                fontSize="40px"
+              >
+                High&nbsp;
+              </Heading>
+              <Heading
+                color="green"
+                fontSize="40px"
+              >
+                Roller
+              </Heading>
+          </Flex>
         {!gameIsLoaded ? (
           <Flex flexDir="column" align="center">
             <Skeleton h="24px" mb="4px">
