@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext } from "react";
-import Messages from "../Components/Messages";
 import { Redirect, Link } from "react-router-dom";
 import { ethers } from "ethers";
 import {
@@ -95,7 +94,6 @@ const CoinFlips = () => {
 
   return (
     <BaseContainer>
-      <Messages />
       <CreateGameModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
       <Box pb="100px">
         <Box py="5%" px="22%" margin="0" height="100%" justifyContent="center">

@@ -1,23 +1,27 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Box, Button, Center, Flex, Spinner } from "@chakra-ui/react";
-import { ethers } from 'ethers';
 import NavBar from "../../Components/Nav/NavBar";
 import "./BaseContainer";
 import { MetaMaskUserContext } from "../../utils/contexts";
 import "../../styles/Home/Home.scss";
-import { userInfo } from "os";
-import { MetaMaskDataContext } from "../../utils/contexts/UserDataContext";
+import DrawerComponent from "../../Components/Nav/MessagesSidebar";
 type BaseContainerProps = {
   showMessages?: boolean;
   children: React.ReactNode;
 };
 
 const BaseContainer = ({
-  showMessages = false,
+  showMessages = true,
   children,
 }: BaseContainerProps) => {
-  const { user, setUser, provider, setProvider, isLoadingUser, setIsLoadingUser } =
-    useContext(MetaMaskUserContext);
+  const {
+    user,
+    setUser,
+    provider,
+    setProvider,
+    isLoadingUser,
+    setIsLoadingUser,
+  } = useContext(MetaMaskUserContext);
   const [isLoadingConnect, setIsLoadingConnect] = useState(false);
 
   const getUser = async () => {
@@ -29,8 +33,6 @@ const BaseContainer = ({
     setUser(account);
     setIsLoadingUser(false);
   };
-
-  //const {connectWallet: getUser, isLoadingUser, isLoadingConnect, user, provider}  = useContext(MetaMaskDataContext)
 
   return (
     <Box>
@@ -60,6 +62,7 @@ const BaseContainer = ({
         </Box>
       ) : (
         <Box bgColor="#141114">
+          {showMessages && <DrawerComponent />}
           <NavBar />
           <Box
             minH="100vh"

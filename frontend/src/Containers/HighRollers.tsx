@@ -8,7 +8,6 @@ import {
 } from "../interfaces/HighRollers_Interface";
 import { Link, NavLink } from "react-router-dom";
 import fetchNFTs from "../utils/HandleNFTs";
-import Messages from "../Components/Messages";
 import NFTSelector from "../Components/NFTSelector";
 import PlayerList from "../Components/PlayersList";
 import HighRollersPot from "../Components/HighRollerPot";
@@ -187,7 +186,6 @@ const HighRollers = () => {
   return (
     <BaseContainer>
       <Box mt={6} textAlign="center">
-        {/* <Messages /> */}
         <Heading color="white" fontSize="40px">
           HIGH ROLLERS
         </Heading>
