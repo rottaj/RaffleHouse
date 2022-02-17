@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { FaEthereum } from "react-icons/fa";
 
-import { useQuery } from "react-query";
+import { useQuery, QueryClient } from "react-query";
 
 const OPENSEA_CONTRACT_URL =
   "https://testnets-api.opensea.io/api/v1/asset_contract/";
@@ -28,38 +28,58 @@ const OPENSEA_COLLECTION_URL =
 
 type NFTProps = {
   token: any;
+  queryClient: any;
 };
 
 function TokenPrice(props) {
-  const [tokenPrice, setTokenPrice] = useState("");
+
+  const invalidQueries = async () => {
+    await props.queryClient.invalidateQueries(`${props.token.tokenName}_${props.token.tokenID}`);
+  }
+
   let assetUrl = OPENSEA_ASSET_URL + props.token.contractAddress + "/" + props.token.tokenID
-  const fetchPrice = (tokenPrice) => fetch(assetUrl).then((res) => res.json()).then((data) => setTokenPrice(data['collection']['stats']['average_price']));
+  const fetchPrice = async () => await fetch(assetUrl).then((res) => res.json());
   const {
     isLoading,
     isError,
     error,
     data,
     isFetching,
+    isRefetching,
     isPreviousData,
-  } = useQuery(['tokenPrice', tokenPrice], () => fetchPrice(tokenPrice), { keepPreviousData : true })
+  } = useQuery(`${props.token.tokenName}_${props.token.tokenID}`, () => fetchPrice(), { 
+      keepPreviousData : true,
+      retry:5,
+      onSuccess: data => {
+        if (data.detail == "Request was throttled. Expected available in 1 second.") {
+          invalidQueries()
+        }
+      }
+
+  })
   return (
     <Box>
-      {isLoading ? (
+      {isFetching || isRefetching ? (
         <Flex align="center" justify="center">
           <Text color="white" fontSize="md" mr={1}>
-            Price:
+            Loading
           </Text>
           <Skeleton h="80%">0.03 eth</Skeleton>
         </Flex>
       ) : (
-
         <Text color="white" fontSize="md">
+
+          {data.detail == undefined &&
           <Flex letterSpacing="1px">
-            Price: {tokenPrice} 
+            {console.log("DATA", data)}
+              <Text>
+                Price: {data['collection']['stats']['average_price'].toFixed(2)}
+              </Text>
             <Box pt="3px">
               <FaEthereum/>
             </Box>
           </Flex>
+        }
         </Text>
 
       )}
@@ -69,19 +89,7 @@ function TokenPrice(props) {
 }
 
 
-const NFT = ({ token }: NFTProps) => {
-  //const [tokenPrice, setTokenPrice] = useState("");
-
-  /*
-  useEffect(() => {
-    const GetTokenPrice = async () => {
-
-    }
-    GetTokenPrice()
-
-  }, []);
-  */
-
+const NFT = ({ token, queryClient }: NFTProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -132,8 +140,7 @@ const NFT = ({ token }: NFTProps) => {
                     <Flex ml={4} fontSize="3xl" w="100%" flexDir="column">
                       <Text>Token ID: {token.tokenID}</Text>
 
-                      {/*<Text>Price: {tokenPrice}</Text>*/}
-                      <TokenPrice token={token}/>
+                      <TokenPrice token={token} queryClient={queryClient}/>
                       <Flex h="full">
                         <Button
                           alignSelf="flex-end"
@@ -160,29 +167,7 @@ const NFT = ({ token }: NFTProps) => {
               </ModalContent>
             </Modal>
             <Flex pl="8px">
-              <TokenPrice token={token}/>
-              {/*
-              {isLoading ? (
-                <Flex align="center" justify="center">
-                  <Text color="white" fontSize="md" mr={1}>
-                    Price:
-                  </Text>
-                  <Skeleton h="80%">0.03 eth</Skeleton>
-                </Flex>
-              ) : (
-
-                <Text color="white" fontSize="md">
-                  <Flex letterSpacing="1px">
-                    Price: {tokenPrice} 
-                    <Box pt="3px">
-                      <FaEthereum/>
-                    </Box>
-                  </Flex>
-
-                </Text>
-
-              )}
-              */}
+              <TokenPrice token={token} queryClient={queryClient}/>
             </Flex>
           </Box>
         </>

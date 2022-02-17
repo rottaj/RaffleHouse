@@ -7,6 +7,7 @@ type MetaMaskUserContextType = {
   setProvider: Dispatch<SetStateAction<any>>;
   isLoadingUser: boolean;
   setIsLoadingUser: Dispatch<SetStateAction<boolean>>;
+  queryClient: any;
 };
 export const MetaMaskUserContext =
   createContext<MetaMaskUserContextType | null>(null);
