@@ -88,6 +88,13 @@ const Messages = () => {
             <Skeleton height="21px" />
             <Skeleton height="21px" />
             <Skeleton height="21px" />
+            <Skeleton height="21px" />
+            <Skeleton height="21px" />
+            <Skeleton height="21px" />
+            <Skeleton height="21px" />
+            <Skeleton height="21px" />
+            <Skeleton height="21px" />
+            <Skeleton height="21px" />
           </Stack>
         ) : (
           messages.map((message: any, index: number) => {
