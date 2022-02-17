@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { RafflesAddress, _abi_raffles } from "../interfaces/Raffles_Interface";
 import { _Raffle_abi } from "../interfaces/RaffleEscrow_Interface";
 import Footer from "../Components/Footer";
-import Messages from "../Components/Messages";
 import BaseContainer from "./BaseContainers/BaseContainer";
 import {
   Grid, 
@@ -81,7 +80,6 @@ const Raffles = () => {
   return (
     <BaseContainer>
       <Box className="Raffles-container-main">
-        <Messages />
         <Box px="20%" fontFamily="Courier New, Monospace">
           <Heading 
             color="#DE89BE"
