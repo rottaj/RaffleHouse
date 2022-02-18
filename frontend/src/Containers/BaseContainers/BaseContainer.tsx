@@ -17,8 +17,6 @@ const BaseContainer = ({
   const {
     user,
     setUser,
-    provider,
-    setProvider,
     isLoadingUser,
     setIsLoadingUser,
   } = useContext(MetaMaskUserContext);

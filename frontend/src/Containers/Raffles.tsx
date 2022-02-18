@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-// import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { _abi } from "../interfaces/Eyescream_Interface";
 import { ethers } from "ethers";
 import { Link } from "react-router-dom";
 import { RafflesAddress, _abi_raffles } from "../interfaces/Raffles_Interface";
 import { _Raffle_abi } from "../interfaces/RaffleEscrow_Interface";
 import Footer from "../Components/Footer";
 import BaseContainer from "./BaseContainers/BaseContainer";
+import { getMetaDataSingle } from "../utils/HandleNFTs";
 import {
   Grid, 
   GridItem,
@@ -54,16 +55,18 @@ const Raffles = () => {
           _Raffle_abi,
           signer
         );
+
         const gameInfo = await raffleInstance.getGameInfo();
         var tempRaffle: any = {
           contractAddress: raffle.contractAddress,
-          tokenImage: raffle.tokenImage,
           creatorAddress: gameInfo.creatorAddress,
           buyInPrice: parseInt(gameInfo.buyInPrice, 16),
           winner: gameInfo.winner,
+          collectionAddress: gameInfo.collectionAddress,
           collectionName: gameInfo.collectionName,
           tokenID: parseInt(gameInfo.tokenID, 16),
         };
+
         if (gameInfo.winner === "0x0000000000000000000000000000000000000000") {
           // Will update when refactor Raffles contract
           setCurrentRaffles((currentRaffles: any) => [
@@ -157,6 +160,16 @@ interface Props {
 }
 
 const Raffle = (props: Props) => {
+
+  const [imageSrc, setImageSrc] = useState('')
+
+  useEffect(() => {
+    getMetaDataSingle(props.token).then((data) => {
+      setImageSrc(data.image);
+    })
+
+  }, [])
+
   return (
     <Box
       height="100%"
@@ -168,7 +181,7 @@ const Raffle = (props: Props) => {
         height="200px"
         width="200px"
         borderRadius="30px"
-        src={props.token.tokenImage}
+        src={imageSrc} // ADD TOKEN IMAGE BITACH
       ></Image>
       <Box 
         alignItems="center"

@@ -6,7 +6,7 @@ import {
   _Raffle_abi,
   _Raffle_bytecode,
 } from "../interfaces/RaffleEscrow_Interface";
-import fetchNFTs from "../utils/HandleNFTs";
+import { fetchNFTs } from "../utils/HandleNFTs";
 import { RafflesAddress, _abi_raffles } from "../interfaces/Raffles_Interface";
 import { Box, Flex, Heading, Input, Button } from "@chakra-ui/react";
 
@@ -32,8 +32,9 @@ const RaffleCreator = () => {
     }
   }, []);
 
-  const handleDeposit = async (buyInPrice: any, limitPrice: any, selectedToken: any) => {
+  const handleDeposit = async ( selectedToken: any, buyInPrice: any, reservePrice: any ) => {
     if (window.ethereum) {
+      console.log("BIIIITCH", selectedToken, parseFloat(buyInPrice).toFixed(2), parseFloat(reservePrice).toFixed(2))
       var accounts = await window.ethereum.send("eth_requestAccounts");
       var provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
@@ -50,9 +51,8 @@ const RaffleCreator = () => {
       // DEPLOY CONTRACT
       const account = accounts.result[0];
       const contract = await raffleFactory.deploy(
-        parseFloat(buyInPrice).toFixed(2),
-        parseFloat(limitPrice).toFixed(2),
-        selectedToken.image,
+        parseInt(buyInPrice),
+        parseInt(reservePrice),
         selectedToken.contractAddress,
         selectedToken.tokenName,
         selectedToken.tokenID
@@ -75,8 +75,8 @@ const RaffleCreator = () => {
         .then(async function (dataTwo) {
           console.log(dataTwo);
           const addRaffleTxn = rafflesContract.addRaffle(
-            selectedToken.image,
             contract.address,
+            selectedToken.contractAddress,
             selectedToken.tokenName,
             selectedToken.tokenID
           );

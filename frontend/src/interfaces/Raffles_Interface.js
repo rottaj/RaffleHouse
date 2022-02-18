@@ -1,5 +1,4 @@
-export const RafflesAddress = "0xDEeb88ddd628b613D43084b411A995Df17b544AF"
-
+export const RafflesAddress = "0x6A115Af943FA33312f7596a8c58222Ac8ABFF9F8" 
 export const _abi_raffles =  
 [
   {
@@ -35,13 +34,13 @@ export const _abi_raffles =
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "_tokenImage",
-        "type": "string"
+        "internalType": "address",
+        "name": "_contractAddress",
+        "type": "address"
       },
       {
         "internalType": "address",
-        "name": "_contractAddress",
+        "name": "_collectionAddress",
         "type": "address"
       },
       {
@@ -83,9 +82,9 @@ export const _abi_raffles =
             "type": "address"
           },
           {
-            "internalType": "string",
-            "name": "tokenImage",
-            "type": "string"
+            "internalType": "address",
+            "name": "collectionAddress",
+            "type": "address"
           },
           {
             "internalType": "string",
@@ -158,9 +157,9 @@ export const _abi_raffles =
         "type": "address"
       },
       {
-        "internalType": "string",
-        "name": "tokenImage",
-        "type": "string"
+        "internalType": "address",
+        "name": "collectionAddress",
+        "type": "address"
       },
       {
         "internalType": "string",

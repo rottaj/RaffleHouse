@@ -6,6 +6,7 @@ import BaseContainer from "./BaseContainers/BaseContainer";
 import RaffleDeposit from "../Components/DepositRaffle";
 import PlayersList from "../Components/PlayersList";
 import Messages from "../Components/Messages";
+import { getMetaDataSingle } from "../utils/HandleNFTs";
 import {
   Box,
   Heading,
@@ -25,74 +26,13 @@ const ETHERSCAN_API_KEY = "JPARDRW9CAVF9ZKISWVC3YYM6RP93JNQUC";
 declare let window: any;
 const RaffleViewer = () => {
   const [tokenMetaData, setTokenMetaData]: any = useState({});
+  const [imageSrc, setImageSrc] = useState('')
   const [isDepositOpen, setIsDepositOpen]: any = useState(false);
   const [raffleContractAddress, setRaffleContractAddress]: any = useState("");
   const [raffleBalance, setRaffleBalance]: any = useState("");
   const [players, setPlayers]: any = useState([]);
   const [gameInfo, setGameInfo]: any = useState([]);
   const [account, setAccount]: any = useState("");
-
-  const fetchNFTs = async (contractAddress: any) => {
-    if (window.ethereum) {
-      var provider = new ethers.providers.Web3Provider(window.ethereum);
-      // const signer = provider.getSigner();
-      // var url = ETHERSCAN_API_ABI + token.address + ABI_KEY
-      //var abi = fetch (url) // get verified contract abi
-      // PERFORM FETCH ABI REQUEST ON VERIFIED CONTRACT
-      //console.log(token.contractAddress, address)
-      var url =
-        ETHERSCAN_API_NFT_TXN +
-        contractAddress +
-        "&startblock=0&endblock=999999999&sort=asc&apikey=" +
-        ETHERSCAN_API_KEY;
-      console.log(url);
-      fetch(url)
-        .then((res) => {
-          console.log(res);
-          return res.json();
-        })
-        .then((data) => {
-          getMetaData(data.result[0]); // POTENTIAL FIX IS PROBALY GOOD
-        });
-    }
-  };
-
-  const getMetaData = async (token: any) => {
-    console.log(token);
-    if (window.ethereum) {
-      var provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      // var url = ETHERSCAN_API_ABI + token.address + ABI_KEY
-      //var abi = fetch (url) // get verified contract abi
-      // PERFORM FETCH ABI REQUEST ON VERIFIED CONTRACT
-      //console.log(token.contractAddress, address)
-      try {
-        if (
-          String(token.contractAddress) ===
-          "0x8f44a8b9059b2bc914c893eed250a2e1097ee187"
-        ) {
-          // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
-          let contract = new ethers.Contract(
-            token.contractAddress,
-            _abi,
-            signer
-          );
-          console.log(token.contractAddress);
-          let metaData = await contract.tokenURI(parseInt(token.tokenID));
-          fetch(metaData)
-            .then((res) => {
-              return res.json();
-            })
-            .then((data) => {
-              token["image"] = data.image;
-              setTokenMetaData(token);
-            });
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  };
 
   const getUniqueAddresses = (array: any) => {
     let unique = array.filter(
@@ -131,11 +71,7 @@ const RaffleViewer = () => {
     }
   };
 
-  const handleDepositClicked = () => {
-    setIsDepositOpen(!isDepositOpen);
-  };
-
-  useEffect(() => {
+   useEffect(() => {
     const contractAddress = window.location.pathname.split("/").at(-1);
     setRaffleContractAddress(contractAddress);
 
@@ -147,7 +83,11 @@ const RaffleViewer = () => {
       const signer = provider.getSigner();
       let contract = new ethers.Contract(contractAddress, _Raffle_abi, signer);
       const gameInfo = await contract.getGameInfo();
-      fetchNFTs(contractAddress); // refactor (can do this later)
+      console.log("gameInfo", gameInfo)
+      getMetaDataSingle(gameInfo).then((data) => {
+        console.log("data", data)
+        setImageSrc(data.image);
+      })
 
       setGameInfo(gameInfo);
       const tickets = await contract.getTickets();
@@ -156,6 +96,7 @@ const RaffleViewer = () => {
     };
     if (window.ethereum) {
       mountRaffleGameInfo();
+
     }
   }, []);
 
@@ -180,7 +121,7 @@ const RaffleViewer = () => {
         </Flex>
         <Flex mx="3%" marginTop="5%">
           <Box height="25%" width="25%" px="1%">
-            <Image borderRadius="20px" src={tokenMetaData.image}></Image>
+            <Image borderRadius="20px" src={imageSrc}></Image>
             <RaffleDeposit
               tokenMetaData={tokenMetaData}
               isDepositOpen={isDepositOpen}

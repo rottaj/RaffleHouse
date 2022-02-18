@@ -33,7 +33,7 @@ interface Token {
 
 declare let window: any;
 
-const fetchNFTs = async (address: string) => {
+export const fetchNFTs = async (address: string) => {
   const url =
     ETHERSCAN_API_NFT_TXN +
     address +
@@ -99,8 +99,6 @@ const getMetaData = async (tokens: any) => {
   return tokens;
 };
 
-export default fetchNFTs;
-
 export const fetchHighRollersPot = async (address: string) => {
   const url =
     ETHERSCAN_API_NFT_TXN +
@@ -136,3 +134,29 @@ export const fetchHighRollersPot = async (address: string) => {
   return data;
 };
 
+export const getMetaDataSingle = async (token: any) => {
+  var provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+    if (token) {
+      const contract = new ethers.Contract(
+        token.collectionAddress,
+        _abi,
+        provider
+      );
+      const metaData = await contract.tokenURI(parseInt(token.tokenID));
+      await fetch(metaData)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          if (data.image.startsWith("ipfs://")) {
+            token["image"] = "https://ipfs.io/ipfs" + data.image.slice(6);
+            console.log(token["image"]);
+          } else {
+            token["image"] = data.image;
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  return token;
+};

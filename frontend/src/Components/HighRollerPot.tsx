@@ -10,6 +10,7 @@ const HighRollersPot = (props: Props) => {
 
   return (
     <Flex w="100%" h="100%">
+      {console.log("FOOOOOOBAR", props)}
       {props.tokens.length !== 0 ? (
         <Grid
           templateColumns="repeat(5, 1fr)"
@@ -19,7 +20,7 @@ const HighRollersPot = (props: Props) => {
           mx="15%"
         >
           {props.tokens.map((token: any) => {
-            return <GridItem>{/*<NFT token={token} ></NFT>*/}</GridItem>;
+            return <GridItem>{<NFT token={token} handleDeposit={{}} game={"highrollers"}></NFT>}</GridItem>;
           })}
         </Grid>
       ) : (

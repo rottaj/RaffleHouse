@@ -7,7 +7,7 @@ import {
   _HighRollers_abi,
 } from "../interfaces/HighRollers_Interface";
 import { Link, NavLink } from "react-router-dom";
-import fetchNFTs from "../utils/HandleNFTs";
+import { fetchNFTs } from "../utils/HandleNFTs";
 import NFTSelector from "../Components/NFTSelector";
 import PlayerList from "../Components/PlayersList";
 import HighRollersPot from "../Components/HighRollerPot";
@@ -159,9 +159,9 @@ const HighRollers = () => {
       const userToks = await fetchNFTs(account);
       setUserTokens(userToks); // FETCHES USER NFTS
 
-      //   fetchNFTs(currentGameInstance.contractAddress).then((data) => {
-      //     setGameTokens(data);
-      //   }); // FETCHES GAME TOKENS
+      fetchNFTs(currentGameInstance.contractAddress).then((data) => {
+        setGameTokens(data);
+      }); // FETCHES GAME TOKENS
       const currentHighRollerContract = new ethers.Contract(
         currentGameInstance.contractAddress,
         _HighRoller_abi,

@@ -12,6 +12,7 @@ contract RaffleEscrow is VRFConsumerBase {
   uint256 private BUY_IN_PRICE;
   uint256 private MIN_TICKETS;
   string private tokenURI;
+  address private collectionAddress;
   string private collectionName;
   uint256 private tokenID;
   address private winner;
@@ -27,7 +28,6 @@ contract RaffleEscrow is VRFConsumerBase {
   constructor(
               uint256 _buyInPrice,
               uint256 _minTickets,
-              string memory _tokenURI,
               address _collectionAddress,
               string memory _collectionName,
               uint256 _tokenID
@@ -44,7 +44,7 @@ contract RaffleEscrow is VRFConsumerBase {
     creatorAddress = payable(msg.sender);
     BUY_IN_PRICE = _buyInPrice;
     MIN_TICKETS = _minTickets;
-    tokenURI = _tokenURI;
+    collectionAddress = _collectionAddress;
     collectionName = _collectionName;
     tokenID = _tokenID;
 
@@ -58,7 +58,7 @@ contract RaffleEscrow is VRFConsumerBase {
     address creatorAddress;
     uint256 buyInPrice;
     address winner;
-    string tokenURI;
+    address collectionAddress;
     string collectionName;
     uint256 tokenID;
   }
@@ -137,7 +137,7 @@ contract RaffleEscrow is VRFConsumerBase {
       creatorAddress: creatorAddress,
       buyInPrice: BUY_IN_PRICE,
       winner: winner,
-      tokenURI: tokenURI,
+      collectionAddress: collectionAddress,
       collectionName: collectionName,
       tokenID: tokenID
     });

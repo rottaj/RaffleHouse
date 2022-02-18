@@ -32,7 +32,6 @@ const OPENSEA_ASSET_URL =
   "https://testnets-api.opensea.io/api/v1/asset/"; // ContractAddress + '/' + id
 const OPENSEA_COLLECTION_URL =
  "https://testnets-api.opensea.io/api/v1/collection/"; // collection-name + '/stats'
- 
 
 type NFTProps = {
   token: any;
@@ -103,9 +102,10 @@ const NFT = ({ token, handleDeposit, game } : NFTProps) => {
 
   const { queryClient }= useContext(MetaMaskUserContext)
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [breakPrice, setBreakPrice]: any = useState(100);
-  const [minDeposit, setMinDeposit]: any = useState(100);
-  const [sliderValue, setSliderValue]: any = useState(0.1);
+  const [reservePrice, setReservePrice]: any = useState(10);
+  const [minimumBuyIn, setMinimumBuyIn]: any = useState(100);
+  const [sliderValueOne, setSliderValueOne]: any = useState(0.1);
+  const [sliderValueTwo, setSliderValueTwo]: any = useState(0.1);
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
@@ -194,7 +194,7 @@ const NFT = ({ token, handleDeposit, game } : NFTProps) => {
                     <Text>Token ID: {token.tokenID}</Text>
 
                     <TokenPrice token={token} queryClient={queryClient}/>
-                    <Heading fontSize="20px"> Break Price </Heading>
+                    <Heading fontSize="20px"> Minimum Buy In</Heading>
                     <Slider
                       id="slider"
                       defaultValue={5}
@@ -202,7 +202,7 @@ const NFT = ({ token, handleDeposit, game } : NFTProps) => {
                       max={100}
                       colorScheme="green"
                       onChange={(v) =>
-                        setSliderValue((breakPrice * (v * 0.01)).toFixed(2))
+                        setSliderValueOne((reservePrice * (v * 0.01)).toFixed(2))
                       }
                       onMouseEnter={() => setShowTooltip(true)}
                       onMouseLeave={() => setShowTooltip(false)}
@@ -217,7 +217,7 @@ const NFT = ({ token, handleDeposit, game } : NFTProps) => {
                       </SliderMark>
                       <SliderMark value={25} mt="1" ml="-2.5" fontSize="sm">
                         <Flex>
-                          <Text>{(breakPrice * 0.25).toFixed(2)}</Text>
+                          <Text>{(reservePrice * 0.25).toFixed(2)}</Text>
                           <Box pt="3px">
                             <FaEthereum />
                           </Box>
@@ -225,7 +225,7 @@ const NFT = ({ token, handleDeposit, game } : NFTProps) => {
                       </SliderMark>
                       <SliderMark value={50} mt="1" ml="-2.5" fontSize="sm">
                         <Flex>
-                          <Text>{(breakPrice * 0.5).toFixed(2)}</Text>
+                          <Text>{(reservePrice * 0.5).toFixed(2)}</Text>
                           <Box pt="3px">
                             <FaEthereum />
                           </Box>
@@ -233,7 +233,7 @@ const NFT = ({ token, handleDeposit, game } : NFTProps) => {
                       </SliderMark>
                       <SliderMark value={75} mt="1" ml="-2.5" fontSize="sm">
                         <Flex>
-                          <Text>{(breakPrice * 0.75).toFixed(2)}</Text>
+                          <Text>{(reservePrice * 0.75).toFixed(2)}</Text>
                           <Box pt="3px">
                             <FaEthereum />
                           </Box>
@@ -241,7 +241,7 @@ const NFT = ({ token, handleDeposit, game } : NFTProps) => {
                       </SliderMark>
                       <SliderMark value={100} mt="1" ml="-2.5" fontSize="sm">
                         <Flex>
-                          <Text>{breakPrice}</Text>
+                          <Text>{reservePrice}</Text>
                           <Box pt="3px">
                             <FaEthereum />
                           </Box>
@@ -256,13 +256,13 @@ const NFT = ({ token, handleDeposit, game } : NFTProps) => {
                         color="white"
                         placement="top"
                         isOpen={showTooltip}
-                        label={`${sliderValue} eth`}
+                        label={`${sliderValueOne} eth`}
                       >
                         <SliderThumb />
                       </Tooltip>
                     </Slider>
                     <Box mt="15%">
-                    <Heading fontSize="20px"> Min Deposit Price </Heading>
+                    <Heading fontSize="20px"> Reserve Price </Heading>
                     <Slider
                       id="slider"
                       defaultValue={5}
@@ -270,7 +270,7 @@ const NFT = ({ token, handleDeposit, game } : NFTProps) => {
                       max={100}
                       colorScheme="green"
                       onChange={(v) =>
-                        setSliderValue((breakPrice * (v * 0.01)).toFixed(2))
+                        setSliderValueTwo((reservePrice * (v * 0.01)).toFixed(2))
                       }
                       onMouseEnter={() => setShowTooltip(true)}
                       onMouseLeave={() => setShowTooltip(false)}
@@ -285,7 +285,7 @@ const NFT = ({ token, handleDeposit, game } : NFTProps) => {
                       </SliderMark>
                       <SliderMark value={25} mt="1" ml="-2.5" fontSize="sm">
                         <Flex>
-                          <Text>{(minDeposit * 0.25).toFixed(2)}</Text>
+                          <Text>{(minimumBuyIn * 0.25).toFixed(2)}</Text>
                           <Box pt="3px">
                             <FaEthereum />
                           </Box>
@@ -293,7 +293,7 @@ const NFT = ({ token, handleDeposit, game } : NFTProps) => {
                       </SliderMark>
                       <SliderMark value={50} mt="1" ml="-2.5" fontSize="sm">
                         <Flex>
-                          <Text>{(minDeposit * 0.5).toFixed(2)}</Text>
+                          <Text>{(minimumBuyIn * 0.5).toFixed(2)}</Text>
                           <Box pt="3px">
                             <FaEthereum />
                           </Box>
@@ -301,7 +301,7 @@ const NFT = ({ token, handleDeposit, game } : NFTProps) => {
                       </SliderMark>
                       <SliderMark value={75} mt="1" ml="-2.5" fontSize="sm">
                         <Flex>
-                          <Text>{(minDeposit * 0.75).toFixed(2)}</Text>
+                          <Text>{(minimumBuyIn * 0.75).toFixed(2)}</Text>
                           <Box pt="3px">
                             <FaEthereum />
                           </Box>
@@ -323,7 +323,7 @@ const NFT = ({ token, handleDeposit, game } : NFTProps) => {
                         color="white"
                         placement="top"
                         isOpen={showTooltip}
-                        label={`${sliderValue} eth`}
+                        label={`${sliderValueTwo} eth`}
                       >
                         <SliderThumb />
                       </Tooltip>
@@ -332,7 +332,7 @@ const NFT = ({ token, handleDeposit, game } : NFTProps) => {
 
                     <Flex h="full" mt="30%">
                       <Button
-                        onClick={() => handleDeposit(token, )}
+                        onClick={() => handleDeposit(token, (sliderValueOne * 0.01) ** 18, (sliderValueTwo * 0.01) ** 18)}
                         alignSelf="flex-end"
                         bgColor="#3a0ca3"
                         w="140px"
