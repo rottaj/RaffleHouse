@@ -308,7 +308,7 @@ type ModalProps = {
     {defaultIsOpen: props.gameInfo.joineeAddress == "0x0000000000000000000000000000000000000000" && String(user.toUpperCase()) !== String(props.gameInfo.creatorAddress)})
   return (
     <Modal 
-      isOpen={true} 
+      isOpen={isOpen} 
       onClose={onClose}
       isCentered
     >
