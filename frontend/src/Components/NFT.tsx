@@ -112,6 +112,8 @@ const NFT = ({ token, handleDeposit, game } : NFTProps) => {
     <Box height="100%" width="100%" maxW="250px">
       {token?.image ? (
         <>
+        {game != "highrollers-pot" ?
+        <Box>
           <Image
             cursor="pointer"
             borderRadius="20px"
@@ -134,6 +136,9 @@ const NFT = ({ token, handleDeposit, game } : NFTProps) => {
             >
               Deposit
             </Button>
+            <Flex pl="8px">
+              <TokenPrice token={token} queryClient={queryClient}/>
+            </Flex>
             <Modal
               isOpen={isOpen}
               onClose={onClose}
@@ -357,10 +362,24 @@ const NFT = ({ token, handleDeposit, game } : NFTProps) => {
                 </ModalBody>
               </ModalContent>
             </Modal>
-            <Flex pl="8px">
-              <TokenPrice token={token} queryClient={queryClient}/>
-            </Flex>
           </Box>
+        </Box>
+        :
+        <Box>
+          <Image
+          cursor="pointer"
+          borderRadius="20px"
+          objectFit="contain"
+          onClick={onOpen}
+          src={token.image}
+          _hover={{ transform: "scale(1.05)" }}
+          transition="transform .2s"
+          />
+          <Flex pl="8px">
+            <TokenPrice token={token} queryClient={queryClient}/>
+          </Flex>
+        </Box>
+        }
         </>
       ) : null}
     </Box>
