@@ -26,7 +26,6 @@ interface CurrentGame {
 const HighRollers = () => {
   const { user: account, isLoadingUser } = useContext(MetaMaskUserContext);
   const [userTokens, setUserTokens]: any = useState([]);
-  const [selectedToken, setSelectedToken]: any = useState({});
   const [gameTokens, setGameTokens]: any = useState([]);
   const [players, setPlayers]: any = useState([]);
   const [gameIsLoaded, setGameIsLoaded] = useState(false);
@@ -39,7 +38,7 @@ const HighRollers = () => {
   const [minutesLeft, setMinutesLeft] = useState(0);
   const [secondsLeft, setSecondsLeft] = useState(0);
 
-  const handleDeposit = async () => {
+  const handleDeposit = async (selectedToken: any) => {
     var provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const collectionContract = new ethers.Contract(
@@ -130,10 +129,6 @@ const HighRollers = () => {
     setPlayers(tempPlayers);
   };
 
-  const handleSelectedToken = (token: any) => {
-    console.log("TOKEN CLICKED ", token);
-    setSelectedToken(token);
-  };
 
   useEffect(() => {
     document.title = "High Rollers - Raffle House";
@@ -265,7 +260,7 @@ const HighRollers = () => {
         </Button> */}
 
         <Box px="120px">
-          <NFTSelector tokens={userTokens} tokenHandler={handleSelectedToken} />
+          <NFTSelector tokens={userTokens} handleDeposit={handleDeposit} game={"highrollers"}/>
         </Box>
 
         <PlayerList players={players} />

@@ -1,15 +1,16 @@
 import { useContext } from 'react';
 import NFT from "../Components/NFT";
-import { Box, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, propNames, SimpleGrid, Text } from "@chakra-ui/react";
 import { QueryClientProvider } from "react-query";
 import { MetaMaskUserContext } from "../utils/contexts";
 
 type NftSelectorProps = {
   tokens: Array<any>;
-  tokenHandler: any;
+  handleDeposit: any;
+  game: string;
 };
 
-const NFTSelector = ({ tokens, tokenHandler }: NftSelectorProps) => {
+const NFTSelector = ({ tokens, handleDeposit, game }: NftSelectorProps) => {
 
   const {queryClient} = useContext(MetaMaskUserContext)
 
@@ -25,7 +26,7 @@ const NFTSelector = ({ tokens, tokenHandler }: NftSelectorProps) => {
         {tokens.map((token, index) => (
           <Box key={index}>
               {console.log(token)}
-              <NFT token={token} queryClient={queryClient}/>
+              <NFT token={token} handleDeposit={handleDeposit} game={game}/>
           </Box>
         ))}
       </SimpleGrid>

@@ -13,7 +13,6 @@ import { Box, Flex, Heading, Input, Button } from "@chakra-ui/react";
 declare let window: any;
 const RaffleCreator = () => {
   const [tokens, setTokens]: any = useState([]);
-  const [selectedToken, setSelectedToken]: any = useState({});
   const [RaffleFormOpen, setRaffleFormOpen] = useState(false);
 
   const handleRaffleForm = () => {
@@ -33,8 +32,7 @@ const RaffleCreator = () => {
     }
   }, []);
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  const handleDeposit = async (buyInPrice: any, limitPrice: any, selectedToken: any) => {
     if (window.ethereum) {
       var accounts = await window.ethereum.send("eth_requestAccounts");
       var provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -52,8 +50,8 @@ const RaffleCreator = () => {
       // DEPLOY CONTRACT
       const account = accounts.result[0];
       const contract = await raffleFactory.deploy(
-        parseInt(e.target[0].value),
-        parseInt(e.target[1].value),
+        parseFloat(buyInPrice).toFixed(2),
+        parseFloat(limitPrice).toFixed(2),
         selectedToken.image,
         selectedToken.contractAddress,
         selectedToken.tokenName,
@@ -86,10 +84,7 @@ const RaffleCreator = () => {
     }
   };
 
-  const handleSelectedToken = (token: any) => {
-    console.log("TOKEN CLICKED ", token);
-    setSelectedToken(token);
-  };
+
 
   return (
     <Flex height="100%" width="100%" justify="center">
@@ -106,7 +101,7 @@ const RaffleCreator = () => {
         <Heading fontSize="40px" color="white">
           Create your Raffle!
         </Heading>
-        <NFTSelector tokens={tokens} tokenHandler={handleSelectedToken} />
+        <NFTSelector tokens={tokens} handleDeposit={handleDeposit} game={"raffles"}/>
       </Box>
     </Flex>
   );

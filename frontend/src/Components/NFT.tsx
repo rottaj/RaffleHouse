@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import {
   Box,
   Flex,
@@ -12,10 +12,19 @@ import {
   Text,
   ModalHeader,
   Skeleton,
+  Slider,
+  SliderMark,
+  SliderTrack,
+  SliderFilledTrack,
+  Tooltip,
+  SliderThumb,
+  Spinner,
+  Heading,
 } from "@chakra-ui/react";
 import { FaEthereum } from "react-icons/fa";
 
 import { useQuery, QueryClient } from "react-query";
+import { MetaMaskUserContext } from "../utils/contexts";
 
 const OPENSEA_CONTRACT_URL =
   "https://testnets-api.opensea.io/api/v1/asset_contract/";
@@ -25,10 +34,10 @@ const OPENSEA_COLLECTION_URL =
  "https://testnets-api.opensea.io/api/v1/collection/"; // collection-name + '/stats'
  
 
-
 type NFTProps = {
   token: any;
-  queryClient: any;
+  handleDeposit: any;
+  game: string;
 };
 
 function TokenPrice(props) {
@@ -89,8 +98,15 @@ function TokenPrice(props) {
 }
 
 
-const NFT = ({ token, queryClient }: NFTProps) => {
+const NFT = ({ token, handleDeposit, game } : NFTProps) => {
+
+
+  const { queryClient }= useContext(MetaMaskUserContext)
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [breakPrice, setBreakPrice]: any = useState(100);
+  const [minDeposit, setMinDeposit]: any = useState(100);
+  const [sliderValue, setSliderValue]: any = useState(0.1);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   return (
     <Box height="100%" width="100%" maxW="250px">
@@ -126,10 +142,11 @@ const NFT = ({ token, queryClient }: NFTProps) => {
               preserveScrollBarGap
             >
               <ModalOverlay />
-              <ModalContent bgColor="#1c191c" color="white" pb={12}>
+              <ModalContent bgColor="#1c191c" color="white" pb={20}>
                 <ModalHeader>{token.tokenName}</ModalHeader>
 
                 <ModalBody>
+                  {game == "highrollers" &&
                   <Flex>
                     <Image
                       width="200px"
@@ -143,6 +160,7 @@ const NFT = ({ token, queryClient }: NFTProps) => {
                       <TokenPrice token={token} queryClient={queryClient}/>
                       <Flex h="full">
                         <Button
+                          onClick={() => handleDeposit(token)}
                           alignSelf="flex-end"
                           bgColor="#3a0ca3"
                           w="140px"
@@ -163,6 +181,179 @@ const NFT = ({ token, queryClient }: NFTProps) => {
                       </Flex>
                     </Flex>
                   </Flex>
+                }
+                {game == "raffles" &&
+                  <Flex>
+                  <Image
+                    width="200px"
+                    height="200px"
+                    src={token.image}
+                    objectFit="contain"
+                  />
+                  <Flex ml={4} fontSize="3xl" w="100%" flexDir="column">
+                    <Text>Token ID: {token.tokenID}</Text>
+
+                    <TokenPrice token={token} queryClient={queryClient}/>
+                    <Heading fontSize="20px"> Break Price </Heading>
+                    <Slider
+                      id="slider"
+                      defaultValue={5}
+                      min={0}
+                      max={100}
+                      colorScheme="green"
+                      onChange={(v) =>
+                        setSliderValue((breakPrice * (v * 0.01)).toFixed(2))
+                      }
+                      onMouseEnter={() => setShowTooltip(true)}
+                      onMouseLeave={() => setShowTooltip(false)}
+                    >
+                      <SliderMark value={0} mt="1" ml="-2.5" fontSize="sm">
+                        <Flex>
+                          <Text>{0}</Text>
+                          <Box pt="3px">
+                            <FaEthereum />
+                          </Box>
+                        </Flex>
+                      </SliderMark>
+                      <SliderMark value={25} mt="1" ml="-2.5" fontSize="sm">
+                        <Flex>
+                          <Text>{(breakPrice * 0.25).toFixed(2)}</Text>
+                          <Box pt="3px">
+                            <FaEthereum />
+                          </Box>
+                        </Flex>
+                      </SliderMark>
+                      <SliderMark value={50} mt="1" ml="-2.5" fontSize="sm">
+                        <Flex>
+                          <Text>{(breakPrice * 0.5).toFixed(2)}</Text>
+                          <Box pt="3px">
+                            <FaEthereum />
+                          </Box>
+                        </Flex>
+                      </SliderMark>
+                      <SliderMark value={75} mt="1" ml="-2.5" fontSize="sm">
+                        <Flex>
+                          <Text>{(breakPrice * 0.75).toFixed(2)}</Text>
+                          <Box pt="3px">
+                            <FaEthereum />
+                          </Box>
+                        </Flex>
+                      </SliderMark>
+                      <SliderMark value={100} mt="1" ml="-2.5" fontSize="sm">
+                        <Flex>
+                          <Text>{breakPrice}</Text>
+                          <Box pt="3px">
+                            <FaEthereum />
+                          </Box>
+                        </Flex>
+                      </SliderMark>
+                      <SliderTrack>
+                        <SliderFilledTrack />
+                      </SliderTrack>
+                      <Tooltip
+                        hasArrow
+                        bg="teal.500"
+                        color="white"
+                        placement="top"
+                        isOpen={showTooltip}
+                        label={`${sliderValue} eth`}
+                      >
+                        <SliderThumb />
+                      </Tooltip>
+                    </Slider>
+                    <Box mt="15%">
+                    <Heading fontSize="20px"> Min Deposit Price </Heading>
+                    <Slider
+                      id="slider"
+                      defaultValue={5}
+                      min={0}
+                      max={100}
+                      colorScheme="green"
+                      onChange={(v) =>
+                        setSliderValue((breakPrice * (v * 0.01)).toFixed(2))
+                      }
+                      onMouseEnter={() => setShowTooltip(true)}
+                      onMouseLeave={() => setShowTooltip(false)}
+                    >
+                      <SliderMark value={0} mt="1" ml="-2.5" fontSize="sm">
+                        <Flex>
+                          <Text>{0}</Text>
+                          <Box pt="3px">
+                            <FaEthereum />
+                          </Box>
+                        </Flex>
+                      </SliderMark>
+                      <SliderMark value={25} mt="1" ml="-2.5" fontSize="sm">
+                        <Flex>
+                          <Text>{(minDeposit * 0.25).toFixed(2)}</Text>
+                          <Box pt="3px">
+                            <FaEthereum />
+                          </Box>
+                        </Flex>
+                      </SliderMark>
+                      <SliderMark value={50} mt="1" ml="-2.5" fontSize="sm">
+                        <Flex>
+                          <Text>{(minDeposit * 0.5).toFixed(2)}</Text>
+                          <Box pt="3px">
+                            <FaEthereum />
+                          </Box>
+                        </Flex>
+                      </SliderMark>
+                      <SliderMark value={75} mt="1" ml="-2.5" fontSize="sm">
+                        <Flex>
+                          <Text>{(minDeposit * 0.75).toFixed(2)}</Text>
+                          <Box pt="3px">
+                            <FaEthereum />
+                          </Box>
+                        </Flex>
+                      </SliderMark>
+                      <SliderMark value={100} mt="1" ml="-2.5" fontSize="sm">
+                        <Flex>
+                          <Box pt="3px">
+                            <FaEthereum />
+                          </Box>
+                        </Flex>
+                      </SliderMark>
+                      <SliderTrack>
+                        <SliderFilledTrack />
+                      </SliderTrack>
+                      <Tooltip
+                        hasArrow
+                        bg="teal.500"
+                        color="white"
+                        placement="top"
+                        isOpen={showTooltip}
+                        label={`${sliderValue} eth`}
+                      >
+                        <SliderThumb />
+                      </Tooltip>
+                    </Slider>
+                    </Box>
+
+                    <Flex h="full" mt="30%">
+                      <Button
+                        onClick={() => handleDeposit(token, )}
+                        alignSelf="flex-end"
+                        bgColor="#3a0ca3"
+                        w="140px"
+                        color="white"
+                        _hover={{ bgColor: "#4361ee" }}
+                        _active={{ bgColor: "#390099" }}
+                        mr={4}
+                      >
+                        Deposit
+                      </Button>
+                      <Button
+                        onClick={onClose}
+                        color="red"
+                        alignSelf="flex-end"
+                      >
+                        Cancel
+                      </Button>
+                    </Flex>
+                  </Flex>
+                </Flex>
+                }
                 </ModalBody>
               </ModalContent>
             </Modal>

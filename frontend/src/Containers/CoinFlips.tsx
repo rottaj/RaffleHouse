@@ -141,7 +141,7 @@ const CoinFlips = () => {
             <Thead w="100%">
               <Tr>
                 <Th>Creator</Th>
-                <Th>Winner</Th>
+                <Th>Status</Th>
                 <Th>Buy In</Th>
               </Tr>
             </Thead>
@@ -177,7 +177,7 @@ const CoinFlips = () => {
             <Thead width="100%">
               <Tr>
                 <Th>Creator</Th>
-                <Th>Winner</Th>
+                <Th pl="10%">Winner</Th>
                 <Th>Buy In</Th>
               </Tr>
             </Thead>

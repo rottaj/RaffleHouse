@@ -8,8 +8,6 @@ interface Props {
 
 const HighRollersPot = (props: Props) => {
 
-  const {queryClient} = useContext(MetaMaskUserContext)
-
   return (
     <Flex w="100%" h="100%">
       {props.tokens.length !== 0 ? (
@@ -21,7 +19,7 @@ const HighRollersPot = (props: Props) => {
           mx="15%"
         >
           {props.tokens.map((token: any) => {
-            return <GridItem>{<NFT token={token} queryClient={queryClient}></NFT>}</GridItem>;
+            return <GridItem>{/*<NFT token={token} ></NFT>*/}</GridItem>;
           })}
         </Grid>
       ) : (
