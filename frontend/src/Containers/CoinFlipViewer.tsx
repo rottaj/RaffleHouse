@@ -1,7 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { ethers } from "ethers";
 import { _CoinFlip_abi } from "../interfaces/CoinFlip_Interface";
-import Messages from "../Components/Messages";
 import Footer from "../Components/Footer";
 import { FaEthereum } from "react-icons/fa";
 import {

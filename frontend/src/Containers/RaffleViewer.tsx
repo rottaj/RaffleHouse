@@ -1,17 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { ethers } from "ethers";
 import { _abi } from "../interfaces/Eyescream_Interface";
 import { _Raffle_abi } from "../interfaces/RaffleEscrow_Interface";
 import BaseContainer from "./BaseContainers/BaseContainer";
 import RaffleDeposit from "../Components/DepositRaffle";
 import PlayersList from "../Components/PlayersList";
-import Messages from "../Components/Messages";
 import { getMetaDataSingle } from "../utils/HandleNFTs";
+import { MetaMaskUserContext } from "../utils/contexts";
+import { FaEthereum } from "react-icons/fa";
 import {
   Box,
   Heading,
   Flex,
-  Image
+  Button,
+  Image,
+  Modal,
+  ModalOverlay,
+  ModalBody,
+  ModalContent,
+  ModalCloseButton,
+  useDisclosure
 } from "@chakra-ui/react"
 
 const ETHERSCAN_API_NFT_TXN =
@@ -103,6 +111,11 @@ const RaffleViewer = () => {
   return (
     <BaseContainer>
       <Box>
+        {
+          gameInfo.winner !== "0x0000000000000000000000000000000000000000" &&
+          <DepositModal raffleContractAddress={raffleContractAddress} gameInfo={gameInfo}/>
+        }
+        {/* check for if "Winner not picked" or not? */}
         <Flex
           paddingLeft="3%"
           color="white"
@@ -114,9 +127,9 @@ const RaffleViewer = () => {
         >
           <Heading fontSize="sl">Raffle Winner:</Heading>
           {gameInfo.winner !== "0x0000000000000000000000000000000000000000" ? (
-            <Heading fontSize="sl">{gameInfo.winner}</Heading>
+            <Heading fontSize="sl" id="status">{gameInfo.winner}</Heading>
           ) : (
-            <Heading fontSize="sl">Winner not picked</Heading>
+            <Heading fontSize="sl" id="status">Winner not picked</Heading>
           )}
         </Flex>
         <Flex mx="3%" marginTop="5%">
@@ -137,3 +150,152 @@ const RaffleViewer = () => {
 };
 
 export default RaffleViewer;
+
+type ModalProps = {
+  raffleContractAddress: any
+  gameInfo: any
+}
+
+  const DepositModal = (props: ModalProps) => {
+  const [tokenMetaData, setTokenMetaData]: any = useState({});
+  const [isDepositOpen, setIsDepositOpen]: any = useState(false);
+  const [raffleContractAddress, setRaffleContractAddress]: any = useState("");
+  const {user} = useContext(MetaMaskUserContext)
+  const handleSubmit = async (contractAddress: any) => {
+    if (window.ethereum) {
+      var provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        contractAddress,
+        _Raffle_abi,
+        signer
+      );
+      let depositTxn = await contract.deposit({
+        value: ethers.utils.parseEther(String((parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2))).toString(),
+      });
+      console.log(depositTxn);
+    }
+  };
+
+  const getMetaData = async (token: any) => {
+    console.log(token);
+    if (window.ethereum) {
+      var provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      // var url = ETHERSCAN_API_ABI + token.address + ABI_KEY
+      //var abi = fetch (url) // get verified contract abi
+      // PERFORM FETCH ABI REQUEST ON VERIFIED CONTRACT
+      //console.log(token.contractAddress, address)
+      try {
+        if (
+          String(token.contractAddress) ===
+          "0x8f44a8b9059b2bc914c893eed250a2e1097ee187"
+        ) {
+          // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
+          let contract = new ethers.Contract(
+            token.contractAddress,
+            _abi,
+            signer
+          );
+          console.log(token.contractAddress);
+          let metaData = await contract.tokenURI(parseInt(token.tokenID));
+          fetch(metaData)
+            .then((res) => {
+              return res.json();
+            })
+            .then((data) => {
+              token["image"] = data.image;
+              setTokenMetaData(token);
+            });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  const handleDepositClicked = () => {
+    setIsDepositOpen(!isDepositOpen);
+  };
+
+  // useEffect(() => {
+  //   const contractAddress = window.location.pathname.split("/").at(-1);
+  //   setRaffleContractAddress(contractAddress);
+
+  //   const mountRaffleGameInfo = async () => {
+  //     var accounts = await window.ethereum.send("eth_requestAccounts");
+  //     const account = accounts.result[0];
+  //     setAccount(account);
+  //     var provider = new ethers.providers.Web3Provider(window.ethereum);
+  //     const signer = provider.getSigner();
+  //     let contract = new ethers.Contract(contractAddress, _Raffle_abi, signer);
+  //     const gameInfo = await contract.getGameInfo();
+  //     fetchNFTs(contractAddress); // refactor (can do this later)
+
+  //     setGameInfo(gameInfo);
+  //     const tickets = await contract.getTickets();
+  //     const uniqueAddresses = getUniqueAddresses(tickets);
+  //     getTickets(uniqueAddresses, tickets);
+  //   };
+  //   if (window.ethereum) {
+  //     mountRaffleGameInfo();
+  //   }
+  // }, []);
+
+
+  console.log("FOOBERA", props.gameInfo)
+  console.log(user.toUpperCase(), props.gameInfo.creatorAddress)
+  const {isOpen, onOpen, onClose} = useDisclosure(
+    {defaultIsOpen: props.gameInfo.joineeAddress == "0x0000000000000000000000000000000000000000" && String(user.toUpperCase()) !== String(props.gameInfo.creatorAddress)})
+  return (
+    <Modal 
+      isOpen={isOpen} 
+      onClose={onClose}
+      isCentered
+    >
+      <ModalOverlay
+        textAlign="center"
+      />
+      <ModalContent
+        bgColor="#1c191c"
+        color="white"
+        background="#141414"
+        mx="25%"
+        textAlign="center"
+        alignContent="center"
+      >
+        <ModalBody
+        >
+
+          <Heading>Join Game</Heading>
+          <Box paddingLeft="13%">
+            <Image borderRadius="20px" src={tokenMetaData.image}></Image>
+          </Box>
+            <Flex
+              py="5%"
+              px="22%"
+              pl="150px"
+              margin="0" 
+              height="100%" 
+              justifyContent="center" 
+            >
+              <Heading>*PRICE HERE*</Heading>
+              <Heading pt="1%" pr="25%"><FaEthereum/></Heading>
+            </Flex>
+            <Box>
+              <Image borderRadius="20px" src={tokenMetaData.image}></Image>
+                  <RaffleDeposit
+                  tokenMetaData={tokenMetaData}
+                  isDepositOpen={isDepositOpen}
+                  raffleContractAddress={raffleContractAddress}
+                  />
+            </Box>
+
+          <Button marginTop="10%" variant='ghost' onClick={onClose}>
+            Watch Game
+          </Button>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  )
+}

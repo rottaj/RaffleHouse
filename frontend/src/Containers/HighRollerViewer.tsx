@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import BaseContainer from "./BaseContainers/BaseContainer";
 import HighRollerPot from "../Components/HighRollerPot";
 import PlayersList from "../Components/PlayersList";
-import Messages from "../Components/Messages";
 import { fetchHighRollersPot } from "../utils/HandleNFTs";
 import { _abi } from "../interfaces/Eyescream_Interface";
 import { _HighRoller_abi } from "../interfaces/HighRoller_Interface";
