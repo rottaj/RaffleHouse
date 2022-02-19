@@ -78,17 +78,15 @@ function TokenPrice(props) {
     <Box>
       {isFetching || isRefetching ? (
         <Flex align="center" justify="center">
-          <Text color="white" fontSize="md" mr={1}>
-            Loading
+          <Text color="white" fontSize="md" pr={1}>
+            <Skeleton>0.03 eth</Skeleton>
           </Text>
-          <Skeleton h="80%">0.03 eth</Skeleton>
         </Flex>
       ) : (
-        <Text color="white" fontSize="md">
+        <>
           {data.detail == undefined && (
-            <Flex letterSpacing="1px">
-              {console.log("DATA", data)}
-              <Text>
+            <Flex>
+              <Text color="white">
                 Price: {data["collection"]["stats"]["average_price"].toFixed(2)}
               </Text>
               <Box pt="3px">
@@ -96,7 +94,7 @@ function TokenPrice(props) {
               </Box>
             </Flex>
           )}
-        </Text>
+        </>
       )}
     </Box>
   );
