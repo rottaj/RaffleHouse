@@ -9,7 +9,13 @@ import HighRollerViewer from "./Containers/HighRollerViewer";
 import CoinFlipViewer from "./Containers/CoinFlipViewer";
 import RaffleViewer from "./Containers/RaffleViewer";
 import { MetaMaskUserContext } from "./utils/contexts";
-import { StylesProvider, useToast, useStyles, ChakraProvider, extendTheme,} from "@chakra-ui/react";
+import {
+  StylesProvider,
+  useToast,
+  useStyles,
+  ChakraProvider,
+  extendTheme,
+} from "@chakra-ui/react";
 import { ethers } from "ethers";
 import { useContext } from "react";
 import { MetaMaskDataContext } from "./utils/contexts/UserDataContext";
@@ -25,13 +31,19 @@ function App() {
   const [user, setUser] = useState<string>(null);
   const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
   const [provider, setProvider] = useState<any>(null);
-  const queryClient = new QueryClient()
-  //const { queryClient } = useContext(MetaMaskUserContext);
+  const queryClient = new QueryClient();
 
-  const value = { user, setUser, provider, setProvider, isLoadingUser, setIsLoadingUser, queryClient}; 
+  const value = {
+    user,
+    setUser,
+    provider,
+    setProvider,
+    isLoadingUser,
+    setIsLoadingUser,
+    queryClient,
+  };
 
   const toast = useToast();
-  //const styles = useStyles()
   const checkConnectedUser = async () => {
     const accounts = await window.ethereum.request({
       method: "eth_accounts",
@@ -43,18 +55,14 @@ function App() {
     setIsLoadingUser(false);
   };
 
-  //const { user } = useContext(MetaMaskDataContext);
-
   useEffect(() => {
     if (typeof window.ethereum != undefined) {
       checkConnectedUser();
-      const etherProvider = new ethers.providers.Web3Provider(window.ethereum)
+      const etherProvider = new ethers.providers.Web3Provider(window.ethereum);
       setProvider(etherProvider);
       window.ethereum.on("accountsChanged", (accounts: string[]) => {
         setUser(accounts[0]);
       });
-
-    console.log(user)
     } else {
       toast({
         title: "Metamask is not installed",
@@ -81,34 +89,35 @@ function App() {
   const theme = extendTheme({
     colors: {
       greyIsh: {
-      100: "#696969",
-      900: "#1c191c"
-      }
-    }
-  })
+        100: "#696969",
+        900: "#1c191c",
+      },
+    },
+  });
 
   return (
-    <QueryClientProvider client={queryClient}> 
-    {/*<StylesProvider value={styles}> */}
-    <MetaMaskUserContext.Provider value={value}>  
-    <ChakraProvider theme={theme}>
-      <BrowserRouter>
-        <Route exact path="/" component={Home} />
-        <Route exact path="/raffles" component={Raffles} />
-        <Route exact path="/coin-flips" component={CoinFlips} />
-        <Route exact path="/high-rollers" component={HighRollers} />
-        <Route exact path="/host" component={Host} />
-        <Route path="/raffle/:contractAddress" component={RaffleViewer} />
-        <Route path="/coin-flip/:contractAddress" component={CoinFlipViewer} />
-        <Route
-          path="/high-roller/:contractAddress"
-          component={HighRollerViewer}
-        /> 
-      </BrowserRouter>
-    </ChakraProvider>
-    </MetaMaskUserContext.Provider> 
-    {/*</StylesProvider> */}
-  </QueryClientProvider> 
+    <QueryClientProvider client={queryClient}>
+      <MetaMaskUserContext.Provider value={value}>
+        <ChakraProvider theme={theme}>
+          <BrowserRouter>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/raffles" component={Raffles} />
+            <Route exact path="/coin-flips" component={CoinFlips} />
+            <Route exact path="/high-rollers" component={HighRollers} />
+            <Route exact path="/host" component={Host} />
+            <Route path="/raffle/:contractAddress" component={RaffleViewer} />
+            <Route
+              path="/coin-flip/:contractAddress"
+              component={CoinFlipViewer}
+            />
+            <Route
+              path="/high-roller/:contractAddress"
+              component={HighRollerViewer}
+            />
+          </BrowserRouter>
+        </ChakraProvider>
+      </MetaMaskUserContext.Provider>
+    </QueryClientProvider>
   );
 }
 
