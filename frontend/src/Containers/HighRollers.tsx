@@ -130,9 +130,6 @@ const HighRollers = () => {
 
   const getGameData = async () => {
     // game data arrays
-    const tempGameTokens = [];
-    const tempUserTokens = [];
-    const tempPlayers = [];
 
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
@@ -152,10 +149,7 @@ const HighRollers = () => {
 
     const userToks = await fetchNFTs(account);
 
-    tempUserTokens.push(userToks);
-    await fetchNFTs(currentGameInstance.contractAddress).then((data) => {
-      tempGameTokens.push(data);
-    }); // FETCHES GAME TOKENS
+    const gameToks = await fetchNFTs(currentGameInstance.contractAddress); // FETCHES GAME TOKENS
     const currentHighRollerContract = new ethers.Contract(
       currentGameInstance.contractAddress,
       _HighRoller_abi,
@@ -164,13 +158,12 @@ const HighRollers = () => {
     const tickets = await currentHighRollerContract.getTickets();
     const uniqueAddresses = await getUniqueAddresses(tickets);
     const players = await getTickets(uniqueAddresses, tickets);
-    tempPlayers.push(players);
 
     return {
       currentGame: currentGameInstance,
-      gameTokens: tempGameTokens,
-      userTokens: tempUserTokens,
-      players: tempPlayers,
+      gameTokens: gameToks,
+      userTokens: userToks,
+      players: players,
     };
   };
 
@@ -197,7 +190,6 @@ const HighRollers = () => {
           </Heading>
         </Flex>
 
-        {/* {!isLoading && isSuccess && ( */}
         <>
           {isLoading || !isSuccess ? (
             <Flex flexDir="column" align="center">
@@ -254,7 +246,7 @@ const HighRollers = () => {
               bgColor="#c1121f"
               borderWidth="2px"
             >
-              <HighRollersPot tokens={data?.gameTokens[0] || []} />
+              <HighRollersPot tokens={data?.gameTokens || []} />
             </Box>
           </Flex>
 
@@ -269,17 +261,16 @@ const HighRollers = () => {
 
           <Box px="120px">
             <NFTSelector
-              tokens={data?.userTokens[0] || []}
+              tokens={data?.userTokens || []}
               handleDeposit={handleDeposit}
               game={"highrollers"}
             />
           </Box>
 
-          <PlayerList players={data?.players[0] || []} />
+          <PlayerList players={data?.players || []} />
 
           <PastHighRollerGames />
         </>
-        {/* )} */}
       </Box>
     </BaseContainer>
   );
