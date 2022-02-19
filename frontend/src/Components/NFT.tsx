@@ -58,6 +58,7 @@ function TokenPrice(props) {
   } = useQuery(`${props.token.tokenName}_${props.token.tokenID}`, () => fetchPrice(), { 
       keepPreviousData : true,
       retry:5,
+      staleTime: Infinity,
       onSuccess: data => {
         if (data.detail == "Request was throttled. Expected available in 1 second.") {
           invalidQueries()

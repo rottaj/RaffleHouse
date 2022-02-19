@@ -181,7 +181,7 @@ const HighRollers = () => {
   return (
     <BaseContainer>
       <Box mt={6} textAlign="center">
-          <Flex position="relative" left={620}>
+          <Flex width="100%" justify="center">
               <Heading
                 color="white"
                 fontSize="40px"

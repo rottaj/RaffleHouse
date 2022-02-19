@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Box, Button, Center, Flex, Spinner } from "@chakra-ui/react";
 import NavBar from "../../Components/Nav/NavBar";
+import SideBarWithHeader from "../../Components/Nav/SideBar";
 import "./BaseContainer";
 import { MetaMaskUserContext } from "../../utils/contexts";
 import "../../styles/Home/Home.scss";
@@ -61,7 +62,8 @@ const BaseContainer = ({
       ) : (
         <Box bgColor="#141114">
           {showMessages && <DrawerComponent />}
-          <NavBar />
+          <NavBar /> 
+          {/* <SideBarWithHeader />  */}
           <Box
             minH="100vh"
             maxW="1440px"

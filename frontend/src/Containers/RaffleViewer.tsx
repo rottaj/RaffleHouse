@@ -90,12 +90,14 @@ const RaffleViewer = () => {
       var provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       let contract = new ethers.Contract(contractAddress, _Raffle_abi, signer);
-      const gameInfo = await contract.getGameInfo();
-      console.log("gameInfo", gameInfo)
-      getMetaDataSingle(gameInfo).then((data) => {
-        console.log("data", data)
-        setImageSrc(data.image);
-      })
+      await contract.getGameInfo().then((token) => {
+      console.log("gameInfo", token)
+        getMetaDataSingle(token).then((bitch) => {
+          console.log("dataaaaa", bitch)
+          setImageSrc(bitch.image);
+        })
+      });
+
 
       setGameInfo(gameInfo);
       const tickets = await contract.getTickets();
@@ -177,70 +179,10 @@ type ModalProps = {
     }
   };
 
-  const getMetaData = async (token: any) => {
-    console.log(token);
-    if (window.ethereum) {
-      var provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      // var url = ETHERSCAN_API_ABI + token.address + ABI_KEY
-      //var abi = fetch (url) // get verified contract abi
-      // PERFORM FETCH ABI REQUEST ON VERIFIED CONTRACT
-      //console.log(token.contractAddress, address)
-      try {
-        if (
-          String(token.contractAddress) ===
-          "0x8f44a8b9059b2bc914c893eed250a2e1097ee187"
-        ) {
-          // THIS IS EYESCREAM ADDRESS (UPDATE THIS !!!)
-          let contract = new ethers.Contract(
-            token.contractAddress,
-            _abi,
-            signer
-          );
-          console.log(token.contractAddress);
-          let metaData = await contract.tokenURI(parseInt(token.tokenID));
-          fetch(metaData)
-            .then((res) => {
-              return res.json();
-            })
-            .then((data) => {
-              token["image"] = data.image;
-              setTokenMetaData(token);
-            });
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  };
 
   const handleDepositClicked = () => {
     setIsDepositOpen(!isDepositOpen);
   };
-
-  // useEffect(() => {
-  //   const contractAddress = window.location.pathname.split("/").at(-1);
-  //   setRaffleContractAddress(contractAddress);
-
-  //   const mountRaffleGameInfo = async () => {
-  //     var accounts = await window.ethereum.send("eth_requestAccounts");
-  //     const account = accounts.result[0];
-  //     setAccount(account);
-  //     var provider = new ethers.providers.Web3Provider(window.ethereum);
-  //     const signer = provider.getSigner();
-  //     let contract = new ethers.Contract(contractAddress, _Raffle_abi, signer);
-  //     const gameInfo = await contract.getGameInfo();
-  //     fetchNFTs(contractAddress); // refactor (can do this later)
-
-  //     setGameInfo(gameInfo);
-  //     const tickets = await contract.getTickets();
-  //     const uniqueAddresses = getUniqueAddresses(tickets);
-  //     getTickets(uniqueAddresses, tickets);
-  //   };
-  //   if (window.ethereum) {
-  //     mountRaffleGameInfo();
-  //   }
-  // }, []);
 
 
   console.log("FOOBERA", props.gameInfo)
