@@ -54,7 +54,7 @@ const HighRollers = () => {
           tokenURI: selectedToken.image,
         }), // CREATE REQUEST BODY ( WILL ADD CONTRACT ADDRESS + TOKEN ID FOR BACKEND AUTH)
       };
-      fetch(
+      await fetch(
         "http://127.0.0.1:8080/submit-tickets-high-rollers",
         requestParameters
       )
