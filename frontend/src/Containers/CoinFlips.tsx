@@ -281,6 +281,7 @@ const CreateGameModal = (props: ModalProps) => {
         };
         await fetch(
           "https://rafflehouse.uk.r.appspot.com/fundGame",
+          //"http://127.0.0.1:8080/fundGame",
           requestParameters
         )
       });
