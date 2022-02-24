@@ -9,7 +9,7 @@ const HighRoller_Interface = require("./interfaces/HighRoller_Interface");
 const request = require('request');
 const cors = require('cors');
 var bodyParser = require('body-parser')
-var app = require('express')();
+var app = require('./express')();
 var http = require('http').createServer(app);
 require('dotenv').config();
 app.use(cors());
