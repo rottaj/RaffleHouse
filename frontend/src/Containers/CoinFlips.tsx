@@ -40,9 +40,17 @@ import { FaEthereum } from "react-icons/fa";
 import {
   createCoinFlipGame,
   sendTransactionToCoinFlips,
-  addCoinFlipToGames,
 } from "../utils/CreateCoinFlipGame";
 import { MetaMaskUserContext } from "../utils/contexts";
+import { db } from "../firebase-config";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 //import { MetaMaskDataContext} from "../utils/contexts/UserDataContext";
 
 declare let window: any;
@@ -50,6 +58,7 @@ const CoinFlips = () => {
   const [currentCoinFlips, setCurrentCoinFlips]: any = useState([]);
   const [pastCoinFlips, setPastCoinFlips]: any = useState([]);
 
+  const coinflipsCollectionRef = collection(db, "coinflips");      
   useEffect(() => {
     document.title = "Coin Flips - Raffle House";
     if (window.ethereum) {
@@ -58,50 +67,17 @@ const CoinFlips = () => {
   }, []);
 
   const getCoinFlips = async () => {
-    // const tempPastCoinFlips = [];
-    // const tempCurrentCoinFlips = [];
     if (window.ethereum) {
-      //const signer = provider.getSigner();
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const coinFlipContract = new ethers.Contract(
-        CoinFlipAddress,
-        _CoinFlips_abi,
-        provider
-      );
-      let coinFlipLength = await coinFlipContract.getCoinFlips();
-      for (let i = 0; i <= coinFlipLength - 1; i++) {
-        var tempCoinFlip: any = {};
-        var coinFlip = await coinFlipContract.getCoinFlipByIndex(i);
-        const coinFlipInstance = await new ethers.Contract(
-          coinFlip.contractAddress,
-          _CoinFlip_abi,
-          provider
-        );
-        const gameInfo = await coinFlipInstance.getGameInfo();
-        tempCoinFlip["contractAddress"] = coinFlip["contractAddress"];
-        tempCoinFlip["buyInPrice"] = (
-          parseInt(gameInfo["buyInPrice"]) *
-          0.1 ** 18
-        ).toFixed(2);
-        tempCoinFlip["creatorAddress"] = gameInfo["creatorAddress"];
-        tempCoinFlip["joineeAddress"] = gameInfo["joineeAddress"];
-        tempCoinFlip["winner"] = gameInfo["winner"];
-        if (gameInfo.winner !== "0x0000000000000000000000000000000000000000") {
-          setPastCoinFlips((pastCoinFlips: any) => [
-            ...pastCoinFlips,
-            tempCoinFlip,
-          ]);
-          // tempPastCoinFlips.push(tempCoinFlip);
-        } else {
-          setCurrentCoinFlips((currentCoinFlips: any) => [
-            ...currentCoinFlips,
-            tempCoinFlip,
-          ]);
-          // tempCurrentCoinFlips.push(tempCoinFlip);
+      const data = await getDocs(coinflipsCollectionRef);
+      console.log("DATA", data.docs)
+      data.docs.map((doc) => {
+        if (doc.data().winner != "0") {
+          setPastCoinFlips((pastCoinFlips) => [...pastCoinFlips, doc.data()])
+        } 
+        else {
+          setCurrentCoinFlips((currentCoinFlips) => [...currentCoinFlips, doc.data()])
         }
-      }
-      // setPastCoinFlips(tempPastCoinFlips);
-      // setCurrentCoinFlips(tempCurrentCoinFlips);
+      })
     }
   };
 
@@ -278,6 +254,7 @@ const CreateGameModal = (props: ModalProps) => {
   const [txnNumber, setTxnNumber] = useState(0);
   const [isCreated, setCreated] = useState(false);
   const [contract, setContract]: any = useState();
+  const coinflipsCollectionRef = collection(db, "coinflips");      
 
   const handleSubmit = () => {
     console.log(parseFloat(sliderValue));
@@ -287,12 +264,25 @@ const CreateGameModal = (props: ModalProps) => {
     createCoinFlipGame(parseFloat(sliderValue)).then((contract) => {
       setContract(contract);
       setTxnNumber(2);
-      sendTransactionToCoinFlips(contract, parseFloat(sliderValue)).then(() => {
+      sendTransactionToCoinFlips(contract, parseFloat(sliderValue)).then(async () => {
         setTxnNumber(3);
-        addCoinFlipToGames(contract, parseFloat(sliderValue)).then(() => {
-          //setLoading(false);
-          setCreated(true);
+        await addDoc(coinflipsCollectionRef, {
+          creatorAddress: account, 
+          contractAddress: contract.address,
+          buyInPrice: parseFloat(sliderValue),
+          winner: "0",
         });
+        const requestParameters = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contractAddress: contract.address
+          }), // CREATE REQUEST BODY 
+        };
+        await fetch(
+          "https://rafflehouse.uk.r.appspot.com/fundGame",
+          requestParameters
+        )
       });
     });
   };
