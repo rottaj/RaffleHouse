@@ -40,7 +40,6 @@ import { FaEthereum } from "react-icons/fa";
 import {
   createCoinFlipGame,
   sendTransactionToCoinFlips,
-  addCoinFlipToGamesFirebase,
 } from "../utils/CreateCoinFlipGame";
 import { MetaMaskUserContext } from "../utils/contexts";
 import { db } from "../firebase-config";
@@ -273,6 +272,17 @@ const CreateGameModal = (props: ModalProps) => {
           buyInPrice: parseFloat(sliderValue),
           winner: "0",
         });
+        const requestParameters = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contractAddress: contract.address
+          }), // CREATE REQUEST BODY 
+        };
+        await fetch(
+          "https://rafflehouse.uk.r.appspot.com/fundGame",
+          requestParameters
+        )
       });
     });
   };
