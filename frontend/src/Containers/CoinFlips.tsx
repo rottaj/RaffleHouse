@@ -1,6 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 import { Redirect, Link, useHistory } from "react-router-dom";
 import { ethers } from "ethers";
+import CoinBull from "../images/coinBull.png";
+import CoinBear from "../images/coinBear.png";
 import {
   CoinFlipAddress,
   _CoinFlips_abi,
@@ -15,6 +17,7 @@ import {
   Box,
   Flex,
   Text,
+  Image,
   Heading,
   Button,
   Modal,
@@ -29,20 +32,25 @@ import {
   Tooltip,
   SliderThumb,
   Spinner,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
+  Grid,
+  GridItem
+
 } from "@chakra-ui/react";
 import { FaEthereum } from "react-icons/fa";
 import {
   createCoinFlipGame,
   sendTransactionToCoinFlips,
-  addCoinFlipToGames,
 } from "../utils/CreateCoinFlipGame";
 import { MetaMaskUserContext } from "../utils/contexts";
+import { db } from "../firebase-config";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 //import { MetaMaskDataContext} from "../utils/contexts/UserDataContext";
 
 declare let window: any;
@@ -50,6 +58,7 @@ const CoinFlips = () => {
   const [currentCoinFlips, setCurrentCoinFlips]: any = useState([]);
   const [pastCoinFlips, setPastCoinFlips]: any = useState([]);
 
+  const coinflipsCollectionRef = collection(db, "coinflips");      
   useEffect(() => {
     document.title = "Coin Flips - Raffle House";
     if (window.ethereum) {
@@ -58,50 +67,17 @@ const CoinFlips = () => {
   }, []);
 
   const getCoinFlips = async () => {
-    // const tempPastCoinFlips = [];
-    // const tempCurrentCoinFlips = [];
     if (window.ethereum) {
-      //const signer = provider.getSigner();
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const coinFlipContract = new ethers.Contract(
-        CoinFlipAddress,
-        _CoinFlips_abi,
-        provider
-      );
-      let coinFlipLength = await coinFlipContract.getCoinFlips();
-      for (let i = 0; i <= coinFlipLength - 1; i++) {
-        var tempCoinFlip: any = {};
-        var coinFlip = await coinFlipContract.getCoinFlipByIndex(i);
-        const coinFlipInstance = await new ethers.Contract(
-          coinFlip.contractAddress,
-          _CoinFlip_abi,
-          provider
-        );
-        const gameInfo = await coinFlipInstance.getGameInfo();
-        tempCoinFlip["contractAddress"] = coinFlip["contractAddress"];
-        tempCoinFlip["buyInPrice"] = (
-          parseInt(gameInfo["buyInPrice"]) *
-          0.1 ** 18
-        ).toFixed(2);
-        tempCoinFlip["creatorAddress"] = gameInfo["creatorAddress"];
-        tempCoinFlip["joineeAddress"] = gameInfo["joineeAddress"];
-        tempCoinFlip["winner"] = gameInfo["winner"];
-        if (gameInfo.winner !== "0x0000000000000000000000000000000000000000") {
-          setPastCoinFlips((pastCoinFlips: any) => [
-            ...pastCoinFlips,
-            tempCoinFlip,
-          ]);
-          // tempPastCoinFlips.push(tempCoinFlip);
-        } else {
-          setCurrentCoinFlips((currentCoinFlips: any) => [
-            ...currentCoinFlips,
-            tempCoinFlip,
-          ]);
-          // tempCurrentCoinFlips.push(tempCoinFlip);
+      const data = await getDocs(coinflipsCollectionRef);
+      console.log("DATA", data.docs)
+      data.docs.map((doc) => {
+        if (doc.data().winner != "0") {
+          setPastCoinFlips((pastCoinFlips) => [...pastCoinFlips, doc.data()])
+        } 
+        else {
+          setCurrentCoinFlips((currentCoinFlips) => [...currentCoinFlips, doc.data()])
         }
-      }
-      // setPastCoinFlips(tempPastCoinFlips);
-      // setCurrentCoinFlips(tempCurrentCoinFlips);
+      })
     }
   };
 
@@ -137,20 +113,16 @@ const CoinFlips = () => {
               </Box>
             </Flex>
           </Box>
-          <Table color="white">
-            <Thead w="100%">
-              <Tr>
-                <Th>Creator</Th>
-                <Th>Status</Th>
-                <Th>Buy In</Th>
-              </Tr>
-            </Thead>
-            <Tbody w="100%">
-              {currentCoinFlips.map((coinFlip: any) => {
-                return <CoinFlip coinFlip={coinFlip}></CoinFlip>;
-              })}
-            </Tbody>
-          </Table>
+          <Grid 
+            color="white"
+            templateColumns='repeat(2, 1fr)' 
+            gap={2}
+          >
+            {currentCoinFlips.map((coinFlip: any) => {
+              return (<GridItem><CoinFlip coinFlip={coinFlip}></CoinFlip></GridItem>)
+            })}
+          </Grid>
+
         </Box>
         <Box py="5%" height="100%" justifyContent="center">
           <Box alignItems="center" borderBottom="4px dotted green">
@@ -173,20 +145,15 @@ const CoinFlips = () => {
               </Heading>
             </Flex>
           </Box>
-          <Table color="white">
-            <Thead width="100%">
-              <Tr>
-                <Th>Creator</Th>
-                <Th pl="10%">Winner</Th>
-                <Th>Buy In</Th>
-              </Tr>
-            </Thead>
-            <Tbody w="100%">
-              {pastCoinFlips.map((coinFlip: any) => {
-                return <CoinFlip coinFlip={coinFlip}></CoinFlip>;
-              })}
-            </Tbody>
-          </Table>
+          <Grid 
+            color="white"
+            templateColumns='repeat(2, 1fr)' 
+            gap={2}
+          >
+            {pastCoinFlips.map((coinFlip: any) => {
+              return (<GridItem><CoinFlip coinFlip={coinFlip}></CoinFlip></GridItem>)
+            })}
+          </Grid>
         </Box>
       </Box>
     </BaseContainer>
@@ -201,62 +168,74 @@ interface Props {
 const CoinFlip = (props: Props) => {
   const history = useHistory();
   return (
-    <Tr
+    <Box 
+      py="0.5%"
+      px="0.5%"
+      borderRadius="20px"
       fontSize="13px"
-      width="100%"
+      minWidth="300px"
+      border="1px solid white"
       cursor="pointer"
       _hover={{ bgColor: "green" }}
       onClick={() =>
         history.push(`coin-flip/${props.coinFlip["contractAddress"]}`)
       }
     >
-      {props.coinFlip.winner !==
-      "0x0000000000000000000000000000000000000000" ? (
+      <Flex>
         <>
-          <Td>{props.coinFlip.creatorAddress.split(20)}</Td>
-          <Td>{props.coinFlip.winner.split(20)}</Td>
-          <Td>
-            <Flex>
-              {props.coinFlip.buyInPrice}
-              <Box pl="3px" pt="3px">
-                <FaEthereum />
+          <Box minHeight="100px" width="50%" border="1px solid white" borderRadius="20px" textAlign="center">
+            <Box pt="10%"pl="15%">
+              <Image src={CoinBull}></Image>
+            </Box>
+            <Heading fontSize="20px">{props.coinFlip.creatorAddress.substr(0, 10)}...</Heading>
+
+            <Box pl="70px" pt="40px" minHeight="100px" width="100%" justifyContent="center" margin="0" fontSize="30px">
+              <Flex margin="0">
+                {props.coinFlip.buyInPrice}
+                <Box pl="3px" pt="3px">
+                  <FaEthereum />
+                </Box>
+              </Flex>
+            </Box>
+
+          </Box>
+
+          <Box bgColor="white" height="40px" width="40px" mt="130px" mx="1%" textAlign="center" lineHeight="20px">
+            <Heading color="black" fontSize="10px">VS</Heading>
+       
+          </Box>
+
+          <Box width="50%" border="1px solid white" borderRadius="20px" textAlign="center">
+            <Box pt="10%"pl="15%">
+              <Image src={CoinBear}></Image>
+            </Box>
+            {props.coinFlip.joineeAddress !==
+            "0x0000000000000000000000000000000000000000" ? 
+              <Box>
+                <Heading fontSize="20px">{props.coinFlip.winner.substr(0, 10)}...</Heading>
+
+              <Box pl="70px" pt="40px" minHeight="100px" width="100%" justifyContent="center" margin="0" fontSize="30px">
+                  <Flex>
+                    {props.coinFlip.buyInPrice}
+                    <Box pl="3px" pt="3px">
+                      <FaEthereum />
+                    </Box>
+                  </Flex>
+                </Box>
+
               </Box>
-            </Flex>
-          </Td>
+            :
+
+              <Heading color="green"fontSize="20px">Joinable</Heading>
+            }
+          </Box>
+
         </>
-      ) : (
-        <>
-          {props.coinFlip.joineeAddress !==
-          "0x0000000000000000000000000000000000000000" ? (
-            <>
-              <Td>{props.coinFlip.creatorAddress.split(20)}</Td>
-              <Td>In Progress</Td>
-              <Td>
-                <Flex>
-                  {props.coinFlip.buyInPrice}{" "}
-                  <Box pl="3px" pt="3px">
-                    <FaEthereum />
-                  </Box>
-                </Flex>
-              </Td>
-            </>
-          ) : (
-            <>
-              <Td>{props.coinFlip.creatorAddress.split(20)}</Td>
-              <Td color="green">Joinable</Td>
-              <Td>
-                <Flex>
-                  {props.coinFlip.buyInPrice}{" "}
-                  <Box pl="3px" pt="3px">
-                    <FaEthereum />
-                  </Box>
-                </Flex>
-              </Td>
-            </>
-          )}
-        </>
-      )}
-    </Tr>
+          
+      </Flex>
+
+
+  </Box>
   );
 };
 
@@ -275,6 +254,7 @@ const CreateGameModal = (props: ModalProps) => {
   const [txnNumber, setTxnNumber] = useState(0);
   const [isCreated, setCreated] = useState(false);
   const [contract, setContract]: any = useState();
+  const coinflipsCollectionRef = collection(db, "coinflips");      
 
   const handleSubmit = () => {
     console.log(parseFloat(sliderValue));
@@ -284,12 +264,26 @@ const CreateGameModal = (props: ModalProps) => {
     createCoinFlipGame(parseFloat(sliderValue)).then((contract) => {
       setContract(contract);
       setTxnNumber(2);
-      sendTransactionToCoinFlips(contract, parseFloat(sliderValue)).then(() => {
+      sendTransactionToCoinFlips(contract, parseFloat(sliderValue)).then(async () => {
         setTxnNumber(3);
-        addCoinFlipToGames(contract, parseFloat(sliderValue)).then(() => {
-          //setLoading(false);
-          setCreated(true);
+        await addDoc(coinflipsCollectionRef, {
+          creatorAddress: account, 
+          contractAddress: contract.address,
+          buyInPrice: parseFloat(sliderValue),
+          winner: "0",
         });
+        const requestParameters = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contractAddress: contract.address
+          }), // CREATE REQUEST BODY 
+        };
+        await fetch(
+          "https://rafflehouse.uk.r.appspot.com/fundGame",
+          //"http://127.0.0.1:8080/fundGame",
+          requestParameters
+        )
       });
     });
   };

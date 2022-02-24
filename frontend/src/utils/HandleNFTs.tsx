@@ -39,7 +39,7 @@ export const fetchNFTs = async (address: string) => {
     address +
     "&startblock=0&endblock=999999999&sort=asc&apikey=" +
     ETHERSCAN_API_KEY;
-  var tokens: Token[] = [];
+  const tokens: Token[] = [];
   await fetch(url)
     .then((res) => {
       return res.json();
@@ -137,26 +137,26 @@ export const fetchHighRollersPot = async (address: string) => {
 export const getMetaDataSingle = async (token: any) => {
   var provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
-    if (token) {
-      const contract = new ethers.Contract(
-        token.collectionAddress,
-        _abi,
-        provider
-      );
-      const metaData = await contract.tokenURI(parseInt(token.tokenID));
-      await fetch(metaData)
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          if (data.image.startsWith("ipfs://")) {
-            token["image"] = "https://ipfs.io/ipfs" + data.image.slice(6);
-            console.log(token["image"]);
-          } else {
-            token["image"] = data.image;
-          }
-        })
-        .catch((err) => console.log(err));
-    }
+  if (token) {
+    const contract = new ethers.Contract(
+      token.collectionAddress,
+      _abi,
+      provider
+    );
+    const metaData = await contract.tokenURI(parseInt(token.tokenID));
+    await fetch(metaData)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        if (data.image.startsWith("ipfs://")) {
+          token["image"] = "https://ipfs.io/ipfs" + data.image.slice(6);
+          console.log(token["image"]);
+        } else {
+          token["image"] = data.image;
+        }
+      })
+      .catch((err) => console.log(err));
+  }
   return token;
 };

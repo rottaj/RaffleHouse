@@ -1,8 +1,5 @@
-import { useContext } from 'react';
 import NFT from "../Components/NFT";
-import { Box, propNames, SimpleGrid, Text } from "@chakra-ui/react";
-import { QueryClientProvider } from "react-query";
-import { MetaMaskUserContext } from "../utils/contexts";
+import { Box, SimpleGrid, Text } from "@chakra-ui/react";
 
 type NftSelectorProps = {
   tokens: Array<any>;
@@ -11,9 +8,6 @@ type NftSelectorProps = {
 };
 
 const NFTSelector = ({ tokens, handleDeposit, game }: NftSelectorProps) => {
-
-  const {queryClient} = useContext(MetaMaskUserContext)
-
   return (
     <Box>
       <Text color="white" fontSize="22px">
@@ -25,12 +19,10 @@ const NFTSelector = ({ tokens, handleDeposit, game }: NftSelectorProps) => {
       <SimpleGrid minChildWidth="100px" spacing="40px" px="60px">
         {tokens.map((token, index) => (
           <Box key={index}>
-              {console.log(token)}
-              <NFT token={token} handleDeposit={handleDeposit} game={game}/>
+            <NFT token={token} handleDeposit={handleDeposit} game={game} />
           </Box>
         ))}
       </SimpleGrid>
-
     </Box>
   );
 };

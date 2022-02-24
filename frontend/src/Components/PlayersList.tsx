@@ -37,7 +37,14 @@ const PlayersList = (props: PropsPlayersList) => {
           >
             <Th>Player</Th>
             <Th>Tickets</Th>
-            <Th><Flex><Text pr="3px">Total</Text><Text pt="1px"><FaEthereum/></Text></Flex></Th>
+            <Th>
+              <Flex>
+                <Text pr="3px">Total</Text>
+                <Text pt="1px">
+                  <FaEthereum />
+                </Text>
+              </Flex>
+            </Th>
             <Th>Chance</Th>
           </Tr>
         </Thead>

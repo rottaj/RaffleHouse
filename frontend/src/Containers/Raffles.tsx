@@ -16,7 +16,7 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import {CheckIcon} from "@chakra-ui/icons"
-import { FaEthereum } from "react-icons/fa"
+import { FaEthereum, FaWpbeginner } from "react-icons/fa"
 
 declare let window: any;
 const Raffles = () => {
@@ -162,6 +162,7 @@ interface Props {
 const Raffle = (props: Props) => {
 
   const [imageSrc, setImageSrc] = useState('')
+  const [isMouseOver, setIsMouseOver] = useState(false)
 
   useEffect(() => {
     getMetaDataSingle(props.token).then((data) => {
@@ -171,37 +172,62 @@ const Raffle = (props: Props) => {
   }, [])
 
   return (
-    <Box
+    <Box 
+      onMouseOver={() => setIsMouseOver(true)}
+      onMouseLeave={() => setIsMouseOver(false)}
       height="100%"
       width="100%"
       margin="3%" 
       textAlign="center"
     >
+      {isMouseOver == false ? 
       <Image 
         height="200px"
         width="200px"
-        borderRadius="30px"
+        borderRadius="10px"
         src={imageSrc} // ADD TOKEN IMAGE BITACH
       ></Image>
+      :
       <Box 
         alignItems="center"
         color="white"
+        minHeight="200px"
+        minWidth="200px"
       >
+        <Image 
+          position="absolute"
+          height="200px"
+          width="200px"
+          borderRadius="30px"
+          opacity="30%"
+          src={imageSrc} // ADD TOKEN IMAGE BITACH
+        ></Image>
+
         <Flex pl="16px">
           <Heading 
             fontSize="20px"
+            pt="10px"
+            opacity="100%"
           >
             {props.token.collectionName}
           </Heading>
-          <h3> #</h3>
-          <h3>{props.token.tokenID}</h3>
+
+            <Heading opacity="100%" pt="20px" pl="5px" fontSize="33px">#{props.token.tokenID}</Heading>
+
           <CheckIcon color="#00acee" marginLeft="20px"></CheckIcon>
         </Flex>
-        <Flex pl="19px">
-          <Heading fontSize="md">BUY IN: {props.token.buyInPrice} eth</Heading>
-          <FaEthereum/>
+          {props.token.winner != "0x0000000000000000000000000000000000000000" ?
+            <Heading opacity="100%"pt="30px" fontSize="20px" color="green">{props.token.winner.split(0, 20)}</Heading>
+          :
+            <Heading opacity="100%" pt="30px" fontSize="20px" color="green">Join Raffle!</Heading>
+          }
+        <Flex pl="30%" pt="18%" opacity="100%">
+          <Heading fontSize="40px">{props.token.buyInPrice}</Heading>
+          <FaEthereum size={50}/>
         </Flex>
       </Box>
+      }
+
     </Box>
   );
 };
