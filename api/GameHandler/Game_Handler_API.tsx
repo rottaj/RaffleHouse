@@ -3,7 +3,7 @@ var bodyParser = require('body-parser')
 var app = require('express')();
 const cors = require('cors');
 var http = require('http').createServer(app);
-const LinkInterface = require('../interfaces/ChainLink_Interface')
+const LinkInterface = require('./ChainLink_Interface')
 require('dotenv').config();
 app.use(cors())
 app.use(bodyParser.urlencoded());
@@ -15,7 +15,7 @@ const abi = JSON.parse(LinkInterface._abi_two.result);
 const ChainLinkContract = new ethers.Contract(LinkInterface.linkAddress, abi, signer); // add this later ?
 
 app.post('/fundGame', async (req, res) => {
-    console.log(req.body)
+    console.log("Request Body", req.body)
     if (req.body.contractAddress) {
       const chainLinkTxn_FundGame = await ChainLinkContract.transfer(req.body.contractAddress, ethers.utils.parseUnits("0.1"));
       console.log(chainLinkTxn_FundGame)
