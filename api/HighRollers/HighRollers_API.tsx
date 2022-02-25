@@ -4,16 +4,19 @@
 
 
 const ethers = require('ethers');
-const HighRollers_Interface = require("./interfaces/HighRollers_Interface");
-const HighRoller_Interface = require("./interfaces/HighRoller_Interface");
+const HighRollers_Interface = require("./HighRollers_Interface");
+const HighRoller_Interface = require("./HighRoller_Interface");
 const request = require('request');
 const cors = require('cors');
 var bodyParser = require('body-parser')
-var app = require('./express')();
+var app = require('express')();
 var http = require('http').createServer(app);
 require('dotenv').config();
 app.use(cors());
-var jsonParser = bodyParser.json();
+app.use(cors())
+app.use(bodyParser.urlencoded());
+app.use(bodyParser.json());
+
 
 // GLOBAL VARIABLES
 const RINKEBY_URL = process.env.RINKEBY_URL;
@@ -38,7 +41,7 @@ http.listen(8080, () => {
   console.log("Listening on port 8080");
 })
 
-app.post('/submit-tickets-high-rollers', jsonParser, function (req, res) { // Create submit tickets route.
+app.post('/submit-tickets-high-rollers', function (req, res) { // Create submit tickets route.
   console.log("SUBMIT HIGH ROLLERS", req.body);
   submitTickets(req.body.tickets, req.body.playerAddress, req.body.tokenURI); //  need to add authentication to prevent frontend smuggling
   

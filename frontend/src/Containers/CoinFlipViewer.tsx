@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { _CoinFlip_abi } from "../interfaces/CoinFlip_Interface";
 import Footer from "../Components/Footer";
 import { FaEthereum } from "react-icons/fa";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
   Box,
   Flex,
@@ -27,6 +28,9 @@ const CoinFlipViewer = () => {
   const [coinFlipContractAddress, setCoinFlipContractAddress] = useState("");
   const [gameInfo, setGameInfo]: any = useState([]);
   const [account, setAccount] = useState("");
+  const [creatorImage, setCreatorImage] = useState("");
+  const [joineeImage, setJoineeImage] = useState("")
+  const storage = getStorage();
 
   useEffect(() => {
     const mountCoinFlipGame = async () => {
@@ -44,7 +48,11 @@ const CoinFlipViewer = () => {
       );
       console.log(contract);
       const gameData = await contract.getGameInfo();
+
+      const creatorRef = ref(storage, `${gameData.creatorAddress}`);
+      const joineeRef = ref(storage, `${gameData.joineeAddress}`);
       setGameInfo(gameData);
+      setCreatorImage(String(creatorRef))
     };
 
     if (window.ethereum) {

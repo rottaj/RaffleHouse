@@ -8,6 +8,7 @@ import Host from "./Containers/Host";
 import HighRollerViewer from "./Containers/HighRollerViewer";
 import CoinFlipViewer from "./Containers/CoinFlipViewer";
 import RaffleViewer from "./Containers/RaffleViewer";
+import Profile from "./Containers/Profile";
 import { MetaMaskUserContext } from "./utils/contexts";
 import {
   StylesProvider,
@@ -15,12 +16,21 @@ import {
   useStyles,
   ChakraProvider,
   extendTheme,
+  useControllableProp,
 } from "@chakra-ui/react";
 import { ethers } from "ethers";
 import { useContext } from "react";
 import { MetaMaskDataContext } from "./utils/contexts/UserDataContext";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+import { db } from "./firebase-config";
+import {
+  collection,
+  getDoc,
+  setDoc,
+  addDoc,
+  doc,
+} from "firebase/firestore";
 declare global {
   interface Window {
     ethereum: any;
@@ -29,6 +39,7 @@ declare global {
 
 function App() {
   const [user, setUser] = useState<string>(null);
+  const [userProfile, setUserProfile]: any = useState({})
   const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
   const [provider, setProvider] = useState<any>(null);
   const queryClient = new QueryClient();
@@ -36,6 +47,8 @@ function App() {
   const value = {
     user,
     setUser,
+    userProfile,
+    setUserProfile,
     provider,
     setProvider,
     isLoadingUser,
@@ -84,6 +97,7 @@ function App() {
         isClosable: true,
       });
     }
+    fetchUserProfile();
   }, [user]);
 
   const theme = extendTheme({
@@ -95,6 +109,22 @@ function App() {
     },
   });
 
+  const fetchUserProfile = async() => {
+    const docRef = doc(db, "cities", "SF");
+    const docSnap = await getDoc(docRef);
+    if (user) {
+      if (docSnap.exists()) {
+        setUserProfile(docSnap)
+      }
+      else {
+        await setDoc(doc(db, "users", user), {
+          id: user,
+          profileImgRef: null,
+        });
+      }
+    }
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <MetaMaskUserContext.Provider value={value}>
@@ -105,6 +135,7 @@ function App() {
             <Route exact path="/coin-flips" component={CoinFlips} />
             <Route exact path="/high-rollers" component={HighRollers} />
             <Route exact path="/host" component={Host} />
+            <Route exact path="/profile" component={Profile} />
             <Route path="/raffle/:contractAddress" component={RaffleViewer} />
             <Route
               path="/coin-flip/:contractAddress"

@@ -7,7 +7,15 @@ import {
 import { Box, Button, Input, Skeleton, Stack, Text } from "@chakra-ui/react";
 import { useContext } from "react";
 import { MetaMaskUserContext } from "../utils/contexts";
-
+import { db } from "../firebase-config";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 declare let window: any;
 const Messages = () => {
   const [messages, setMessages]: any = useState([]);
@@ -15,26 +23,15 @@ const Messages = () => {
   const [message, setMessage] = useState("");
 
   const { user: myAddress } = useContext(MetaMaskUserContext);
-
+  const messagesCollectionRef = collection(db, "messages");      
   const getMessages = async () => {
     if (window.ethereum) {
-      const tempMessages = [];
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const messagesContract = await new ethers.Contract(
-        MessagesAddress,
-        _Messages_abi,
-        signer
-      );
-      let messagesLength = await messagesContract.getMessages();
-      for (let i = 0; i <= messagesLength - 1; i++) {
-        var message: any = {};
-        var messageInstance = await messagesContract.getMessageByIndex(i);
-        message["messager"] = messageInstance["messager"];
-        message["message"] = messageInstance["message"];
-        tempMessages.push(message);
-      }
-      setMessages(tempMessages);
+
+      const data = await getDocs(messagesCollectionRef);
+      console.log("DATA", data.docs)
+      data.docs.map((doc) => {
+          setMessages((messages) => [...messages, doc.data()])
+      });
       setIsMessagesLoading(false);
     }
   };
@@ -53,7 +50,10 @@ const Messages = () => {
       _Messages_abi,
       signer
     ); // connect to Raffles Contract
-    await messagesContract.createMessage(message);
+    await addDoc(messagesCollectionRef, {
+      messager: myAddress,
+      message: message
+    });
   };
 
   return (
@@ -101,12 +101,16 @@ const Messages = () => {
             return (
               <Box key={index}>
                 <Text fontWeight="bold" fontSize="sm">
-                  {message.messager.toLowerCase() === myAddress
+                  {message.messager && 
+                  <Box>
+                    {message.messager.toLowerCase() === myAddress
                     ? "You" + ": "
                     : message.messager.substring(0, 6) +
                       "..." +
                       message.messager.substring(36, 40) +
                       ": "}
+                  </Box>
+                    }
                 </Text>
                 <Text fontSize="sm">{message.message}</Text>
               </Box>
