@@ -4,4 +4,5 @@ export const AppRoutePaths = {
   CoinFlips: "/coin-flips",
   HighRollers: "/high-rollers",
   Host: "/host",
+  Profile: "/profile",
 };

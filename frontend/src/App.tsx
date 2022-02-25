@@ -8,6 +8,7 @@ import Host from "./Containers/Host";
 import HighRollerViewer from "./Containers/HighRollerViewer";
 import CoinFlipViewer from "./Containers/CoinFlipViewer";
 import RaffleViewer from "./Containers/RaffleViewer";
+import Profile from "./Containers/Profile";
 import { MetaMaskUserContext } from "./utils/contexts";
 import {
   StylesProvider,
@@ -111,14 +112,16 @@ function App() {
   const fetchUserProfile = async() => {
     const docRef = doc(db, "cities", "SF");
     const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      setUserProfile(docSnap)
-    }
-    else {
-      await setDoc(doc(db, "users", user), {
-        id: user,
-        profileImgRef: null,
-      });
+    if (user) {
+      if (docSnap.exists()) {
+        setUserProfile(docSnap)
+      }
+      else {
+        await setDoc(doc(db, "users", user), {
+          id: user,
+          profileImgRef: null,
+        });
+      }
     }
   }
 
@@ -132,6 +135,7 @@ function App() {
             <Route exact path="/coin-flips" component={CoinFlips} />
             <Route exact path="/high-rollers" component={HighRollers} />
             <Route exact path="/host" component={Host} />
+            <Route exact path="/profile" component={Profile} />
             <Route path="/raffle/:contractAddress" component={RaffleViewer} />
             <Route
               path="/coin-flip/:contractAddress"

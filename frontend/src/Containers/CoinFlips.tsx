@@ -13,6 +13,7 @@ import {
 } from "../interfaces/CoinFlip_Interface";
 import Footer from "../Components/Footer";
 import BaseContainer from "./BaseContainers/BaseContainer";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
   Box,
   Flex,
@@ -167,6 +168,58 @@ interface Props {
 
 const CoinFlip = (props: Props) => {
   const history = useHistory();
+  const storage = getStorage();
+  const [creatorImage, setCreatorImage] = useState("");
+  const [joineeImage, setJoineeImage] = useState("")
+
+  useEffect(() => {
+    if (props.coinFlip.creatorAddress) {
+    const joineeRef = ref(storage, `${props.coinFlip.joineeAddress}`);
+    getDownloadURL(ref(storage, `${String(props.coinFlip.creatorAddress)}`))
+    .then((url) => {
+        // `url` is the download URL for 'images/stars.jpg'
+
+        // This can be downloaded directly:
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = 'blob';
+        xhr.onload = (event) => {
+        const blob = xhr.response;
+        };
+        xhr.open('GET', url);
+        xhr.send();
+        console.log("BIIITCH", url)
+        setCreatorImage(url)
+        // Or inserted into an <img> element
+        //const img = document.getElementById('myimg');
+        //img.setAttribute('src', url);
+    })
+    .catch((error) => {
+        // Handle any errors
+    });
+    getDownloadURL(ref(storage, `${String(props.coinFlip.joineeAddress)}`))
+    .then((url) => {
+        // `url` is the download URL for 'images/stars.jpg'
+
+        // This can be downloaded directly:
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = 'blob';
+        xhr.onload = (event) => {
+        const blob = xhr.response;
+        };
+        xhr.open('GET', url);
+        xhr.send();
+        console.log("BIIITCH", url)
+        setJoineeImage(url)
+        // Or inserted into an <img> element
+        //const img = document.getElementById('myimg');
+        //img.setAttribute('src', url);
+    })
+    .catch((error) => {
+        // Handle any errors
+    });
+    }
+
+  })
   return (
     <Box 
       py="0.5%"
@@ -184,9 +237,15 @@ const CoinFlip = (props: Props) => {
       <Flex>
         <>
           <Box minHeight="100px" width="50%" border="1px solid white" borderRadius="20px" textAlign="center">
+            <Flex>
+
             <Box pt="10%"pl="15%">
-              <Image src={CoinBull}></Image>
+              <Image borderRadius="50%"src={String(creatorImage)}></Image>
             </Box>
+            <Box position="absolute" pl="1.9%" pt="0.5%">
+              <Image borderRadius="50%"  maxHeight="60px" maxWidth="60px"src={CoinBull}></Image>
+            </Box>
+            </Flex>
             <Heading fontSize="20px">{props.coinFlip.creatorAddress.substr(0, 10)}...</Heading>
 
             <Box pl="70px" pt="40px" minHeight="100px" width="100%" justifyContent="center" margin="0" fontSize="30px">
@@ -207,7 +266,7 @@ const CoinFlip = (props: Props) => {
 
           <Box width="50%" border="1px solid white" borderRadius="20px" textAlign="center">
             <Box pt="10%"pl="15%">
-              <Image src={CoinBear}></Image>
+              <Image borderRadius="50%" src={String(joineeImage)}></Image>
             </Box>
             {props.coinFlip.joineeAddress !==
             "0x0000000000000000000000000000000000000000" ? 
