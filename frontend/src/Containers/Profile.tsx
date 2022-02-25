@@ -7,8 +7,13 @@ import { useEffect } from "react";
 import { 
     Box,
     Input,
-    Image
+    Image,
+    Heading,
+    Flex,
+    Grid,
+    GridItem
 } from "@chakra-ui/react";
+import { FaEthereum } from "react-icons/fa";
 const Profile = () => {
     const [profileImage, setProfileImage] = useState("");
     const inputFile = useRef(null);
@@ -56,31 +61,44 @@ const Profile = () => {
     return (
         <BaseContainer>
             <Box>
-                Profile Page
-                <Box>
-                <Box 
-                    pt="10%"
-                    pl="15%"
-                    maxHeight="200px"
-                    maxWidth="200px"
-                >
-                    <Image
-                        borderRadius="50%"
-                        minHeight="200px"
-                        minWidth="200px"
-                        src={profileImage}
-                    ></Image>
-                </Box>
+                <Heading color="green">Profile</Heading>
+                    <Box border="1px solid white" py="2%" pl="5%" width="90%">
+                        <Flex>
 
+                            <Box 
+                                pl="1%"
+                                py="1%"
+                                maxHeight="350px"
+                                maxWidth="350px"
+                            >
+                                <Image
+                                    borderRadius="50%"
+                                    src={profileImage}
+                                ></Image>
+                            </Box>
+                            <Grid 
+                                pl="5%"
+                                pt="5%"
+                                color="white"
+                                templateColumns='repeat(2, 1fr)' 
+                                gap={10} 
+                            >
+                                <GridItem><Flex><Heading>Wins: 0</Heading><Box pt="2%"><FaEthereum size={30}/></Box></Flex></GridItem>
+                                <GridItem><Flex><Heading>Deposited: 0</Heading><Box pt="2%"><FaEthereum size={30}/></Box></Flex></GridItem>
+                                <GridItem><Heading>Wallet Value</Heading></GridItem>
+                                <GridItem><Heading>??? 25</Heading></GridItem>
+                            </Grid>
 
-                <Input
-                    ref={inputFile}
-                    onChange={handleFileUpload}
-                    type="file"
-                />
-                <Box className="button" onClick={onButtonClick}>
-                    Upload
-                </Box>
+                        </Flex>
+
+                        <Input
+                            ref={inputFile}
+                            onChange={handleFileUpload}
+                            type="file"
+                        />
+                        <Box className="button" onClick={onButtonClick}>
+                            Upload
+                        </Box>
 
                 </Box>
             </Box>       
