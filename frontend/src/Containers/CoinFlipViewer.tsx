@@ -22,6 +22,13 @@ import BaseContainer from "./BaseContainers/BaseContainer";
 import { isBoxedPrimitive } from "util/types";
 import { ConstructorFragment } from "ethers/lib/utils";
 import { MetaMaskUserContext } from "../utils/contexts";
+import { db } from "../firebase-config";
+import {
+  setDoc,
+  doc,
+  getDoc,
+  updateDoc
+} from "firebase/firestore";
 
 declare let window: any;
 const CoinFlipViewer = () => {
@@ -222,6 +229,10 @@ const DepositModal = (props: ModalProps) => {
         value: ethers.utils.parseEther(String((parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2))).toString(),
       });
       console.log(depositTxn);
+      const washingtonRef = doc(db, "coinflips", contractAddress);
+      await updateDoc(washingtonRef, {
+        joineeAddress: user
+      });
     }
   };
 

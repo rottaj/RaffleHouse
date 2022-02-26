@@ -47,6 +47,7 @@ import { db } from "../firebase-config";
 import {
   collection,
   getDocs,
+  setDoc,
   addDoc,
   updateDoc,
   deleteDoc,
@@ -174,12 +175,8 @@ const CoinFlip = (props: Props) => {
 
   useEffect(() => {
     if (props.coinFlip.creatorAddress) {
-    const joineeRef = ref(storage, `${props.coinFlip.joineeAddress}`);
     getDownloadURL(ref(storage, `${String(props.coinFlip.creatorAddress)}`))
     .then((url) => {
-        // `url` is the download URL for 'images/stars.jpg'
-
-        // This can be downloaded directly:
         const xhr = new XMLHttpRequest();
         xhr.responseType = 'blob';
         xhr.onload = (event) => {
@@ -196,11 +193,9 @@ const CoinFlip = (props: Props) => {
     .catch((error) => {
         // Handle any errors
     });
+    console.log("HELLLLO", props.coinFlip.joineeAddress)
     getDownloadURL(ref(storage, `${String(props.coinFlip.joineeAddress)}`))
     .then((url) => {
-        // `url` is the download URL for 'images/stars.jpg'
-
-        // This can be downloaded directly:
         const xhr = new XMLHttpRequest();
         xhr.responseType = 'blob';
         xhr.onload = (event) => {
@@ -208,7 +203,7 @@ const CoinFlip = (props: Props) => {
         };
         xhr.open('GET', url);
         xhr.send();
-        console.log("BIIITCH", url)
+        console.log("BIIITCHTWOO", url)
         setJoineeImage(url)
         // Or inserted into an <img> element
         //const img = document.getElementById('myimg');
@@ -265,9 +260,14 @@ const CoinFlip = (props: Props) => {
           </Box>
 
           <Box width="50%" border="1px solid white" borderRadius="20px" textAlign="center">
-            <Box pt="10%"pl="15%">
-              <Image borderRadius="50%" src={String(joineeImage)}></Image>
-            </Box>
+            <Flex>
+              <Box pt="10%"pl="15%">
+                <Image borderRadius="50%" src={String(joineeImage)}></Image>
+              </Box>
+              <Box position="absolute" pl="1.9%" pt="0.5%">
+                <Image borderRadius="50%"  maxHeight="60px" maxWidth="60px"src={CoinBear}></Image>
+              </Box>
+            </Flex>
             {props.coinFlip.joineeAddress !==
             "0x0000000000000000000000000000000000000000" ? 
               <Box>
@@ -325,10 +325,11 @@ const CreateGameModal = (props: ModalProps) => {
       setTxnNumber(2);
       sendTransactionToCoinFlips(contract, parseFloat(sliderValue)).then(async () => {
         setTxnNumber(3);
-        await addDoc(coinflipsCollectionRef, {
+        await setDoc(doc(db, "coinflips", contract.address), {
           creatorAddress: account, 
           contractAddress: contract.address,
           buyInPrice: parseFloat(sliderValue),
+          joineeAddress: null,
           winner: "0",
         });
         const requestParameters = {
