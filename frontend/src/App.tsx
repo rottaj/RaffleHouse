@@ -110,9 +110,9 @@ function App() {
   });
 
   const fetchUserProfile = async() => {
-    const docRef = doc(db, "cities", "SF");
-    const docSnap = await getDoc(docRef);
     if (user) {
+    const docRef = doc(db, "users", user);
+    const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         setUserProfile(docSnap)
       }
