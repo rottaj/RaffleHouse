@@ -28,7 +28,7 @@ app.post('/fundGame', async (req, res) => {
 })
 
 
-async function listenForWinner() {
+async function listenForWinner() { // Currently only updates winner --> Need to update User + Site winnings.
   const gamesQuery = firestore.query(coinflipsCollectionRef, firestore.where("winner", "==", "0"));
   const querySnapshot = await firestore.getDocs(gamesQuery);
   querySnapshot.forEach(async (doc) => {
@@ -39,7 +39,12 @@ async function listenForWinner() {
       const coinFlipGameRef = firestore.doc(FirebaseProject.db, "coinflips", doc.data().contractAddress);
       await firestore.updateDoc(coinFlipGameRef, {
         winner: gameInfo.winner
-      });
+      }).then(async () => {
+        const winnerRef = firestore.doc(FirebaseProject.db, "users", gameInfo.winner.toLowerCase());
+        await firestore.updateDoc(winnerRef, {
+          totalWinnings: firestore.increment((parseFloat(gameInfo.buyInPrice) * 2).toFixed(2))
+        });
+    })
     }
   });
 }

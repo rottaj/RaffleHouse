@@ -26,6 +26,7 @@ import { db } from "../firebase-config";
 import {
   setDoc,
   doc,
+  increment,
   getDoc,
   updateDoc
 } from "firebase/firestore";
@@ -232,6 +233,10 @@ const DepositModal = (props: ModalProps) => {
       const coinFlipGameRef = doc(db, "coinflips", contractAddress);
       await updateDoc(coinFlipGameRef, {
         joineeAddress: user
+      });
+      const playerRef =  doc(db, "users", user);
+      await updateDoc(playerRef, {
+        totalDeposited: increment(parseFloat(String((parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2))))
       });
     }
   };
