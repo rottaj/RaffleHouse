@@ -18,9 +18,6 @@ import {
   useDisclosure
 } from "@chakra-ui/react"
 import "../styles/CoinFlips/CoinFlipViewer.scss";
-import BaseContainer from "./BaseContainers/BaseContainer";
-import { isBoxedPrimitive } from "util/types";
-import { ConstructorFragment } from "ethers/lib/utils";
 import { MetaMaskUserContext } from "../utils/contexts";
 import { db } from "../firebase-config";
 import {
