@@ -106,10 +106,13 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
         textAlign="center"
       />
       <ModalContent
-        bgColor="#1c191c"
+        //bgColor="#1c191c"
+        bgColor="black"
+        border="1px solid white"
         color="white"
         background="#141414"
         mx="25%"
+        pb="5%"
         textAlign="center"
         alignContent="center"
       >
@@ -139,6 +142,7 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
                     border="1px solid white"
                     borderRadius="10%"
                   >
+                    <Heading fontSize="lg">Creator</Heading>
                     <Flex pl="10%">
                     <Box pt="10%"pl="15%">
                       <Image maxWidth="200px" maxHeight="200px" borderRadius="50%"src={String(props.creatorImage)}></Image>
@@ -147,7 +151,11 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
                       <Image borderRadius="50%"  maxHeight="60px" maxWidth="60px"src={CoinBull}></Image>
                     </Box>
                     </Flex>
-                    <Heading fontSize="sl">Creator:</Heading>
+                    <Flex my="5%" ml="42%">
+                      <Heading fontSize="25px">{props.gameInfo.buyInPrice}</Heading>
+                      <FaEthereum size={25}/>
+                    </Flex>
+
                     <Heading fontSize="sl">{props.gameInfo.creatorAddress}</Heading>
                   </Box>
                 </Box>
@@ -166,6 +174,7 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
                     border="1px solid white"
                     borderRadius="10%"
                   >
+                    <Heading fontSize="lg">Joinee</Heading>
                     <Flex pl="10%">
                       <Box pt="10%"pl="15%">
                         <Image maxHeight="200px" maxWidth="200px" borderRadius="50%" src={String(props.joineeImage)}></Image>
@@ -174,7 +183,12 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
                         <Image borderRadius="50%"  maxHeight="60px" maxWidth="60px"src={CoinBear}></Image>
                       </Box>
                     </Flex>
-                    <Heading fontSize="sl">Joinee:</Heading>
+                    <Flex my="5%" ml="42%">
+                      <Heading fontSize="25px">{props.gameInfo.buyInPrice}</Heading>
+                      <FaEthereum size={25}/>
+                    </Flex>
+
+
                     <Heading fontSize="sl">{props.gameInfo.joineeAddress}</Heading>
 
                   </Box>
