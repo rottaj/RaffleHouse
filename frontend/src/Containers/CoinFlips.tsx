@@ -73,7 +73,6 @@ const CoinFlips = () => {
   const getCoinFlips = async () => {
     if (window.ethereum) {
       const data = await getDocs(coinflipsCollectionRef);
-      console.log("DATA", data.docs)
       data.docs.map((doc) => {
         if (doc.data().winner != "0") {
           setPastCoinFlips((pastCoinFlips) => [...pastCoinFlips, doc.data()])
@@ -188,7 +187,6 @@ const CoinFlip = (props: Props) => {
         };
         xhr.open('GET', url);
         xhr.send();
-        console.log("BIIITCH", url)
         setCreatorImage(url)
         // Or inserted into an <img> element
         //const img = document.getElementById('myimg');
@@ -197,7 +195,6 @@ const CoinFlip = (props: Props) => {
     .catch((error) => {
         // Handle any errors
     });
-    console.log("HELLLLO", props.coinFlip.joineeAddress)
     getDownloadURL(ref(storage, `${String(props.coinFlip.joineeAddress)}`))
     .then((url) => {
         const xhr = new XMLHttpRequest();
@@ -207,7 +204,6 @@ const CoinFlip = (props: Props) => {
         };
         xhr.open('GET', url);
         xhr.send();
-        console.log("BIIITCHTWOO", url)
         setJoineeImage(url)
         // Or inserted into an <img> element
         //const img = document.getElementById('myimg');
@@ -231,7 +227,6 @@ const CoinFlip = (props: Props) => {
       _hover={{ bgColor: "green" }}
       onClick={onOpen}
     >
-      
       <CoinFlipViewer isOpen={isOpen} onOpen={onOpen} onClose={onClose} gameInfo={props.coinFlip}/>
       <Flex>
         <>
@@ -320,7 +315,6 @@ const CreateGameModal = (props: ModalProps) => {
   const coinflipsCollectionRef = collection(db, "coinflips");      
 
   const handleSubmit = () => {
-    console.log(parseFloat(sliderValue));
     setLoading(true);
 
     setTxnNumber(1);
@@ -498,3 +492,5 @@ const CreateGameModal = (props: ModalProps) => {
     </Box>
   );
 };
+
+

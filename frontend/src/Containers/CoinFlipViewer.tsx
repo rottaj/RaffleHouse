@@ -42,27 +42,9 @@ type ModalViewerProps = {
 
 declare let window: any;
 const CoinFlipViewer = (props: ModalViewerProps) => {
-  const [coinFlipContractAddress, setCoinFlipContractAddress] = useState("");
-  const [account, setAccount] = useState("");
-  const [creatorImage, setCreatorImage] = useState("");
-  const [joineeImage, setJoineeImage] = useState("")
-  const {isOpen, onOpen, onClose} = useDisclosure();
-  const storage = getStorage();
 
   useEffect(() => {
-    const mountCoinFlipGame = async () => {
-      var accounts = await window.ethereum.send("eth_requestAccounts");
-      const account = accounts.result[0];
-      setAccount(account);
 
-      const creatorRef = ref(storage, `${props.gameInfo.creatorAddress}`);
-      const joineeRef = ref(storage, `${props.gameInfo.joineeAddress}`);
-      setCreatorImage(String(creatorRef))
-    };
-
-    if (window.ethereum) {
-      mountCoinFlipGame();
-    }
     if (props.gameInfo.winner === "0x0000000000000000000000000000000000000000" && props.gameInfo.joineeAddress !== "0x0000000000000000000000000000000000000000") {
       setInterval(() => {
       let coin = document.getElementById("coin");
@@ -71,23 +53,6 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
       }, 500)
     }
   }, []);
-
-  const handleSubmit = async (e: any, contractAddress: any) => {
-    e.preventDefault();
-    if (window.ethereum) {
-      var provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(
-        contractAddress,
-        _CoinFlip_abi,
-        signer
-      );
-      let depositTxn = await contract.deposit({
-        value: ethers.utils.parseEther(String((parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2))).toString(),
-      });
-      console.log(depositTxn);
-    }
-  };
 
 
   const handleCoinAnimation = () => {
@@ -102,6 +67,8 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
 
 
   return (
+    <>
+    {props.gameInfo.joineeAddress != null ?
     <Modal 
       isOpen={props.isOpen} 
       onClose={props.onClose}
@@ -121,11 +88,7 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
       >
         <ModalBody
         >
-          {console.log("GAME INFO COINFLIP", props.gameInfo)}
       <Box textAlign="center" alignItems="center">
-        {props.gameInfo.joineeAddress != undefined &&
-          <DepositModal coinFlipContractAddress={props.gameInfo.contractAddress} gameInfo={props.gameInfo}/>
-        }
         <Box>
           <Box paddingTop="2%">
             <Heading color="white" textShadow="green 3px 3px" fontSize="40px">COIN FLIP</Heading>
@@ -178,6 +141,7 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
                   >
                     <Heading fontSize="sl">Joinee:</Heading>
                     <Heading fontSize="sl">{props.gameInfo.joineeAddress}</Heading>
+
                   </Box>
 
                 </Box>
@@ -197,13 +161,71 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
       </ModalBody>
       </ModalContent>
     </Modal>
+
+    :
+    <Modal 
+      isOpen={props.isOpen} 
+      onClose={props.onClose}
+      isCentered
+    >
+      <ModalOverlay
+        textAlign="center"
+      />
+      <ModalContent
+        bgColor="#1c191c"
+        color="white"
+        background="#141414"
+        mx="25%"
+        textAlign="center"
+        alignContent="center"
+      >
+        <ModalBody
+        >
+
+          <Heading>Waiting for player</Heading>
+          <Box paddingLeft="13%">
+            <Heading fontSize="60px"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></Heading>
+          </Box>
+            <Flex
+              py="5%"
+              px="22%"
+              pl="150px"
+              margin="0" 
+              height="100%" 
+              justifyContent="center" 
+            >
+              <Heading>{(parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2)} </Heading>
+              <Heading pt="1%" pr="25%"><FaEthereum/></Heading>
+            </Flex>
+            <Box>
+              <Button 
+                //onClick={() => handleSubmit(props.gameInfo.contractAddress)}
+                mt="10px"
+                color="black" 
+                type="submit"
+                bgColor="green"
+              >
+                Buy In
+              </Button> 
+            </Box>
+
+          <Button marginTop="10%" variant='ghost' onClick={props.onClose}>
+            Watch Game
+          </Button>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+    }
+    </>
   );
 };
 
 export default CoinFlipViewer;
 
 type ModalProps = {
-  coinFlipContractAddress: any
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
   gameInfo: any
 }
 
@@ -221,7 +243,6 @@ const DepositModal = (props: ModalProps) => {
       let depositTxn = await contract.deposit({
         value: ethers.utils.parseEther(String((parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2))).toString(),
       });
-      console.log(depositTxn);
       const coinFlipGameRef = doc(db, "coinflips", contractAddress);
       await updateDoc(coinFlipGameRef, {
         joineeAddress: user
@@ -233,15 +254,14 @@ const DepositModal = (props: ModalProps) => {
     }
   };
 
-
-  console.log("FOOBERA", props.gameInfo)
-  console.log(user.toUpperCase(), props.gameInfo.creatorAddress)
+  /*
   const {isOpen, onOpen, onClose} = useDisclosure(
-    {defaultIsOpen: props.gameInfo.joineeAddress == "0x0000000000000000000000000000000000000000" || null && String(user.toUpperCase()) !== String(props.gameInfo.creatorAddress)})
+    {defaultIsOpen: props.gameInfo.joineeAddress == "0x0000000000000000000000000000000000000000" || props.gameInfo.joineeAddress == null && String(user.toUpperCase()) !== String(props.gameInfo.creatorAddress)})
+  */
   return (
     <Modal 
-      isOpen={isOpen} 
-      onClose={onClose}
+      isOpen={props.isOpen} 
+      onClose={props.onClose}
       isCentered
     >
       <ModalOverlay
@@ -275,7 +295,7 @@ const DepositModal = (props: ModalProps) => {
             </Flex>
             <Box>
               <Button 
-                onClick={() => handleSubmit(props.coinFlipContractAddress)}
+                onClick={() => handleSubmit(props.gameInfo.contractAddress)}
                 mt="10px"
                 color="black" 
                 type="submit"
@@ -285,7 +305,7 @@ const DepositModal = (props: ModalProps) => {
               </Button> 
             </Box>
 
-          <Button marginTop="10%" variant='ghost' onClick={onClose}>
+          <Button marginTop="10%" variant='ghost' onClick={props.onClose}>
             Watch Game
           </Button>
         </ModalBody>
