@@ -43,6 +43,8 @@ type ModalViewerProps = {
 declare let window: any;
 const CoinFlipViewer = (props: ModalViewerProps) => {
 
+  const { user } = useContext(MetaMaskUserContext)
+
   useEffect(() => {
 
     if (props.gameInfo.winner === "0x0000000000000000000000000000000000000000" && props.gameInfo.joineeAddress !== "0x0000000000000000000000000000000000000000") {
@@ -64,6 +66,29 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
       coin.className = "flipTail";
     }
   }
+
+  const handleSubmit = async (contractAddress: any) => {
+    if (window.ethereum) {
+      var provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        contractAddress,
+        _CoinFlip_abi,
+        signer
+      );
+      let depositTxn = await contract.deposit({
+        value: ethers.utils.parseEther(props.gameInfo.buyInPrice.toString()),
+      });
+      const coinFlipGameRef = doc(db, "coinflips", contractAddress);
+      await updateDoc(coinFlipGameRef, {
+        joineeAddress: user
+      });
+      const playerRef =  doc(db, "users", user);
+      await updateDoc(playerRef, {
+        totalDeposited: increment(parseFloat(String((parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2))))
+      });
+    }
+  };
 
 
   return (
@@ -194,12 +219,12 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
               height="100%" 
               justifyContent="center" 
             >
-              <Heading>{(parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2)} </Heading>
+              <Heading>{parseFloat(props.gameInfo.buyInPrice)} </Heading>
               <Heading pt="1%" pr="25%"><FaEthereum/></Heading>
             </Flex>
             <Box>
               <Button 
-                //onClick={() => handleSubmit(props.gameInfo.contractAddress)}
+                onClick={() => handleSubmit(props.gameInfo.contractAddress)}
                 mt="10px"
                 color="black" 
                 type="submit"
@@ -221,95 +246,3 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
 };
 
 export default CoinFlipViewer;
-
-type ModalProps = {
-  isOpen: boolean;
-  onOpen: () => void;
-  onClose: () => void;
-  gameInfo: any
-}
-
-const DepositModal = (props: ModalProps) => {
-  const {user} = useContext(MetaMaskUserContext)
-  const handleSubmit = async (contractAddress: any) => {
-    if (window.ethereum) {
-      var provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(
-        contractAddress,
-        _CoinFlip_abi,
-        signer
-      );
-      let depositTxn = await contract.deposit({
-        value: ethers.utils.parseEther(String((parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2))).toString(),
-      });
-      const coinFlipGameRef = doc(db, "coinflips", contractAddress);
-      await updateDoc(coinFlipGameRef, {
-        joineeAddress: user
-      });
-      const playerRef =  doc(db, "users", user);
-      await updateDoc(playerRef, {
-        totalDeposited: increment(parseFloat(String((parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2))))
-      });
-    }
-  };
-
-  /*
-  const {isOpen, onOpen, onClose} = useDisclosure(
-    {defaultIsOpen: props.gameInfo.joineeAddress == "0x0000000000000000000000000000000000000000" || props.gameInfo.joineeAddress == null && String(user.toUpperCase()) !== String(props.gameInfo.creatorAddress)})
-  */
-  return (
-    <Modal 
-      isOpen={props.isOpen} 
-      onClose={props.onClose}
-      isCentered
-    >
-      <ModalOverlay
-        textAlign="center"
-      />
-      <ModalContent
-        bgColor="#1c191c"
-        color="white"
-        background="#141414"
-        mx="25%"
-        textAlign="center"
-        alignContent="center"
-      >
-        <ModalBody
-        >
-
-          <Heading>Join Game</Heading>
-          <Box paddingLeft="13%">
-            <Heading fontSize="60px"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></Heading>
-          </Box>
-            <Flex
-              py="5%"
-              px="22%"
-              pl="150px"
-              margin="0" 
-              height="100%" 
-              justifyContent="center" 
-            >
-              <Heading>{(parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2)} </Heading>
-              <Heading pt="1%" pr="25%"><FaEthereum/></Heading>
-            </Flex>
-            <Box>
-              <Button 
-                onClick={() => handleSubmit(props.gameInfo.contractAddress)}
-                mt="10px"
-                color="black" 
-                type="submit"
-                bgColor="green"
-              >
-                Buy In
-              </Button> 
-            </Box>
-
-          <Button marginTop="10%" variant='ghost' onClick={props.onClose}>
-            Watch Game
-          </Button>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
-  )
-}
