@@ -46,27 +46,23 @@ declare let window: any;
 const CoinFlipViewer = (props: ModalViewerProps) => {
 
   const { user } = useContext(MetaMaskUserContext)
-
+  const [ coinStatus, setCoinStatus ] = useState("flipHead");
   useEffect(() => {
 
     if (props.gameInfo.winner === "0x0000000000000000000000000000000000000000" && props.gameInfo.joineeAddress !== "0x0000000000000000000000000000000000000000") {
       setInterval(() => {
-      let coin = document.getElementById("coin");
-      coin.className="flipHead"
-      coin.className="flipTail"
+        handleCoinAnimation()
       }, 500)
     }
   }, []);
 
 
   const handleCoinAnimation = () => {
-    let coin = document.getElementById("coin");
-    var flipResult = Math.random();
-    if (flipResult < 0.5) {
-      coin.className = "flipHead";
-    } else {
-      coin.className = "flipTail";
-    }
+   if (coinStatus == 'flipHead') {
+    setCoinStatus('flipTail')
+   } else if (coinStatus == 'flipTail') {
+     setCoinStatus('flipHead')
+   }
   }
 
   const handleSubmit = async (contractAddress: any) => {
@@ -196,7 +192,7 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
                 </Box>
               </Flex>
               
-              <div id="coin" onClick={handleCoinAnimation}>
+              <div id="coin" className={coinStatus} onClick={handleCoinAnimation}>
                 <div className="side head"></div>
                 <div className="side tail"></div>
               </div>
