@@ -48,6 +48,7 @@ import {
   collection,
   getDocs,
   setDoc,
+  increment,
   addDoc,
   updateDoc,
   deleteDoc,
@@ -331,6 +332,10 @@ const CreateGameModal = (props: ModalProps) => {
           buyInPrice: parseFloat(sliderValue),
           joineeAddress: null,
           winner: "0",
+        });
+        const playerRef =  doc(db, "users", account);
+        await updateDoc(playerRef, {
+          totalDeposited: increment(parseFloat(sliderValue))
         });
         const requestParameters = {
           method: "POST",

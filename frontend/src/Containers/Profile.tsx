@@ -18,7 +18,7 @@ const Profile = () => {
     const [profileImage, setProfileImage] = useState("");
     const inputFile = useRef(null);
     const storage = getStorage();
-    const user = useContext(MetaMaskUserContext)
+    const { user, userProfile } = useContext(MetaMaskUserContext)
     const storageRef = ref(storage, `${String(user.user)}`);
 
     const handleFileUpload = e => {
@@ -30,8 +30,8 @@ const Profile = () => {
         }
     };
     useEffect(()  => {
-        console.log(user)   
-        getDownloadURL(ref(storage, `${String(user.user)}`))
+        console.log(user, userProfile.data())   
+        getDownloadURL(ref(storage, `${String(user)}`))
         .then((url) => {
             // `url` is the download URL for 'images/stars.jpg'
 
@@ -83,8 +83,8 @@ const Profile = () => {
                                 templateColumns='repeat(2, 1fr)' 
                                 gap={10} 
                             >
-                                <GridItem><Flex><Heading>Wins: 0</Heading><Box pt="2%"><FaEthereum size={30}/></Box></Flex></GridItem>
-                                <GridItem><Flex><Heading>Deposited: 0</Heading><Box pt="2%"><FaEthereum size={30}/></Box></Flex></GridItem>
+                                <GridItem><Flex><Heading>Wins: {userProfile.data().totalWinnings}</Heading><Box pt="2%"><FaEthereum size={30}/></Box></Flex></GridItem>
+                                <GridItem><Flex><Heading>Deposited: {userProfile.data().totalDeposited}</Heading><Box pt="2%"><FaEthereum size={30}/></Box></Flex></GridItem>
                                 <GridItem><Heading>Wallet Value</Heading></GridItem>
                                 <GridItem><Heading>??? 25</Heading></GridItem>
                             </Grid>

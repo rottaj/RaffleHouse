@@ -119,7 +119,8 @@ function App() {
       else {
         await setDoc(doc(db, "users", user), {
           id: user,
-          profileImgRef: null,
+          totalWinnings: 0,
+          totalDeposited: 0
         });
       }
     }

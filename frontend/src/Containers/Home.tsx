@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Flex,
   Stack,
@@ -14,10 +14,40 @@ import ape from "../images/my_fucking_mayc.png";
 import dood from "../images/dood.png";
 import cat from "../images/cc.png";
 import { FaEthereum } from "react-icons/fa";
-
+import { db } from "../firebase-config";
+import {
+  collection,
+  getDocs,
+  getDoc,
+  setDoc,
+  increment,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 const Home = () => {
+
+  const [totalGames, setTotalGames] = useState(0);
+  const [totalPlayers, setTotalPlayers] = useState(0);
+  const [totalWinnings, setTotalWinnings] = useState(0);
+
+  const coinflipsCollectionRef = collection(db, "coinflips");
+  const playersCollectionRef = collection(db, "users"); 
+  const siteDataCollectionRef = doc(db, "siteData", "TotalWinnings");
+
   useEffect(() => {
     document.title = "Raffle House";
+    const mountSiteData = async () => {
+      const gameData = await getDocs(coinflipsCollectionRef);
+      const playerData = await getDocs(playersCollectionRef);
+      const siteDataDoc = await getDoc(siteDataCollectionRef);
+      setTotalGames(gameData.docs.length) // update w/ Raffles + HighRollers
+      setTotalPlayers(playerData.docs.length) // update w/ Raffles + HighRollers
+      setTotalWinnings(siteDataDoc.data().TotalEth)
+    }
+
+    mountSiteData();
   }, []);
 
   return (
@@ -71,20 +101,24 @@ const Home = () => {
               />
             </HStack>
 
-            <Text fontSize="3xl">
-              {/* 69,421+<span><FaEthereum size={0}/></span>won */}
-              69,421+*ETH ICON*won
-            </Text>
+            <Flex>
+              <Text >
+                  {totalWinnings} 
+              </Text>
+              <Text>
+                  <FaEthereum size={30}/>
+              </Text>
+            </Flex>
           </VStack>
 
           <VStack>
             <Heading size="4xl">Total Games</Heading>
-            <Text fontSize="3xl">1,421,337+ Games and counting</Text>
+            <Text fontSize="3xl">{totalGames} Games and counting</Text>
           </VStack>
 
           <VStack>
             <Heading size="4xl">Total Players</Heading>
-            <Text fontSize="3xl">149,000+ Players and counting</Text>
+            <Text fontSize="3xl">{totalPlayers} Players and counting</Text>
           </VStack>
         </Stack>
       </VStack>

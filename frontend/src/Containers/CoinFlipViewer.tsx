@@ -26,6 +26,7 @@ import { db } from "../firebase-config";
 import {
   setDoc,
   doc,
+  increment,
   getDoc,
   updateDoc
 } from "firebase/firestore";
@@ -229,9 +230,13 @@ const DepositModal = (props: ModalProps) => {
         value: ethers.utils.parseEther(String((parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2))).toString(),
       });
       console.log(depositTxn);
-      const washingtonRef = doc(db, "coinflips", contractAddress);
-      await updateDoc(washingtonRef, {
+      const coinFlipGameRef = doc(db, "coinflips", contractAddress);
+      await updateDoc(coinFlipGameRef, {
         joineeAddress: user
+      });
+      const playerRef =  doc(db, "users", user);
+      await updateDoc(playerRef, {
+        totalDeposited: increment(parseFloat(String((parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2))))
       });
     }
   };
