@@ -149,14 +149,17 @@ export const getMetaDataSingle = async (token: any) => {
         return res.json();
       })
       .then((data) => {
+        console.log("TESTING METADATA", data)
         if (data.image.startsWith("ipfs://")) {
-          token["image"] = "https://ipfs.io/ipfs" + data.image.slice(6);
-          console.log(token["image"]);
+          token.image = String("https://ipfs.io/ipfs" + String(data.image.slice(6)));
+          console.log("TESTING", token);
         } else {
-          token["image"] = data.image;
+          token.image = String(data.image);
+          console.log("TESTING", token);
         }
       })
       .catch((err) => console.log(err));
   }
+  console.log("TEMPTOKEN", token)
   return token;
 };

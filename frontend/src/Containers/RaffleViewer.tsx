@@ -5,7 +5,7 @@ import { _Raffle_abi } from "../interfaces/RaffleEscrow_Interface";
 import BaseContainer from "./BaseContainers/BaseContainer";
 import RaffleDeposit from "../Components/DepositRaffle";
 import PlayersList from "../Components/PlayersList";
-import { getMetaDataSingle } from "../utils/HandleNFTs";
+import { fetchNFTs, getMetaDataSingle } from "../utils/HandleNFTs";
 import { MetaMaskUserContext } from "../utils/contexts";
 import { FaEthereum } from "react-icons/fa";
 import {
@@ -14,6 +14,8 @@ import {
   Flex,
   Button,
   Image,
+  Text,
+  Skeleton,
   Modal,
   ModalOverlay,
   ModalBody,
@@ -21,26 +23,25 @@ import {
   ModalCloseButton,
   useDisclosure
 } from "@chakra-ui/react"
-
-const ETHERSCAN_API_NFT_TXN =
-  "https://api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=";
-const ETHERSCAN_API_KEY = "JPARDRW9CAVF9ZKISWVC3YYM6RP93JNQUC";
+import { TokenPrice } from "../utils/Opensea/TokenPrice";
+import { TokenMetaData } from "../utils/Opensea/TokenMetaData";
 
 /*
-            The reason for this shenanigans is RaffleViewer is not a child component.. so no props. ( getting contract address from path :shit: )
-            We are fetching all token info... again.
+    The reason for this shenanigans is RaffleViewer is not a child component.. so no props. ( getting contract address from path :shit: )
 */
+
+
 
 declare let window: any;
 const RaffleViewer = () => {
   const [tokenMetaData, setTokenMetaData]: any = useState({});
-  const [imageSrc, setImageSrc] = useState('')
+  const [gameInfo, setGameInfo]: any = useState({})
+  const [token, setToken]: any = useState({});
   const [isDepositOpen, setIsDepositOpen]: any = useState(false);
   const [raffleContractAddress, setRaffleContractAddress]: any = useState("");
   const [raffleBalance, setRaffleBalance]: any = useState("");
   const [players, setPlayers]: any = useState([]);
-  const [gameInfo, setGameInfo]: any = useState([]);
-  const [account, setAccount]: any = useState("");
+  const { user, queryClient } = useContext(MetaMaskUserContext);
 
   const getUniqueAddresses = (array: any) => {
     let unique = array.filter(
@@ -58,7 +59,6 @@ const RaffleViewer = () => {
   };
 
   const getTickets = async (uniqueAddresses: any, tickets: any) => {
-    console.log(tickets);
     for (let i = 0; i <= uniqueAddresses.length; i++) {
       let ticketNumber = getOccurances(tickets, uniqueAddresses[i]);
       if (uniqueAddresses[i] !== undefined) {
@@ -84,26 +84,20 @@ const RaffleViewer = () => {
     setRaffleContractAddress(contractAddress);
 
     const mountRaffleGameInfo = async () => {
-      var accounts = await window.ethereum.send("eth_requestAccounts");
-      const account = accounts.result[0];
-      setAccount(account);
       var provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      let contract = new ethers.Contract(contractAddress, _Raffle_abi, signer);
-      await contract.getGameInfo().then((token) => {
-      console.log("gameInfo", token)
-        getMetaDataSingle(token).then((bitch) => {
-          console.log("dataaaaa", bitch)
-          setImageSrc(bitch.image);
-        })
-      });
+      let contract = new ethers.Contract(contractAddress, _Raffle_abi, provider);
+      const gameToken = await fetchNFTs(contractAddress); // FETCHES GAME TOKENS
+      console.log(gameToken[0])
+      setToken(gameToken[0]);
 
 
-      setGameInfo(gameInfo);
       const tickets = await contract.getTickets();
       const uniqueAddresses = getUniqueAddresses(tickets);
       getTickets(uniqueAddresses, tickets);
     };
+
+
+
     if (window.ethereum) {
       mountRaffleGameInfo();
 
@@ -112,46 +106,64 @@ const RaffleViewer = () => {
 
   return (
     <BaseContainer>
-      <Box>
-        {
-          gameInfo.winner !== "0x0000000000000000000000000000000000000000" &&
-          <DepositModal raffleContractAddress={raffleContractAddress} gameInfo={gameInfo}/>
-        }
-        {/* check for if "Winner not picked" or not? */}
-        <Flex
-          paddingLeft="3%"
-          color="white"
-          background="#211c1c"
-          marginTop="8%"
-          mx="30%"
-          border="1px solid black"
-          borderRadius="20px" /* or 50% */
-        >
-          <Heading fontSize="sl">Raffle Winner:</Heading>
-          {gameInfo.winner !== "0x0000000000000000000000000000000000000000" ? (
-            <Heading fontSize="sl" id="status">{gameInfo.winner}</Heading>
-          ) : (
-            <Heading fontSize="sl" id="status">Winner not picked</Heading>
-          )}
-        </Flex>
+      <Box
+        margin="0"
+        height="100%" 
+        width="100%"
+        px="5%"
+        justifyContent="center"
+
+      >
+        {console.log(token, token.length)}
         <Flex mx="3%" marginTop="5%">
           <Box height="25%" width="25%" px="1%">
-            <Image borderRadius="20px" src={imageSrc}></Image>
-            <RaffleDeposit
-              tokenMetaData={tokenMetaData}
-              isDepositOpen={isDepositOpen}
-              raffleContractAddress={raffleContractAddress}
-            />
+
+              {token.contractAddress != undefined && 
+
+              <Flex>
+              <Box>
+                <Heading color="white">{token.tokenName} #{token.tokenID}</Heading>
+                <Image minWidth="300px" minHeight="300px" borderRadius="20px" src={token.image}></Image>
+                <Box fontSize="30px" ml="30%">
+                  <TokenPrice
+                    token={token}
+                    queryClient={queryClient}
+                  />
+                </Box>
+              </Box>
+                <Box ml="60%" mt="20%">
+                  <TokenMetaData token={token} queryClient={queryClient}/>
+                </Box>
+              </Flex>
+              }
           </Box>
 
-          <PlayersList players={players} />
+
         </Flex>
+        <PlayersList players={players} />
       </Box>
   </BaseContainer>
   );
 };
 
 export default RaffleViewer;
+
+
+/*
+        <RaffleDeposit
+          tokenMetaData={tokenMetaData}
+          isDepositOpen={isDepositOpen}
+          raffleContractAddress={raffleContractAddress}
+        />
+
+*/
+
+
+
+
+
+
+
 
 type ModalProps = {
   raffleContractAddress: any
@@ -185,8 +197,6 @@ type ModalProps = {
   };
 
 
-  console.log("FOOBERA", props.gameInfo)
-  console.log(user.toUpperCase(), props.gameInfo.creatorAddress)
   const {isOpen, onOpen, onClose} = useDisclosure(
     {defaultIsOpen: props.gameInfo.joineeAddress == "0x0000000000000000000000000000000000000000" && String(user.toUpperCase()) !== String(props.gameInfo.creatorAddress)})
   return (

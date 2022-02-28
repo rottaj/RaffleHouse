@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { Redirect, Link, useHistory } from "react-router-dom";
+//import { Redirect, Link, useHistory } from "react-router-dom";
 import { ethers } from "ethers";
 import CoinBull from "../images/coinBull.png";
 import CoinBear from "../images/coinBear.png";
@@ -169,7 +169,7 @@ interface Props {
 }
 
 const CoinFlip = (props: Props) => {
-  const history = useHistory();
+  //const history = useHistory();
   const storage = getStorage();
   const [creatorImage, setCreatorImage] = useState("");
   const [joineeImage, setJoineeImage] = useState("")
@@ -188,9 +188,7 @@ const CoinFlip = (props: Props) => {
         xhr.open('GET', url);
         xhr.send();
         setCreatorImage(url)
-        // Or inserted into an <img> element
-        //const img = document.getElementById('myimg');
-        //img.setAttribute('src', url);
+
     })
     .catch((error) => {
         // Handle any errors
@@ -205,9 +203,7 @@ const CoinFlip = (props: Props) => {
         xhr.open('GET', url);
         xhr.send();
         setJoineeImage(url)
-        // Or inserted into an <img> element
-        //const img = document.getElementById('myimg');
-        //img.setAttribute('src', url);
+
     })
     .catch((error) => {
         // Handle any errors
