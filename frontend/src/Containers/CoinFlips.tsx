@@ -3,6 +3,7 @@ import { Redirect, Link, useHistory } from "react-router-dom";
 import { ethers } from "ethers";
 import CoinBull from "../images/coinBull.png";
 import CoinBear from "../images/coinBear.png";
+import CoinFlipViewer from "./CoinFlipViewer";
 import {
   CoinFlipAddress,
   _CoinFlips_abi,
@@ -174,6 +175,8 @@ const CoinFlip = (props: Props) => {
   const [creatorImage, setCreatorImage] = useState("");
   const [joineeImage, setJoineeImage] = useState("")
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   useEffect(() => {
     if (props.coinFlip.creatorAddress) {
     getDownloadURL(ref(storage, `${String(props.coinFlip.creatorAddress)}`))
@@ -226,10 +229,10 @@ const CoinFlip = (props: Props) => {
       border="1px solid white"
       cursor="pointer"
       _hover={{ bgColor: "green" }}
-      onClick={() =>
-        history.push(`coin-flip/${props.coinFlip["contractAddress"]}`)
-      }
+      onClick={onOpen}
     >
+      
+      <CoinFlipViewer isOpen={isOpen} onOpen={onOpen} onClose={onClose} gameInfo={props.coinFlip}/>
       <Flex>
         <>
           <Box minHeight="100px" width="50%" border="1px solid white" borderRadius="20px" textAlign="center">
@@ -304,7 +307,7 @@ type ModalProps = {
   onOpen: () => void;
   onClose: () => void;
 };
-
+ 
 const CreateGameModal = (props: ModalProps) => {
   const { user: account } = useContext(MetaMaskUserContext);
   const [balance, setBalance]: any = useState(0);
@@ -366,7 +369,7 @@ const CreateGameModal = (props: ModalProps) => {
 
   return (
     <Box>
-      {isCreated && <Redirect to={`/coin-flip/${contract.address}`} />}
+      {/*isCreated && <Redirect to={`/coin-flip/${contract.address}`} />*/}
       <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered>
         <ModalOverlay textAlign="center"></ModalOverlay>
         <ModalContent

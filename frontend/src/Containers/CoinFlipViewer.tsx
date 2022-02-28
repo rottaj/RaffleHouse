@@ -31,42 +31,39 @@ import {
   updateDoc
 } from "firebase/firestore";
 
+
+type ModalViewerProps = {
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+  gameInfo: any
+};
+ 
+
 declare let window: any;
-const CoinFlipViewer = () => {
+const CoinFlipViewer = (props: ModalViewerProps) => {
   const [coinFlipContractAddress, setCoinFlipContractAddress] = useState("");
-  const [gameInfo, setGameInfo]: any = useState([]);
   const [account, setAccount] = useState("");
   const [creatorImage, setCreatorImage] = useState("");
   const [joineeImage, setJoineeImage] = useState("")
+  const {isOpen, onOpen, onClose} = useDisclosure();
   const storage = getStorage();
 
   useEffect(() => {
     const mountCoinFlipGame = async () => {
-      const contractAddress = window.location.pathname.split("/").at(-1);
-      setCoinFlipContractAddress(contractAddress);
       var accounts = await window.ethereum.send("eth_requestAccounts");
       const account = accounts.result[0];
       setAccount(account);
-      var provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      let contract = new ethers.Contract(
-        contractAddress,
-        _CoinFlip_abi,
-        signer
-      );
-      console.log(contract);
-      const gameData = await contract.getGameInfo();
 
-      const creatorRef = ref(storage, `${gameData.creatorAddress}`);
-      const joineeRef = ref(storage, `${gameData.joineeAddress}`);
-      setGameInfo(gameData);
+      const creatorRef = ref(storage, `${props.gameInfo.creatorAddress}`);
+      const joineeRef = ref(storage, `${props.gameInfo.joineeAddress}`);
       setCreatorImage(String(creatorRef))
     };
 
     if (window.ethereum) {
       mountCoinFlipGame();
     }
-    if (gameInfo.winner === "0x0000000000000000000000000000000000000000" && gameInfo.joineeAddress !== "0x0000000000000000000000000000000000000000") {
+    if (props.gameInfo.winner === "0x0000000000000000000000000000000000000000" && props.gameInfo.joineeAddress !== "0x0000000000000000000000000000000000000000") {
       setInterval(() => {
       let coin = document.getElementById("coin");
       coin.className="flipHead"
@@ -86,7 +83,7 @@ const CoinFlipViewer = () => {
         signer
       );
       let depositTxn = await contract.deposit({
-        value: ethers.utils.parseEther(String((parseInt(gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2))).toString(),
+        value: ethers.utils.parseEther(String((parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2))).toString(),
       });
       console.log(depositTxn);
     }
@@ -105,22 +102,41 @@ const CoinFlipViewer = () => {
 
 
   return (
-    <BaseContainer>
+    <Modal 
+      isOpen={props.isOpen} 
+      onClose={props.onClose}
+      isCentered
+      size='7xl'
+    >
+      <ModalOverlay
+        textAlign="center"
+      />
+      <ModalContent
+        bgColor="#1c191c"
+        color="white"
+        background="#141414"
+        mx="25%"
+        textAlign="center"
+        alignContent="center"
+      >
+        <ModalBody
+        >
+          {console.log("GAME INFO COINFLIP", props.gameInfo)}
       <Box textAlign="center" alignItems="center">
-        {gameInfo.joineeAddress != undefined &&
-          <DepositModal coinFlipContractAddress={coinFlipContractAddress} gameInfo={gameInfo}/>
+        {props.gameInfo.joineeAddress != undefined &&
+          <DepositModal coinFlipContractAddress={props.gameInfo.contractAddress} gameInfo={props.gameInfo}/>
         }
         <Box>
           <Box paddingTop="2%">
             <Heading color="white" textShadow="green 3px 3px" fontSize="40px">COIN FLIP</Heading>
-            <Heading color="white" fontSize="20px">{coinFlipContractAddress}</Heading>
-            {gameInfo.winner != "0x0000000000000000000000000000000000000000" ?
-              <Heading color="white" fontSize="20px">Winner: {gameInfo.winner}</Heading>           
+            <Heading color="white" fontSize="20px">{props.gameInfo.contractAddress}</Heading>
+            {props.gameInfo.winner != "0x0000000000000000000000000000000000000000" ?
+              <Heading color="white" fontSize="20px">Winner: {props.gameInfo.winner}</Heading>           
             :
               <Heading color="white" fontSize="20px">Winner not selected.</Heading>           
             }
           </Box>
-          {gameInfo ? (
+          {props.gameInfo ? (
             <Box>
               <Flex justifyContent="center" marginTop="10%">
                 <Box>
@@ -138,7 +154,7 @@ const CoinFlipViewer = () => {
                     borderRadius="md"
                   >
                     <Heading fontSize="sl">Creator:</Heading>
-                    <Heading fontSize="sl">{gameInfo.creatorAddress}</Heading>
+                    <Heading fontSize="sl">{props.gameInfo.creatorAddress}</Heading>
                   </Box>
                 </Box>
                 <Box paddingTop="5.5%">
@@ -150,46 +166,20 @@ const CoinFlipViewer = () => {
                 <div id="coinStatic" >
                   <div className="side static_tails"></div>
                 </div>
-                {/*}
-                {gameInfo.joineeAddress !==
-                "0x0000000000000000000000000000000000000000" ? ( */}
+                  <Box 
+                    px="1%"
+                    py="1%"
+                    my="1%"
+                    mx="5%"
+                    color="white"
+                    border="1px solid black"
+                    background="#40434E"
+                    borderRadius="md"
+                  >
+                    <Heading fontSize="sl">Joinee:</Heading>
+                    <Heading fontSize="sl">{props.gameInfo.joineeAddress}</Heading>
+                  </Box>
 
-                    <Box 
-                      px="1%"
-                      py="1%"
-                      my="1%"
-                      mx="5%"
-                      color="white"
-                      border="1px solid black"
-                      background="#40434E"
-                      borderRadius="md"
-                    >
-                      <Heading fontSize="sl">Joinee:</Heading>
-                      <Heading fontSize="sl">{gameInfo.joineeAddress}</Heading>
-                    </Box>
-
-                {/*
-                ) : (
-
-                    <Box>
-                      <Box 
-                        px="1%"
-                        py="1%"
-                        my="1%"
-                        mx="5%"
-                        color="white"
-                        border="1px solid black"
-                        background="#40434E"
-                        borderRadius="md"
-                      >
-                        <Heading fontSize="sl">Joinee:</Heading>
-                        <Heading fontSize="sl">Waiting for player</Heading>
-                      </Box>
-                    </Box>
-
-                )}
-
-                    */}
                 </Box>
               </Flex>
               
@@ -204,7 +194,9 @@ const CoinFlipViewer = () => {
           )}
         </Box>
       </Box>
-    </BaseContainer>
+      </ModalBody>
+      </ModalContent>
+    </Modal>
   );
 };
 
@@ -245,7 +237,7 @@ const DepositModal = (props: ModalProps) => {
   console.log("FOOBERA", props.gameInfo)
   console.log(user.toUpperCase(), props.gameInfo.creatorAddress)
   const {isOpen, onOpen, onClose} = useDisclosure(
-    {defaultIsOpen: props.gameInfo.joineeAddress == "0x0000000000000000000000000000000000000000" && String(user.toUpperCase()) !== String(props.gameInfo.creatorAddress)})
+    {defaultIsOpen: props.gameInfo.joineeAddress == "0x0000000000000000000000000000000000000000" || null && String(user.toUpperCase()) !== String(props.gameInfo.creatorAddress)})
   return (
     <Modal 
       isOpen={isOpen} 
