@@ -25,9 +25,20 @@ type PropsPlayersList = {
 const PlayersList = (props: PropsPlayersList) => {
   return (
     <Flex w="100%" align="center" mt={12} flexDir="column">
-      <Text color="white" fontSize="2xl">
-        Current Players
-      </Text>
+      <Flex>
+        <Text
+          color="white"
+          fontSize="3xl"
+          >
+          Current&nbsp;
+        </Text>
+        <Text
+          color="green"
+          fontSize="3xl"
+          >
+          Players
+        </Text>
+      </Flex>
       <Table variant="unstyled" maxW="60%">
         <Thead>
           <Tr
