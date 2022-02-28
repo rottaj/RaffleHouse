@@ -4,6 +4,7 @@ import {
   Flex,
   Text,
   Skeleton,
+  Heading
 } from "@chakra-ui/react"
 import { FaEthereum } from "react-icons/fa";
 
@@ -54,20 +55,31 @@ export function TokenMetaData(props) {
       ) : (
         <>
           {data.detail == undefined && (
-            <Flex>
-                {data['traits'].map((trait: any) => {
-                    return (
-                        <Box textAlign="center" px="2px" mx="5px" border="1px solid white">
-                            <>
-                            {console.log(trait)}
-                            </>
-                            <Text fontSize="sm" color="white">{trait.trait_type}</Text>
-                            <Text fontSize="sm" color="white">{trait.value}</Text>
-                            <Text fontSize="sm" color="white"> {(((parseInt(trait.trait_count) * 0.01) * 10000) / 10000)* 100} %</Text>
-                        </Box>
-                    )
-                })}
-            </Flex>
+            <Box>
+                <Box>
+                    <Text color="white">
+                        The Bored Ape Fake Club is a collection of 10,000 unique Bored Ape NFTs— unique digital collectibles living on the Ethereum blockchain. Your Bored Ape doubles as your Yacht Club membership card, and grants access to members-only benefits, the first of which is access to THE BATHROOM, a collaborative graffiti board. Future areas and perks can be unlocked by the community through roadmap activation. Visit www.YourMother.com for more details.
+                    </Text>
+
+                </Box>
+                <Heading color="white" fontSize="25px">Properties: </Heading>
+                <Flex>
+
+                    {data['traits'].map((trait: any) => {
+                        return (
+                            <Box textAlign="center" py="5px" px="5px" mx="5px" border="1px solid white" borderRadius="20px">
+                                <>
+                                {console.log(trait)}
+                                </>
+                                <Text fontSize="sm" color="white">{trait.trait_type}</Text>
+                                <Text fontSize="sm" color="white">{trait.value}</Text>
+                                <Text fontSize="sm" color="white"> {(((parseInt(trait.trait_count) * 0.01) * 10000) / 10000)* 100} %</Text>
+                            </Box>
+                        )
+                    })}
+                </Flex>
+
+            </Box>
           )}
         </>
       )}

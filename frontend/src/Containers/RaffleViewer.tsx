@@ -117,16 +117,24 @@ const RaffleViewer = () => {
         {console.log(token, token.length)}
         <Flex mx="3%" marginTop="5%">
           <Box height="25%" width="25%" px="1%">
-              <Heading color="white">{token.tokenName} #{token.tokenID}</Heading>
-              <Image minWidth="300px" minHeight="300px" borderRadius="20px" src={token.image}></Image>
+
               {token.contractAddress != undefined && 
+
+              <Flex>
+              <Box>
+                <Heading color="white">{token.tokenName} #{token.tokenID}</Heading>
+                <Image minWidth="300px" minHeight="300px" borderRadius="20px" src={token.image}></Image>
                 <Box fontSize="30px" ml="30%">
                   <TokenPrice
                     token={token}
                     queryClient={queryClient}
                   />
-                <TokenMetaData token={token} queryClient={queryClient}/>
                 </Box>
+              </Box>
+                <Box ml="60%" mt="20%">
+                  <TokenMetaData token={token} queryClient={queryClient}/>
+                </Box>
+              </Flex>
               }
           </Box>
 
