@@ -1,6 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 import { ethers } from "ethers";
 import { _CoinFlip_abi } from "../interfaces/CoinFlip_Interface";
+import CoinBull from "../images/coinBull.png";
+import CoinBear from "../images/coinBear.png";
 import Footer from "../Components/Footer";
 import { FaEthereum } from "react-icons/fa";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -8,6 +10,7 @@ import {
   Box,
   Flex,
   Heading,
+  Image,
   Input,
   Button,
   Modal,
@@ -33,7 +36,9 @@ type ModalViewerProps = {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
-  gameInfo: any
+  gameInfo: any;
+  creatorImage: string;
+  joineeImage: string;
 };
  
 
@@ -125,19 +130,23 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
             <Box>
               <Flex justifyContent="center" marginTop="10%">
                 <Box>
-                  <div id="coinStatic" >
-                    <div className="side static_heads"></div>
-                  </div>
                   <Box 
                     py="1%"
                     px="1%"
                     my="1%" 
                     mx="5%"
                     color="white"
-                    border="1px solid black"
-                    background="#40434E"
-                    borderRadius="md"
+                    border="1px solid white"
+                    borderRadius="10%"
                   >
+                    <Flex pl="10%">
+                    <Box pt="10%"pl="15%">
+                      <Image maxWidth="200px" maxHeight="200px" borderRadius="50%"src={String(props.creatorImage)}></Image>
+                    </Box>
+                    <Box position="absolute" pl="6%" pt="2.5%">
+                      <Image borderRadius="50%"  maxHeight="60px" maxWidth="60px"src={CoinBull}></Image>
+                    </Box>
+                    </Flex>
                     <Heading fontSize="sl">Creator:</Heading>
                     <Heading fontSize="sl">{props.gameInfo.creatorAddress}</Heading>
                   </Box>
@@ -148,19 +157,23 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
                 </Box>
                 
                 <Box>
-                <div id="coinStatic" >
-                  <div className="side static_tails"></div>
-                </div>
                   <Box 
                     px="1%"
                     py="1%"
                     my="1%"
                     mx="5%"
                     color="white"
-                    border="1px solid black"
-                    background="#40434E"
-                    borderRadius="md"
+                    border="1px solid white"
+                    borderRadius="10%"
                   >
+                    <Flex pl="10%">
+                      <Box pt="10%"pl="15%">
+                        <Image maxHeight="200px" maxWidth="200px" borderRadius="50%" src={String(props.joineeImage)}></Image>
+                      </Box>
+                      <Box position="absolute" pl="6%" pt="2.5%">
+                        <Image borderRadius="50%"  maxHeight="60px" maxWidth="60px"src={CoinBear}></Image>
+                      </Box>
+                    </Flex>
                     <Heading fontSize="sl">Joinee:</Heading>
                     <Heading fontSize="sl">{props.gameInfo.joineeAddress}</Heading>
 
