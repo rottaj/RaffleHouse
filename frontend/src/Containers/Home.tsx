@@ -18,6 +18,7 @@ import { db } from "../firebase-config";
 import {
   collection,
   getDocs,
+  getDoc,
   setDoc,
   increment,
   addDoc,
@@ -29,17 +30,21 @@ const Home = () => {
 
   const [totalGames, setTotalGames] = useState(0);
   const [totalPlayers, setTotalPlayers] = useState(0);
+  const [totalWinnings, setTotalWinnings] = useState(0);
 
-  const coinflipsCollectionRef = collection(db, "coinflips");      
-  const playersCollectionRef = collection(db, "users");      
+  const coinflipsCollectionRef = collection(db, "coinflips");
+  const playersCollectionRef = collection(db, "users"); 
+  const siteDataCollectionRef = doc(db, "siteData", "TotalWinnings");
+
   useEffect(() => {
     document.title = "Raffle House";
     const mountSiteData = async () => {
       const gameData = await getDocs(coinflipsCollectionRef);
       const playerData = await getDocs(playersCollectionRef);
-
+      const siteDataDoc = await getDoc(siteDataCollectionRef);
       setTotalGames(gameData.docs.length) // update w/ Raffles + HighRollers
       setTotalPlayers(playerData.docs.length) // update w/ Raffles + HighRollers
+      setTotalWinnings(siteDataDoc.data().TotalEth)
     }
 
     mountSiteData();
@@ -96,10 +101,14 @@ const Home = () => {
               />
             </HStack>
 
-            <Text fontSize="3xl">
-              {/* 69,421+<span><FaEthereum size={0}/></span>won */}
-              69,421+*ETH ICON*won
-            </Text>
+            <Flex>
+              <Text >
+                  {totalWinnings} 
+              </Text>
+              <Text>
+                  <FaEthereum size={30}/>
+              </Text>
+            </Flex>
           </VStack>
 
           <VStack>
