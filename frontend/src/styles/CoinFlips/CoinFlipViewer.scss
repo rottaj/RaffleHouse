@@ -69,11 +69,15 @@ lds-ellipsis {
   }
 
   .static_heads {
-    background-color: rgb(203, 176, 204);
+    //background-color: rgb(203, 176, 204);
+    background-size: 100px;
+    background-image: url('../../images/coinBull.png');
     z-index: 10;
   }
   .static_tails {
-    background-color: rgb(255, 242, 145);
+    //background-color: rgb(255, 242, 145);
+    background-size: 100px;
+    background-image: url('../../images/coinBear.png');
     z-index: 10
   }
 
@@ -99,12 +103,16 @@ lds-ellipsis {
     backface-visibility: hidden;
   }
   .head {
-    background-color: rgb(203, 176, 204);
+    //background-color: rgb(203, 176, 204);
+    background-size: 100px;
+    background-image: url('../../images/coinBull.png');
     z-index: 10;
   }
   .tail {
-    background-color: rgb(255, 242, 145);
+    //background-color: rgb(255, 242, 145);
     transform: rotateX(-180deg);
+    background-size: 100px;
+    background-image: url('../../images/coinBear.png');
   }
 
   .flipHead {

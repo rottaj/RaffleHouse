@@ -3,6 +3,7 @@ import { Redirect, Link, useHistory } from "react-router-dom";
 import { ethers } from "ethers";
 import CoinBull from "../images/coinBull.png";
 import CoinBear from "../images/coinBear.png";
+import CoinFlipViewer from "./CoinFlipViewer";
 import {
   CoinFlipAddress,
   _CoinFlips_abi,
@@ -72,7 +73,6 @@ const CoinFlips = () => {
   const getCoinFlips = async () => {
     if (window.ethereum) {
       const data = await getDocs(coinflipsCollectionRef);
-      console.log("DATA", data.docs)
       data.docs.map((doc) => {
         if (doc.data().winner != "0") {
           setPastCoinFlips((pastCoinFlips) => [...pastCoinFlips, doc.data()])
@@ -174,6 +174,8 @@ const CoinFlip = (props: Props) => {
   const [creatorImage, setCreatorImage] = useState("");
   const [joineeImage, setJoineeImage] = useState("")
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   useEffect(() => {
     if (props.coinFlip.creatorAddress) {
     getDownloadURL(ref(storage, `${String(props.coinFlip.creatorAddress)}`))
@@ -185,7 +187,6 @@ const CoinFlip = (props: Props) => {
         };
         xhr.open('GET', url);
         xhr.send();
-        console.log("BIIITCH", url)
         setCreatorImage(url)
         // Or inserted into an <img> element
         //const img = document.getElementById('myimg');
@@ -194,7 +195,6 @@ const CoinFlip = (props: Props) => {
     .catch((error) => {
         // Handle any errors
     });
-    console.log("HELLLLO", props.coinFlip.joineeAddress)
     getDownloadURL(ref(storage, `${String(props.coinFlip.joineeAddress)}`))
     .then((url) => {
         const xhr = new XMLHttpRequest();
@@ -204,7 +204,6 @@ const CoinFlip = (props: Props) => {
         };
         xhr.open('GET', url);
         xhr.send();
-        console.log("BIIITCHTWOO", url)
         setJoineeImage(url)
         // Or inserted into an <img> element
         //const img = document.getElementById('myimg');
@@ -226,10 +225,9 @@ const CoinFlip = (props: Props) => {
       border="1px solid white"
       cursor="pointer"
       _hover={{ bgColor: "green" }}
-      onClick={() =>
-        history.push(`coin-flip/${props.coinFlip["contractAddress"]}`)
-      }
+      onClick={onOpen}
     >
+      <CoinFlipViewer isOpen={isOpen} onOpen={onOpen} onClose={onClose} gameInfo={props.coinFlip}/>
       <Flex>
         <>
           <Box minHeight="100px" width="50%" border="1px solid white" borderRadius="20px" textAlign="center">
@@ -304,7 +302,7 @@ type ModalProps = {
   onOpen: () => void;
   onClose: () => void;
 };
-
+ 
 const CreateGameModal = (props: ModalProps) => {
   const { user: account } = useContext(MetaMaskUserContext);
   const [balance, setBalance]: any = useState(0);
@@ -317,7 +315,6 @@ const CreateGameModal = (props: ModalProps) => {
   const coinflipsCollectionRef = collection(db, "coinflips");      
 
   const handleSubmit = () => {
-    console.log(parseFloat(sliderValue));
     setLoading(true);
 
     setTxnNumber(1);
@@ -366,7 +363,7 @@ const CreateGameModal = (props: ModalProps) => {
 
   return (
     <Box>
-      {isCreated && <Redirect to={`/coin-flip/${contract.address}`} />}
+      {/*isCreated && <Redirect to={`/coin-flip/${contract.address}`} />*/}
       <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered>
         <ModalOverlay textAlign="center"></ModalOverlay>
         <ModalContent
@@ -495,3 +492,5 @@ const CreateGameModal = (props: ModalProps) => {
     </Box>
   );
 };
+
+
