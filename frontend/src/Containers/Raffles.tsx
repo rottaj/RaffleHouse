@@ -14,6 +14,7 @@ import {
   Image,
   Flex,
   Heading,
+  Button
 } from "@chakra-ui/react";
 import {CheckIcon} from "@chakra-ui/icons"
 import { FaEthereum, FaWpbeginner } from "react-icons/fa"
@@ -83,13 +84,18 @@ const Raffles = () => {
   return (
     <BaseContainer>
       <Box className="Raffles-container-main">
+        <Box float="right">
+          <Button bgColor="green" color="white">
+              Create Game
+          </Button>
+        </Box>
         <Box alignItems="center" px="20%" fontFamily="Courier New, Monospace">
             <Flex>
               <Heading
                 color="white"
                 fontSize="40px"
               >
-                Current&nbsp;
+                Latest&nbsp;
               </Heading>
               <Heading
                 color="green"
@@ -122,13 +128,13 @@ const Raffles = () => {
                   color="white"
                   fontSize="40px"
                 >
-                  Past&nbsp;
+                  Recent&nbsp;
                 </Heading>
                 <Heading
                   color="green"
                   fontSize="40px"
                 >
-                  Raffles
+                  Wins
                 </Heading>
             </Flex>
           </Box>
@@ -148,6 +154,22 @@ const Raffles = () => {
             );
           })}
         </Grid>
+        <Box alignItems="center" px="20%" fontFamily="Courier New, Monospace">
+            <Flex>
+              <Heading
+                color="white"
+                fontSize="40px"
+              >
+                Trending&nbsp;
+              </Heading>
+              <Heading
+                color="green"
+                fontSize="40px"
+              >
+                Raffles
+              </Heading>
+          </Flex>
+        </Box>
         {/* <Footer /> */}
       </Box>
     </BaseContainer>

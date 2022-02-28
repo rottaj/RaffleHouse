@@ -57,6 +57,12 @@ export function TokenMetaData(props) {
           {data.detail == undefined && (
             <Box>
                 <Box>
+                    <Heading color="white" fontSize="5xl">
+                      Raffle Status:
+                    </Heading>
+                    <Text color="white" fontSize="3xl">
+                      Potential Winner:
+                    </Text>
                     <Text color="white">
                         The Bored Ape Fake Club is a collection of 10,000 unique Bored Ape NFTs— unique digital collectibles living on the Ethereum blockchain. Your Bored Ape doubles as your Yacht Club membership card, and grants access to members-only benefits, the first of which is access to THE BATHROOM, a collaborative graffiti board. Future areas and perks can be unlocked by the community through roadmap activation. Visit www.YourMother.com for more details.
                     </Text>
@@ -67,7 +73,7 @@ export function TokenMetaData(props) {
 
                     {data['traits'].map((trait: any) => {
                         return (
-                            <Box textAlign="center" py="5px" px="5px" mx="5px" border="1px solid white" borderRadius="20px">
+                            <Box textAlign="center" py="5px" px="5px" mx="5px" border="2px solid white" borderRadius="20px" h={75} w={100}>
                                 <>
                                 {console.log(trait)}
                                 </>
