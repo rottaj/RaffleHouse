@@ -72,8 +72,27 @@ export function TokenMetaData(props) {
                 <Flex>
 
                     {data['traits'].map((trait: any) => {
+                        let background="2px solid white"
+                        if (((((parseInt(trait.trait_count) * 0.01) * 10000) / 10000) * 100) <= 2 ) {
+                          background="2px solid red"
+                        }
+                        else if (((((parseInt(trait.trait_count) * 0.01) * 10000) / 10000) * 100) <= 3 ) {
+                          background="2px solid teal"
+                        }
+                        else if (((((parseInt(trait.trait_count) * 0.01) * 10000) / 10000) * 100) <= 4 ) {
+                          background="2px solid yellow"
+                        }
+                        else if (((((parseInt(trait.trait_count) * 0.01) * 10000) / 10000) * 100) <= 10 ) {
+                          background="2px solid pink"
+                        }
+                        else if (((((parseInt(trait.trait_count) * 0.01) * 10000) / 10000) * 100) <= 25 ) {
+                          background="2px solid green"
+                        }
+
                         return (
-                            <Box textAlign="center" py="5px" px="5px" mx="5px" border="2px solid white" borderRadius="20px" h={75} w={100}>
+                          <>
+
+                            <Box textAlign="center" py="5px" px="5px" mx="5px" border={background} borderRadius="20px" h={75} w={100}>
                                 <>
                                 {console.log(trait)}
                                 </>
@@ -81,6 +100,7 @@ export function TokenMetaData(props) {
                                 <Text fontSize="sm" color="white">{trait.value}</Text>
                                 <Text fontSize="sm" color="white"> {(((parseInt(trait.trait_count) * 0.01) * 10000) / 10000)* 100} %</Text>
                             </Box>
+                            </>
                         )
                     })}
                 </Flex>
