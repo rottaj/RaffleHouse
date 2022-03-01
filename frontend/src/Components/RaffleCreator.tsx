@@ -9,6 +9,17 @@ import {
 import { fetchNFTs } from "../utils/HandleNFTs";
 import { RafflesAddress, _abi_raffles } from "../interfaces/Raffles_Interface";
 import { Box, Flex, Heading, Input, Button } from "@chakra-ui/react";
+import { db } from "../firebase-config";
+import {
+  collection,
+  getDocs,
+  setDoc,
+  increment,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 
 declare let window: any;
 const RaffleCreator = () => {
@@ -51,8 +62,8 @@ const RaffleCreator = () => {
       // DEPLOY CONTRACT
       const account = accounts.result[0];
       const contract = await raffleFactory.deploy(
-        parseInt(buyInPrice),
-        parseInt(reservePrice),
+        ethers.utils.parseEther(String((buyInPrice))),
+        ethers.utils.parseEther(String((reservePrice))),
         selectedToken.contractAddress,
         selectedToken.tokenName,
         selectedToken.tokenID
@@ -74,12 +85,17 @@ const RaffleCreator = () => {
         })
         .then(async function (dataTwo) {
           console.log(dataTwo);
-          const addRaffleTxn = rafflesContract.addRaffle(
-            contract.address,
-            selectedToken.contractAddress,
-            selectedToken.tokenName,
-            selectedToken.tokenID
-          );
+          await setDoc(doc(db, "raffles", contract.address), {
+            creatorAddress: account, 
+            contractAddress: contract.address,
+            collectionAddress: selectedToken.contractAddress,
+            collectionName: selectedToken.tokenName,
+            tokenImage: selectedToken.image,
+            tokenID: selectedToken.tokenID,
+            buyInPrice: parseFloat(buyInPrice).toFixed(2),
+            rservePrice: parseFloat(reservePrice).toFixed(2),
+            winner: "0",
+          });
         });
     }
   };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { _abi } from "../interfaces/Eyescream_Interface";
 import { ethers } from "ethers";
 import { Link } from "react-router-dom";
@@ -7,23 +7,53 @@ import { _Raffle_abi } from "../interfaces/RaffleEscrow_Interface";
 import Footer from "../Components/Footer";
 import BaseContainer from "./BaseContainers/BaseContainer";
 import { getMetaDataSingle } from "../utils/HandleNFTs";
+import { MetaMaskUserContext } from "../utils/contexts";
 import {
-  Grid, 
-  GridItem,
   Box,
-  Image,
   Flex,
+  Text,
+  Image,
   Heading,
-  Button
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
+  useDisclosure,
+  Slider,
+  SliderMark,
+  SliderTrack,
+  SliderFilledTrack,
+  Tooltip,
+  SliderThumb,
+  Spinner,
+  Grid,
+  GridItem
+
 } from "@chakra-ui/react";
+
+import { db } from "../firebase-config";
+import {
+  collection,
+  getDocs,
+  setDoc,
+  increment,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import {CheckIcon} from "@chakra-ui/icons"
 import { FaEthereum, FaWpbeginner } from "react-icons/fa"
+
+import RaffleCreator from "../Components/RaffleCreator";
 
 declare let window: any;
 const Raffles = () => {
   const [currentRaffles, setCurrentRaffles]: any = useState([]);
   const [pastRaffles, setPastRaffles]: any = useState([]);
   const [account, setAccount] = useState("");
+  const rafflesCollectionRef = collection(db, "raffles");   
 
   useEffect(() => {
     document.title = "Raffles - Raffle House";
@@ -40,52 +70,28 @@ const Raffles = () => {
 
   const getRaffles = async () => {
     if (window.ethereum) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-
-      const rafflesContract = await new ethers.Contract(
-        RafflesAddress,
-        _abi_raffles,
-        signer
-      );
-      let rafflesLength = await rafflesContract.getRaffles();
-      for (let i = 0; i <= rafflesLength - 1; i++) {
-        let raffle = await rafflesContract.getRaffleByIndex(i);
-        const raffleInstance = await new ethers.Contract(
-          raffle.contractAddress,
-          _Raffle_abi,
-          signer
-        );
-
-        const gameInfo = await raffleInstance.getGameInfo();
-        var tempRaffle: any = {
-          contractAddress: raffle.contractAddress,
-          creatorAddress: gameInfo.creatorAddress,
-          buyInPrice: parseInt(gameInfo.buyInPrice, 16),
-          winner: gameInfo.winner,
-          collectionAddress: gameInfo.collectionAddress,
-          collectionName: gameInfo.collectionName,
-          tokenID: parseInt(gameInfo.tokenID, 16),
-        };
-
-        if (gameInfo.winner === "0x0000000000000000000000000000000000000000") {
-          // Will update when refactor Raffles contract
-          setCurrentRaffles((currentRaffles: any) => [
-            ...currentRaffles,
-            tempRaffle,
-          ]);
-        } else {
-          setPastRaffles((pastRaffles: any) => [...pastRaffles, tempRaffle]);
+      const data = await getDocs(rafflesCollectionRef);
+      data.docs.map((doc) => {
+        if (doc.data().winner != "0" || doc.data().winner != null) {
+          setPastRaffles((pastRaffles) => [...pastRaffles, doc.data()])
+        } 
+        else {
+          setCurrentRaffles((currentRaffles) => [...currentRaffles, doc.data()])
         }
-      }
+      })
     }
   };
 
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <BaseContainer>
+      {console.log("CURRENT RAFFLES", currentRaffles)}
+      <CreateGameModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
       <Box className="Raffles-container-main">
         <Box float="right">
-          <Button bgColor="green" color="white">
+          <Button bgColor="green" color="white" onClick={onOpen}>
               Create Game
           </Button>
         </Box>
@@ -183,15 +189,7 @@ interface Props {
 
 const Raffle = (props: Props) => {
 
-  const [imageSrc, setImageSrc] = useState('')
   const [isMouseOver, setIsMouseOver] = useState(false)
-
-  useEffect(() => {
-    getMetaDataSingle(props.token).then((data) => {
-      setImageSrc(data.image);
-    })
-
-  }, [])
 
   return (
     <Box 
@@ -207,7 +205,7 @@ const Raffle = (props: Props) => {
         height="200px"
         width="200px"
         borderRadius="10px"
-        src={imageSrc} // ADD TOKEN IMAGE BITACH
+        src={props.token.tokenImage} // ADD TOKEN IMAGE BITACH
       ></Image>
       :
       <Box 
@@ -222,7 +220,7 @@ const Raffle = (props: Props) => {
           width="200px"
           borderRadius="30px"
           opacity="30%"
-          src={imageSrc} // ADD TOKEN IMAGE BITACH
+          src={props.token.tokenImage} // ADD TOKEN IMAGE BITACH
         ></Image>
 
         <Flex pl="16px">
@@ -238,7 +236,7 @@ const Raffle = (props: Props) => {
 
           <CheckIcon color="#00acee" marginLeft="20px"></CheckIcon>
         </Flex>
-          {props.token.winner != "0x0000000000000000000000000000000000000000" ?
+          {props.token.winner != "0" || props.token.winner != null ?
             <Heading opacity="100%"pt="30px" fontSize="20px" color="green">{props.token.winner.split(0, 20)}</Heading>
           :
             <Heading opacity="100%" pt="30px" fontSize="20px" color="green">Join Raffle!</Heading>
@@ -253,3 +251,65 @@ const Raffle = (props: Props) => {
     </Box>
   );
 };
+
+
+
+type ModalProps = {
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+};
+ 
+const CreateGameModal = (props: ModalProps) => {
+  const { user: account } = useContext(MetaMaskUserContext);
+  const [isLoading, setLoading] = useState(false);
+  const [txnNumber, setTxnNumber] = useState(0);
+
+  return (
+    <Box>
+      {/*isCreated && <Redirect to={`/coin-flip/${contract.address}`} />*/}
+      <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered size="6xl">
+        <ModalOverlay textAlign="center"></ModalOverlay>
+        <ModalContent
+          bgColor="#1c191c"
+          color="white"
+          pt="2%"
+          textAlign="center"
+          alignContent="center"
+        >
+          {!isLoading ? (
+            <ModalBody>
+              <RaffleCreator/>
+            </ModalBody>
+          ) : (
+            // LOADING SCREEN  // WIll move this to RaffleCreator ( Or NFT )
+            <ModalBody>
+              <Heading>Waiting for Metamask Transaction </Heading>
+              {txnNumber === 1 && (
+                <Box>
+                  <Text>Creating Game Contract</Text>
+                  <Spinner size="lg" />
+                </Box>
+              )}
+              {txnNumber === 2 && (
+                <Box>
+                  <Text>Sending Ethereum to Game</Text>
+                  <Spinner size="lg" />
+                </Box>
+              )}
+              {txnNumber === 3 && (
+                <Box>
+                  <Text>Adding Game to Coin Flips</Text>
+                  <Spinner size="lg" />
+                </Box>
+              )}
+            </ModalBody>
+          )}
+        </ModalContent>
+      </Modal>
+    </Box>
+  );
+};
+
+
+
