@@ -223,7 +223,7 @@ const CoinFlip = (props: Props) => {
       _hover={{ bgColor: "green" }}
       onClick={onOpen}
     >
-      <CoinFlipViewer isOpen={isOpen} onOpen={onOpen} onClose={onClose} gameInfo={props.coinFlip}/>
+      <CoinFlipViewer isOpen={isOpen} onOpen={onOpen} onClose={onClose} gameInfo={props.coinFlip} creatorImage={creatorImage} joineeImage={joineeImage}/>
       <Flex>
         <>
           <Box minHeight="100px" width="50%" border="1px solid white" borderRadius="20px" textAlign="center">
