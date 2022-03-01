@@ -26,7 +26,11 @@ export const NavItem = ({ item }: Props) => {
             transitionProperty="background"
             transitionDuration="normal"
             _hover={{
-              border: '2px solid green'
+              borderWidth:"9px",
+              //borderBottom: '2px solid green',
+              //borderRadius:"20px",
+              //backgroundImage: "linear-gradient(to right, green, black)"
+
             }}
             borderWidth="2px"
             borderColor="transparent"
