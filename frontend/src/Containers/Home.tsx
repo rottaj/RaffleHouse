@@ -74,7 +74,7 @@ const Home = () => {
             </div>
           </Flex>
           <Flex justify="center">
-            <Heading size="xl" color="white">
+            <Heading size="xl" color="white" fontFamily="Monaco">
               The worlds first and #1 in on-chain NFT gambling
             </Heading>
           </Flex>
@@ -87,8 +87,9 @@ const Home = () => {
           color="white"
           pt="75px"
           px="22px"
+          fontFamily="Monaco"
         >
-          <VStack>
+          <VStack >
             <Heading size="2xl">Total Winnings</Heading>
             <HStack>
               <Image
