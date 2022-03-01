@@ -5,4 +5,7 @@ export const AppRoutePaths = {
   HighRollers: "/high-rollers",
   Host: "/host",
   Profile: "/profile",
+  History: "/history",
+  FAQ: "/faq",
+  Settings: "/settings"
 };
