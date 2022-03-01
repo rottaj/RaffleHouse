@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { _abi } from "../interfaces/Eyescream_Interface";
 import { ethers } from "ethers";
 import { Link } from "react-router-dom";
@@ -7,17 +7,44 @@ import { _Raffle_abi } from "../interfaces/RaffleEscrow_Interface";
 import Footer from "../Components/Footer";
 import BaseContainer from "./BaseContainers/BaseContainer";
 import { getMetaDataSingle } from "../utils/HandleNFTs";
+import { MetaMaskUserContext } from "../utils/contexts";
 import {
-  Grid, 
-  GridItem,
   Box,
-  Image,
   Flex,
+  Text,
+  Image,
   Heading,
-  Button
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
+  useDisclosure,
+  Slider,
+  SliderMark,
+  SliderTrack,
+  SliderFilledTrack,
+  Tooltip,
+  SliderThumb,
+  Spinner,
+  Grid,
+  GridItem
+
 } from "@chakra-ui/react";
 import {CheckIcon} from "@chakra-ui/icons"
 import { FaEthereum, FaWpbeginner } from "react-icons/fa"
+import { db } from "../firebase-config";
+import {
+  collection,
+  getDocs,
+  setDoc,
+  increment,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+import RaffleCreator from "../Components/RaffleCreator";
 
 declare let window: any;
 const Raffles = () => {
@@ -81,11 +108,15 @@ const Raffles = () => {
     }
   };
 
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <BaseContainer>
+      <CreateGameModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
       <Box className="Raffles-container-main">
         <Box float="right">
-          <Button bgColor="green" color="white">
+          <Button bgColor="green" color="white" onClick={onOpen}>
               Create Game
           </Button>
         </Box>
@@ -253,3 +284,119 @@ const Raffle = (props: Props) => {
     </Box>
   );
 };
+
+
+
+type ModalProps = {
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+};
+ 
+const CreateGameModal = (props: ModalProps) => {
+  const { user: account } = useContext(MetaMaskUserContext);
+  const [balance, setBalance]: any = useState(0);
+  const [sliderValue, setSliderValue]: any = useState(0.1);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [txnNumber, setTxnNumber] = useState(0);
+  const [isCreated, setCreated] = useState(false);
+  const [contract, setContract]: any = useState();
+  const coinflipsCollectionRef = collection(db, "coinflips");      
+
+  const handleSubmit = () => {
+    setLoading(true);
+    /*
+    setTxnNumber(1);
+    createCoinFlipGame(parseFloat(sliderValue)).then((contract) => {
+      setContract(contract);
+      setTxnNumber(2);
+      sendTransactionToCoinFlips(contract, parseFloat(sliderValue)).then(async () => {
+        setTxnNumber(3);
+        await setDoc(doc(db, "coinflips", contract.address), {
+          creatorAddress: account, 
+          contractAddress: contract.address,
+          buyInPrice: parseFloat(sliderValue),
+          joineeAddress: null,
+          winner: "0",
+        });
+        const playerRef =  doc(db, "users", account);
+        await updateDoc(playerRef, {
+          totalDeposited: increment(parseFloat(sliderValue))
+        });
+        const requestParameters = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contractAddress: contract.address
+          }), // CREATE REQUEST BODY 
+        };
+        await fetch(
+          "https://rafflehouse.uk.r.appspot.com/fundGame",
+          //"http://127.0.0.1:8080/fundGame",
+          requestParameters
+        )
+      });
+    });
+    */
+  };
+
+  useEffect(() => {
+    const getBalance = async () => {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const balance = await provider.getBalance(account);
+      setBalance((parseInt(String(balance)) * 0.1 ** 18).toFixed(2));
+    };
+    if (window.ethereum) {
+      getBalance();
+    }
+  }, []);
+
+  return (
+    <Box>
+      {/*isCreated && <Redirect to={`/coin-flip/${contract.address}`} />*/}
+      <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered size="6xl">
+        <ModalOverlay textAlign="center"></ModalOverlay>
+        <ModalContent
+          bgColor="#1c191c"
+          color="white"
+          pt="2%"
+          textAlign="center"
+          alignContent="center"
+        >
+          {!isLoading ? (
+            <ModalBody>
+              <RaffleCreator/>
+            </ModalBody>
+          ) : (
+            // LOADING SCREEN
+            <ModalBody>
+              <Heading>Waiting for Metamask Transaction </Heading>
+              {txnNumber === 1 && (
+                <Box>
+                  <Text>Creating Game Contract</Text>
+                  <Spinner size="lg" />
+                </Box>
+              )}
+              {txnNumber === 2 && (
+                <Box>
+                  <Text>Sending Ethereum to Game</Text>
+                  <Spinner size="lg" />
+                </Box>
+              )}
+              {txnNumber === 3 && (
+                <Box>
+                  <Text>Adding Game to Coin Flips</Text>
+                  <Spinner size="lg" />
+                </Box>
+              )}
+            </ModalBody>
+          )}
+        </ModalContent>
+      </Modal>
+    </Box>
+  );
+};
+
+
+
