@@ -25,7 +25,7 @@ import { FaEthereum } from "react-icons/fa";
 
 import { useQuery, QueryClient } from "react-query";
 import { MetaMaskUserContext } from "../utils/contexts";
-import { TokenPrice } from "../utils/Opensea/TokenPrice";
+import { TokenPrice  } from "../utils/Opensea/TokenPrice";
 
 const OPENSEA_CONTRACT_URL =
   "https://testnets-api.opensea.io/api/v1/asset_contract/";
@@ -352,8 +352,8 @@ const NFT = ({ token, handleDeposit, game }: NFTProps) => {
                                 onClick={() =>
                                   handleDeposit(
                                     token,
-                                    (sliderValueOne * 0.01) ** 18,
-                                    (sliderValueTwo * 0.01) ** 18
+                                    sliderValueOne,
+                                    sliderValueTwo
                                   )
                                 }
                                 alignSelf="flex-end"
