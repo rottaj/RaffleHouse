@@ -24,6 +24,7 @@ import { MetaMaskDataContext } from "./utils/contexts/UserDataContext";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { db } from "./firebase-config";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
   collection,
   getDoc,
@@ -31,6 +32,8 @@ import {
   addDoc,
   doc,
 } from "firebase/firestore";
+import { url } from "node:inspector";
+import { CgArrowsExpandDownLeft } from "react-icons/cg";
 declare global {
   interface Window {
     ethereum: any;
@@ -40,9 +43,11 @@ declare global {
 function App() {
   const [user, setUser] = useState<string>(null);
   const [userProfile, setUserProfile]: any = useState({})
+  const [network, setNetwork] = useState("")
   const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
   const [provider, setProvider] = useState<any>(null);
   const queryClient = new QueryClient();
+  const storage = getStorage();
 
   const value = {
     user,
@@ -113,11 +118,29 @@ function App() {
     if (user) {
     const docRef = doc(db, "users", user);
     const docSnap = await getDoc(docRef);
+    //const userImage = '';
+    getDownloadURL(ref(storage, `${String(user)}`))
+    .then((url) => {
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = 'blob';
+        xhr.onload = (event) => {
+        const blob = xhr.response;
+        };
+        xhr.open('GET', url);
+        xhr.send();
+        docSnap['profileImage'] = url
+
+    })
+    .catch((error) => {
+        // Handle any errors
+    });
       if (docSnap.exists()) {
+        // Should store profile image from storage in users doc to avoid unecessary fetching
         setUserProfile(docSnap)
       }
       else {
         await setDoc(doc(db, "users", user), {
+          //profileImage: url,
           id: user,
           totalWinnings: 0,
           totalDeposited: 0

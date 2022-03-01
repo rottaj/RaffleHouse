@@ -5,6 +5,7 @@ import "./BaseContainer";
 import { MetaMaskUserContext } from "../../utils/contexts";
 import "../../styles/Home/Home.scss";
 import DrawerComponent from "../../Components/Nav/MessagesSidebar";
+import NetworkAndUser from "../../Components/NetworkAndUser";
 type BaseContainerProps = {
   showMessages?: boolean;
   children: React.ReactNode;
@@ -61,6 +62,7 @@ const BaseContainer = ({
       ) : (
         <Box bgColor="#141114"> 
           {showMessages && <DrawerComponent />}
+          <NetworkAndUser/>
           <Sidebar/>
           <Box
             minH="100vh"
