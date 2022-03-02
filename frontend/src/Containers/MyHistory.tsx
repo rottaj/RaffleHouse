@@ -3,6 +3,7 @@ import BaseContainer from "./BaseContainers/BaseContainer";
 import CoinFlip from "../Components/CoinFlip";
 import {
     Box,
+    HStack,
     Grid,
     GridItem,
     Heading
@@ -47,9 +48,14 @@ const MyHistory = () => {
         <BaseContainer>
             <Box textAlign="center" color="white">
                 <Heading> Game History </Heading>
-                <Box width="50%" ml="25%">
-                    <Heading>CoinFlips</Heading>
+                <HStack>
+                    <Heading>Coin Flips</Heading>
+                    <Heading>NFTS</Heading>
+                </HStack>
+                <HStack>
                     <Grid 
+                        w="10%"
+                        height="10%"
                         color="white"
                         templateColumns='repeat(2, 1fr)' 
                         gap={2}
@@ -60,13 +66,11 @@ const MyHistory = () => {
                             return (<GridItem><CoinFlip coinFlip={coinFlip}></CoinFlip></GridItem>)
                         })}
                     </Grid>
-                </Box>
-                <Box>
-                    <Heading>Raffles</Heading>
-                </Box>
-                <Box>
-                    <Heading>High Rollers</Heading>
-                </Box>
+                    <Box>
+                    </Box>
+                    <Box>
+                    </Box>
+                </HStack>
             </Box>
         </BaseContainer>
     )
