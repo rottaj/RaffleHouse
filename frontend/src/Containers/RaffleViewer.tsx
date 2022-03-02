@@ -190,6 +190,8 @@ type ModalProps = {
 
   const handleSubmit = async () => {
     if (window.ethereum) {
+      console.log("SLIDER VALUE", sliderValue)
+      console.log(props.token.contractAddress)
       setTxnNumber(1);
       var provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
@@ -198,8 +200,9 @@ type ModalProps = {
         _Raffle_abi,
         signer
       );
-      let depositTxn = await contract.deposit({
-        value: ethers.utils.parseEther(String((parseInt(props.token.buyInPrice) * 0.1 ** 18).toFixed(2))).toString(),
+      console.log("TESTING FOOBAR", parseInt(String(parseFloat(sliderValue) / 0.01)))
+      let depositTxn = await contract.deposit(parseInt(String(parseFloat(sliderValue) / 0.01)), {
+        value: ethers.utils.parseEther(parseFloat(sliderValue).toString()),
       });
       console.log(depositTxn);
     }
@@ -320,7 +323,7 @@ type ModalProps = {
                   color="white"
                   onClick={() => handleSubmit()}
                 >
-                  Create Game!
+                  Join Raffle!
                 </Button>
               </Box>
             </ModalBody>
