@@ -10,18 +10,25 @@ import { MetaMaskUserContext } from "../utils/contexts";
 import { FaEthereum } from "react-icons/fa";
 import {
   Box,
-  Heading,
   Flex,
-  Button,
-  Image,
   Text,
-  Skeleton,
+  Heading,
+  Button,
   Modal,
+  Image,
   ModalOverlay,
-  ModalBody,
   ModalContent,
-  ModalCloseButton,
-  useDisclosure
+  ModalBody,
+  useDisclosure,
+  Slider,
+  SliderMark,
+  SliderTrack,
+  SliderFilledTrack,
+  Tooltip,
+  SliderThumb,
+  Spinner,
+  Grid,
+  GridItem
 } from "@chakra-ui/react"
 import { TokenPrice } from "../utils/Opensea/TokenPrice";
 import { TokenMetaData } from "../utils/Opensea/TokenMetaData";
@@ -104,8 +111,11 @@ const RaffleViewer = () => {
     }
   }, []);
 
+  const {isOpen, onOpen, onClose} = useDisclosure()
+
   return (
     <BaseContainer>
+      <DepositModal token={token} isOpen={isOpen} onOpen={onOpen} onClose={onClose}/>
       <Box
         margin="0"
         height="100%" 
@@ -138,8 +148,10 @@ const RaffleViewer = () => {
               }
           </Box>
 
-
         </Flex>
+        <Box>
+          <Button onClick={onOpen}>Buy Tickets</Button>
+        </Box>
         <PlayersList players={players} />
       </Box>
   </BaseContainer>
@@ -160,94 +172,172 @@ export default RaffleViewer;
 
 
 
-
-
-
-
-
 type ModalProps = {
-  raffleContractAddress: any
-  gameInfo: any
+  token: any,
+  isOpen,
+  onOpen,
+  onClose
 }
 
   const DepositModal = (props: ModalProps) => {
-  const [tokenMetaData, setTokenMetaData]: any = useState({});
   const [isDepositOpen, setIsDepositOpen]: any = useState(false);
-  const [raffleContractAddress, setRaffleContractAddress]: any = useState("");
+  const [balance, setBalance]: any = useState(0);
   const {user} = useContext(MetaMaskUserContext)
-  const handleSubmit = async (contractAddress: any) => {
+  const [sliderValue, setSliderValue]: any = useState(0.1);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [txnNumber, setTxnNumber] = useState(0);
+
+  const handleSubmit = async () => {
     if (window.ethereum) {
+      setTxnNumber(1);
       var provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
-        contractAddress,
+        props.token.contractAddress,
         _Raffle_abi,
         signer
       );
       let depositTxn = await contract.deposit({
-        value: ethers.utils.parseEther(String((parseInt(props.gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2))).toString(),
+        value: ethers.utils.parseEther(String((parseInt(props.token.buyInPrice) * 0.1 ** 18).toFixed(2))).toString(),
       });
       console.log(depositTxn);
     }
   };
 
+  useEffect(() => {
+    const getBalance = async () => {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const balance = await provider.getBalance(user);
+      setBalance((parseInt(String(balance)) * 0.1 ** 18).toFixed(2));
+    };
+    if (window.ethereum) {
+      getBalance();
+    }
+  }, []);
 
-  const handleDepositClicked = () => {
-    setIsDepositOpen(!isDepositOpen);
-  };
 
 
-  const {isOpen, onOpen, onClose} = useDisclosure(
-    {defaultIsOpen: props.gameInfo.joineeAddress == "0x0000000000000000000000000000000000000000" && String(user.toUpperCase()) !== String(props.gameInfo.creatorAddress)})
   return (
     <Modal 
-      isOpen={isOpen} 
-      onClose={onClose}
+      isOpen={props.isOpen} 
+      onClose={props.onClose}
       isCentered
     >
       <ModalOverlay
         textAlign="center"
       />
-      <ModalContent
-        bgColor="#1c191c"
-        color="white"
-        background="#141414"
-        mx="25%"
-        textAlign="center"
-        alignContent="center"
-      >
-        <ModalBody
+        <ModalContent
+          bgColor="#1c191c"
+          color="white"
+          pt="2%"
+          textAlign="center"
+          alignContent="center"
         >
+          {!isLoading ? (
+            <ModalBody>
+              <Heading pb="30%">Buy Tickets!</Heading>
+              <Flex
+                margin="0"
+                height="100%"
+                width="100%"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Text width="auto">Your Balance: {balance}</Text>
+                <FaEthereum />
+              </Flex>
 
-          <Heading>Join Game</Heading>
-          <Box paddingLeft="13%">
-            <Image borderRadius="20px" src={tokenMetaData.image}></Image>
-          </Box>
-            <Flex
-              py="5%"
-              px="22%"
-              pl="150px"
-              margin="0" 
-              height="100%" 
-              justifyContent="center" 
-            >
-              <Heading>*PRICE HERE*</Heading>
-              <Heading pt="1%" pr="25%"><FaEthereum/></Heading>
-            </Flex>
-            <Box>
-              <Image borderRadius="20px" src={tokenMetaData.image}></Image>
-                  <RaffleDeposit
-                  tokenMetaData={tokenMetaData}
-                  isDepositOpen={isDepositOpen}
-                  raffleContractAddress={raffleContractAddress}
-                  />
-            </Box>
+              <Slider
+                id="slider"
+                defaultValue={5}
+                min={0}
+                max={100}
+                colorScheme="green"
+                onChange={(v) =>
+                  setSliderValue((balance * (v * 0.01)).toFixed(2))
+                }
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+              >
+                <SliderMark value={0} mt="1" ml="-2.5" fontSize="sm">
+                  <Flex>
+                    <Text>{0}</Text>
+                    <Box pt="3px">
+                      <FaEthereum />
+                    </Box>
+                  </Flex>
+                </SliderMark>
+                <SliderMark value={25} mt="1" ml="-2.5" fontSize="sm">
+                  <Flex>
+                    <Text>{(balance * 0.25).toFixed(2)}</Text>
+                    <Box pt="3px">
+                      <FaEthereum />
+                    </Box>
+                  </Flex>
+                </SliderMark>
+                <SliderMark value={50} mt="1" ml="-2.5" fontSize="sm">
+                  <Flex>
+                    <Text>{(balance * 0.5).toFixed(2)}</Text>
+                    <Box pt="3px">
+                      <FaEthereum />
+                    </Box>
+                  </Flex>
+                </SliderMark>
+                <SliderMark value={75} mt="1" ml="-2.5" fontSize="sm">
+                  <Flex>
+                    <Text>{(balance * 0.75).toFixed(2)}</Text>
+                    <Box pt="3px">
+                      <FaEthereum />
+                    </Box>
+                  </Flex>
+                </SliderMark>
+                <SliderMark value={100} mt="1" ml="-2.5" fontSize="sm">
+                  <Flex>
+                    <Text>{balance}</Text>
+                    <Box pt="3px">
+                      <FaEthereum />
+                    </Box>
+                  </Flex>
+                </SliderMark>
+                <SliderTrack>
+                  <SliderFilledTrack />
+                </SliderTrack>
+                <Tooltip
+                  hasArrow
+                  bg="teal.500"
+                  color="white"
+                  placement="top"
+                  isOpen={showTooltip}
+                  label={`${sliderValue} eth`}
+                >
+                  <SliderThumb />
+                </Tooltip>
+              </Slider>
+              <Box pt="30%" pb="10%">
+                <Button
+                  bgColor="green"
+                  color="white"
+                  onClick={() => handleSubmit()}
+                >
+                  Create Game!
+                </Button>
+              </Box>
+            </ModalBody>
+          ) : (
+            // LOADING SCREEN
+            <ModalBody>
+              <Heading>Waiting for Metamask Transaction </Heading>
+              {txnNumber === 1 && (
+                <Box>
+                  <Text>Sending Ethereum to Game</Text>
+                  <Spinner size="lg" />
+                </Box>
+              )}
 
-          <Button marginTop="10%" variant='ghost' onClick={onClose}>
-            Watch Game
-          </Button>
-        </ModalBody>
-      </ModalContent>
+            </ModalBody>
+          )}
+        </ModalContent>
     </Modal>
   )
 }

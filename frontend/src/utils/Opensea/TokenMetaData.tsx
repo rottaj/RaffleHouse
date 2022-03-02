@@ -98,7 +98,7 @@ export function TokenMetaData(props) {
                                 </>
                                 <Text fontSize="sm" color="white">{trait.trait_type}</Text>
                                 <Text fontSize="sm" color="white">{trait.value}</Text>
-                                <Text fontSize="sm" color={background}> {(((parseInt(trait.trait_count) * 0.01) * 10000) / 10000)* 100} %</Text>
+                                <Text fontSize="sm" color={background}> {((((parseInt(trait.trait_count) * 0.01) * 10000) / 10000)* 100).toFixed(2)} %</Text>
                             </Box>
                             </>
                         )

@@ -8,6 +8,7 @@ import Host from "./Containers/Host";
 import HighRollerViewer from "./Containers/HighRollerViewer";
 import CoinFlipViewer from "./Containers/CoinFlipViewer";
 import RaffleViewer from "./Containers/RaffleViewer";
+import FAQ from "./Containers/FAQ";
 import Profile from "./Containers/Profile";
 import { MetaMaskUserContext } from "./utils/contexts";
 import {
@@ -34,6 +35,8 @@ import {
 } from "firebase/firestore";
 import { url } from "node:inspector";
 import { CgArrowsExpandDownLeft } from "react-icons/cg";
+import MyHistory from "./Containers/MyHistory";
+import Settings from "./Containers/Settings";
 declare global {
   interface Window {
     ethereum: any;
@@ -160,6 +163,9 @@ function App() {
             <Route exact path="/high-rollers" component={HighRollers} />
             <Route exact path="/host" component={Host} />
             <Route exact path="/profile" component={Profile} />
+            <Route path="/history" component={MyHistory}/>
+            <Route path="/FAQ" component={FAQ}/>
+            <Route path="/settings" component={Settings}/>
             <Route path="/raffle/:contractAddress" component={RaffleViewer} />
             <Route
               path="/coin-flip/:contractAddress"
