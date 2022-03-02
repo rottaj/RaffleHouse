@@ -5,3 +5,4 @@ cache
 artifacts
 # GAE API
 api/GameHandler/app.yaml
+api/HighRollers/app.yaml
