@@ -26,6 +26,7 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { db } from "./firebase-config";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getCurrentEthereumGasPrice, getCurrentEthereumPrice } from "./utils/EthereumStats";
 import {
   collection,
   getDoc,
@@ -47,6 +48,7 @@ function App() {
   const [user, setUser] = useState<string>(null);
   const [userProfile, setUserProfile]: any = useState({})
   const [network, setNetwork] = useState("")
+  const [networkStats, setNetworkStats]:any = useState();
   const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
   const [provider, setProvider] = useState<any>(null);
   const queryClient = new QueryClient();
@@ -55,6 +57,8 @@ function App() {
   const value = {
     user,
     setUser,
+    networkStats,
+    setNetworkStats,
     userProfile,
     setUserProfile,
     provider,
@@ -77,6 +81,16 @@ function App() {
   };
 
   useEffect(() => {
+
+    const mountNetworkStats = async () => {
+        const ethereumPrice = await getCurrentEthereumPrice();
+        const ethereumGasPrice = await getCurrentEthereumGasPrice();
+        console.log("HELLO", ethereumGasPrice)
+        const ethereumStats = {...ethereumPrice.result, ...ethereumGasPrice.result}
+        console.log("FOOOBAR", ethereumStats)
+        setNetworkStats(ethereumStats)
+    }
+
     if (typeof window.ethereum != undefined) {
       checkConnectedUser();
       const etherProvider = new ethers.providers.Web3Provider(window.ethereum);
@@ -84,6 +98,8 @@ function App() {
       window.ethereum.on("accountsChanged", (accounts: string[]) => {
         setUser(accounts[0]);
       });
+      mountNetworkStats();
+
     } else {
       toast({
         title: "Metamask is not installed",
