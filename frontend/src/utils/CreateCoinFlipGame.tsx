@@ -31,21 +31,3 @@ export const sendTransactionToCoinFlips = async (contract, buyInPrice) => {
     })
 
 }
-
-export const addCoinFlipToGames = async (contract, buyInPrice) => {
-  var provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const coinFlipsContract = await new ethers.Contract(
-    CoinFlipAddress,
-    _CoinFlips_abi,
-    signer
-  ); 
-  const addCoinFlipsTxn = coinFlipsContract.addCoinFlip(
-    contract.address,
-    ethers.utils.parseEther(buyInPrice.toFixed(2))
-  );
-  console.log("COINFLIPS TXN", addCoinFlipsTxn);
-
-}
-
-//export default CreateCoinFlipGame

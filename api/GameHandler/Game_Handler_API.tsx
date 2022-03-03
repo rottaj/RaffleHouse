@@ -42,8 +42,21 @@ async function listenForWinner() { // Currently only updates winner --> Need to 
       }).then(async () => {
         const winnerRef = firestore.doc(FirebaseProject.db, "users", gameInfo.winner.toLowerCase());
         await firestore.updateDoc(winnerRef, {
-          totalWinnings: firestore.increment(parseFloat(String((parseInt(gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2))))
+          totalWinnings: firestore.increment(parseFloat(String((parseInt(gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2)))),
+          gamesWon: firestore.increment(1)
         });
+        if (gameInfo.winner == gameInfo.creatorAddress) { // Increment gamesLost for loser
+          const loserRef = firestore.doc(FirebaseProject.db, "users", gameInfo.joineeAddress.toLowerCase());
+          await firestore.updateDoc(loserRef, {
+            gamesLost: firestore.increment(1)
+          });
+        }
+        else {
+          const loserRef = firestore.doc(FirebaseProject.db, "users", gameInfo.creatorAddress.toLowerCase());
+          await firestore.updateDoc(loserRef, {
+            gamesLost: firestore.increment(1)
+          });
+        }
         const siteDataRef = firestore.doc(FirebaseProject.db, "siteData", "TotalWinnings");
         await firestore.updateDoc(siteDataRef, {
           TotalEth: firestore.increment(parseFloat(String((parseInt(gameInfo.buyInPrice) * 0.1 ** 18).toFixed(2))))
