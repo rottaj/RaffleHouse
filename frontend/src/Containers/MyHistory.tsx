@@ -31,6 +31,7 @@ import {
 } from "firebase/firestore";
 import { MetaMaskUserContext } from "../utils/contexts";
 import { FaEthereum } from 'react-icons/fa';
+import {BiDownArrowAlt, BiUpArrowAlt} from 'react-icons/bi'
 
 const MyHistory = () => {
     const [coinFlips, setCoinFlips]: any = useState([]);
@@ -62,19 +63,28 @@ const MyHistory = () => {
                 </Flex>
                 <Flex ml="35%" pt="5%">
                     <Box px="5%" borderRight="1px solid white" py="3%">
-                        <Heading fontSize="55px" color="green">Wins: </Heading>
+                        <Heading fontSize="55px" color="green">Wins: {userProfile.data().gamesWon}</Heading>
                     </Box>
                     <Box px="5%" py="3%">
-                        <Heading fontSize="55px" color="red">Losses:</Heading>
+                        <Heading fontSize="55px" color="red">Losses: {userProfile.data().gamesLost}</Heading>
                     </Box>
                 </Flex>
                 <Flex ml="31%">
                     <Flex mr="7%">
                         <Heading fontSize="35px" pr="5%">Profits:</Heading>
-                        <Flex>
-                            <Heading>{userProfile.data().totalWinnings}</Heading>
-                            <FaEthereum size={35}/>
-                        </Flex>
+                        <Box>
+                            <Flex>
+                                <Heading>{userProfile.data().totalWinnings}</Heading>
+                                <FaEthereum size={35}/>
+                            </Flex>
+                            {parseFloat(userProfile.data().totalDeposited) >= parseFloat(userProfile.data().totalWinnings) ? 
+                                <Flex><Heading color="red" fontSize={15}>({(parseFloat(userProfile.data().totalDeposited) / parseFloat(userProfile.data().totalWinnings)) * 100} %)</Heading><Box pt="1.5%"><BiDownArrowAlt color="red"/></Box></Flex>
+                            :
+                                <Flex><Heading color="green" fontSize={15}>({(parseFloat(userProfile.data().totalDeposited) / parseFloat(userProfile.data().totalWinnings)) * 100} %)</Heading><Box pt="1.5%"><BiUpArrowAlt color="green"/></Box></Flex>
+                            }
+
+                        </Box>
+
                     </Flex>
                     <Flex ml="7%">
                         <Heading fontSize="35px" pr="5%">Wagered:</Heading>

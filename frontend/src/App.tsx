@@ -146,7 +146,9 @@ function App() {
           //profileImage: url,
           id: user,
           totalWinnings: 0,
-          totalDeposited: 0
+          totalDeposited: 0,
+          gamesWon: 0,
+          gamesLost: 0
         });
       }
     }
