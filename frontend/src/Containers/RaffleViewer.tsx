@@ -182,27 +182,26 @@ type ModalProps = {
   const DepositModal = (props: ModalProps) => {
   const [isDepositOpen, setIsDepositOpen]: any = useState(false);
   const [balance, setBalance]: any = useState(0);
-  const {user} = useContext(MetaMaskUserContext)
+  const {user, networkStats} = useContext(MetaMaskUserContext)
   const [sliderValue, setSliderValue]: any = useState(0.1);
+  const [usdValue, setUsdValue]: any = useState();
   const [showTooltip, setShowTooltip] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [txnNumber, setTxnNumber] = useState(0);
 
   const handleSubmit = async () => {
     if (window.ethereum) {
-      console.log("SLIDER VALUE", sliderValue)
-      console.log(props.token.contractAddress)
+      const contractAddress = window.location.pathname.split("/").at(-1);
       setTxnNumber(1);
       var provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
-        props.token.contractAddress,
+        contractAddress,
         _Raffle_abi,
         signer
       );
-      console.log("TESTING FOOBAR", parseInt(String(parseFloat(sliderValue) / 0.01)))
       let depositTxn = await contract.deposit(parseInt(String(parseFloat(sliderValue) / 0.01)), {
-        value: ethers.utils.parseEther(parseFloat(sliderValue).toString()),
+        value: ethers.utils.parseEther(String(parseFloat(sliderValue))),
       });
       console.log(depositTxn);
     }
@@ -239,6 +238,7 @@ type ModalProps = {
         >
           {!isLoading ? (
             <ModalBody>
+              {console.log("PROPS", props)}
               <Heading pb="30%">Buy Tickets!</Heading>
               <Flex
                 margin="0"
@@ -250,6 +250,7 @@ type ModalProps = {
                 <Text width="auto">Your Balance: {balance}</Text>
                 <FaEthereum />
               </Flex>
+              <Text width="auto">USD: ${String(parseFloat(String(parseFloat(balance) * parseFloat(networkStats.ethusd))).toFixed(2)).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text> 
 
               <Slider
                 id="slider"
@@ -317,6 +318,9 @@ type ModalProps = {
                   <SliderThumb />
                 </Tooltip>
               </Slider>
+              <Box pt="10%">
+                <Heading fontSize="20px">${parseFloat(String(sliderValue * parseFloat(networkStats.ethusd))).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Heading>
+              </Box>
               <Box pt="30%" pb="10%">
                 <Button
                   bgColor="green"
