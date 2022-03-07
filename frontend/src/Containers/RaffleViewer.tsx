@@ -182,8 +182,9 @@ type ModalProps = {
   const DepositModal = (props: ModalProps) => {
   const [isDepositOpen, setIsDepositOpen]: any = useState(false);
   const [balance, setBalance]: any = useState(0);
-  const {user} = useContext(MetaMaskUserContext)
+  const {user, networkStats} = useContext(MetaMaskUserContext)
   const [sliderValue, setSliderValue]: any = useState(0.1);
+  const [usdValue, setUsdValue]: any = useState();
   const [showTooltip, setShowTooltip] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [txnNumber, setTxnNumber] = useState(0);
@@ -250,6 +251,7 @@ type ModalProps = {
                 <Text width="auto">Your Balance: {balance}</Text>
                 <FaEthereum />
               </Flex>
+              <Text width="auto">USD: ${String(parseFloat(String(parseFloat(balance) * parseFloat(networkStats.ethusd))).toFixed(2)).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text> 
 
               <Slider
                 id="slider"
@@ -317,6 +319,9 @@ type ModalProps = {
                   <SliderThumb />
                 </Tooltip>
               </Slider>
+              <Box pt="10%">
+                <Heading fontSize="20px">${parseFloat(String(sliderValue * parseFloat(networkStats.ethusd))).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Heading>
+              </Box>
               <Box pt="30%" pb="10%">
                 <Button
                   bgColor="green"

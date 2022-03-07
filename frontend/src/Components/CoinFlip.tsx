@@ -16,12 +16,13 @@ import {
   Flex,
   Image,
   Heading,
-
+  Text,
   useDisclosure,
 
 
 } from "@chakra-ui/react";
 import { FaEthereum } from "react-icons/fa";
+import { MetaMaskUserContext } from "../utils/contexts";
 
 
 
@@ -33,6 +34,7 @@ interface Props {
 
 const CoinFlip = (props: Props) => {
   //const history = useHistory();
+  const { networkStats } = useContext(MetaMaskUserContext)
   const storage = getStorage();
   const [creatorImage, setCreatorImage] = useState("");
   const [joineeImage, setJoineeImage] = useState("")
@@ -108,6 +110,7 @@ const CoinFlip = (props: Props) => {
                   <FaEthereum />
                 </Box>
               </Flex>
+              <Text>${parseFloat(String(props.coinFlip.buyInPrice * parseFloat(networkStats.ethusd))).toFixed(2)}</Text>
             </Box>
 
           </Box>
@@ -138,6 +141,7 @@ const CoinFlip = (props: Props) => {
                       <FaEthereum />
                     </Box>
                   </Flex>
+                  <Text>${parseFloat(String(props.coinFlip.buyInPrice * parseFloat(networkStats.ethusd))).toFixed(2)}</Text>
                 </Box>
 
               </Box>

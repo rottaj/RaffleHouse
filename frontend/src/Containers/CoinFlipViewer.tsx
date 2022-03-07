@@ -12,6 +12,7 @@ import {
   Heading,
   Image,
   Input,
+  Text,
   Button,
   Modal,
   ModalOverlay,
@@ -45,7 +46,7 @@ type ModalViewerProps = {
 declare let window: any;
 const CoinFlipViewer = (props: ModalViewerProps) => {
 
-  const { user } = useContext(MetaMaskUserContext)
+  const { user, networkStats } = useContext(MetaMaskUserContext)
   const [ coinStatus, setCoinStatus ] = useState("flipHead");
   useEffect(() => {
 
@@ -151,7 +152,7 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
                       <Heading fontSize="25px">{props.gameInfo.buyInPrice}</Heading>
                       <FaEthereum size={25}/>
                     </Flex>
-
+                    <Text>${parseFloat(String(props.gameInfo.buyInPrice * parseFloat(networkStats.ethusd))).toFixed(2)}</Text>
                     <Heading fontSize="sl">{props.gameInfo.creatorAddress}</Heading>
                   </Box>
                 </Box>
@@ -184,7 +185,7 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
                       <FaEthereum size={25}/>
                     </Flex>
 
-
+                    <Text>${parseFloat(String(props.gameInfo.buyInPrice * parseFloat(networkStats.ethusd))).toFixed(2)}</Text>
                     <Heading fontSize="sl">{props.gameInfo.joineeAddress}</Heading>
 
                   </Box>

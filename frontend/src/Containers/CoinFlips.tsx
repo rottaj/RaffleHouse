@@ -163,7 +163,7 @@ type ModalProps = {
 };
  
 const CreateGameModal = (props: ModalProps) => {
-  const { user: account } = useContext(MetaMaskUserContext);
+  const { user: account, networkStats } = useContext(MetaMaskUserContext);
   const [balance, setBalance]: any = useState(0);
   const [sliderValue, setSliderValue]: any = useState(0.1);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -245,7 +245,8 @@ const CreateGameModal = (props: ModalProps) => {
                 <Text width="auto">Your Balance: {balance}</Text>
                 <FaEthereum />
               </Flex>
-
+              <Text width="auto">USD: ${String(parseFloat(String(parseFloat(balance) * parseFloat(networkStats.ethusd))).toFixed(2)).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text> 
+              
               <Slider
                 id="slider"
                 defaultValue={5}
@@ -312,6 +313,9 @@ const CreateGameModal = (props: ModalProps) => {
                   <SliderThumb />
                 </Tooltip>
               </Slider>
+              <Box pt="10%">
+                <Heading fontSize="20px">${parseFloat(String(sliderValue * parseFloat(networkStats.ethusd))).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Heading>
+              </Box>
               <Box pt="30%" pb="10%">
                 <Button
                   bgColor="green"
