@@ -94,7 +94,7 @@ const RaffleViewer = () => {
       var provider = new ethers.providers.Web3Provider(window.ethereum);
       let contract = new ethers.Contract(contractAddress, _Raffle_abi, provider);
       const gameToken = await fetchNFTs(contractAddress); // FETCHES GAME TOKENS
-      console.log(gameToken[0])
+      console.log("GAMETOKEN", gameToken)
       setToken(gameToken[0]);
 
 
