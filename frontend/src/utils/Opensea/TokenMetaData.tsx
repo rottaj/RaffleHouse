@@ -48,7 +48,7 @@ export function TokenMetaData(props) {
   return (
     <Box>
 
-      {console.log(data)}
+      {console.log("HAHHA", data)}
       {isFetching || isRefetching ? (
         <Flex align="center" justify="center">
         </Flex>
