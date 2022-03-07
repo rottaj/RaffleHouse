@@ -191,19 +191,17 @@ type ModalProps = {
 
   const handleSubmit = async () => {
     if (window.ethereum) {
-      console.log("SLIDER VALUE", sliderValue)
-      console.log(props.token.contractAddress)
+      const contractAddress = window.location.pathname.split("/").at(-1);
       setTxnNumber(1);
       var provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
-        props.token.contractAddress,
+        contractAddress,
         _Raffle_abi,
         signer
       );
-      console.log("TESTING FOOBAR", parseInt(String(parseFloat(sliderValue) / 0.01)))
       let depositTxn = await contract.deposit(parseInt(String(parseFloat(sliderValue) / 0.01)), {
-        value: ethers.utils.parseEther(parseFloat(sliderValue).toString()),
+        value: ethers.utils.parseEther(String(parseFloat(sliderValue))),
       });
       console.log(depositTxn);
     }
@@ -240,6 +238,7 @@ type ModalProps = {
         >
           {!isLoading ? (
             <ModalBody>
+              {console.log("PROPS", props)}
               <Heading pb="30%">Buy Tickets!</Heading>
               <Flex
                 margin="0"
