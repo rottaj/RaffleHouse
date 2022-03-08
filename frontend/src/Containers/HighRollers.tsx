@@ -197,39 +197,41 @@ const HighRollersGame = () => {
           </Text>
         </Flex>
         <Flex color="white" flexDir="column">
-          <Flex fontSize="34px" pb="12px">
-            <Text>Game ID:</Text>
-            <>
-              {isLoading || !isSuccess ? (
-                <Flex align="center">
-                  <Skeleton w="200px" h="30px">
-                    loading
-                  </Skeleton>
-                </Flex>
-              ) : (
-                <Tooltip
-                  fontSize="22px"
-                  hasArrow
-                  label={data?.currentGame.contractAddress}
-                >
-                  <Text cursor="pointer" maxW="200px" noOfLines={1}>
-                    {data?.currentGame.contractAddress}
-                  </Text>
-                </Tooltip>
-              )}
-            </>
-          </Flex>
           <Box>
             <Stack
               spacing="40px"
               direction={["column", null, null, null, "row"]}
             >
-              <HighRollersGameBoard
-                contractAddress={data?.currentGame?.contractAddress}
-                usersWithData={usersWithData}
-                totalEthInGame={totalEthInGame}
-                userTokens={data?.userTokens || []}
-              />
+              <Box>
+                <Flex fontSize="34px" justify="center" pb="12px">
+                  <Text>Game ID:</Text>
+                  <>
+                    {isLoading || !isSuccess ? (
+                      <Flex align="center">
+                        <Skeleton w="200px" h="30px">
+                          loading
+                        </Skeleton>
+                      </Flex>
+                    ) : (
+                      <Tooltip
+                        fontSize="22px"
+                        hasArrow
+                        label={data?.currentGame.contractAddress}
+                      >
+                        <Text cursor="pointer" maxW="200px" noOfLines={1}>
+                          {data?.currentGame.contractAddress}
+                        </Text>
+                      </Tooltip>
+                    )}
+                  </>
+                </Flex>
+                <HighRollersGameBoard
+                  contractAddress={data?.currentGame?.contractAddress}
+                  usersWithData={usersWithData}
+                  totalEthInGame={totalEthInGame}
+                  userTokens={data?.userTokens || []}
+                />
+              </Box>
               <PlayerPanels players={usersWithData} />
             </Stack>
             <Box
@@ -244,7 +246,7 @@ const HighRollersGame = () => {
               <Flex justify="center">
                 <Text fontSize="32px">Game Pot</Text>
               </Flex>
-              <SimpleGrid minChildWidth="80px" spacing="12px" px="20px">
+              <SimpleGrid minChildWidth="90px" spacing="8px" px="20px">
                 {data?.gameTokens.map((token, index) => (
                   <Box key={index}>
                     <NFT

@@ -62,7 +62,13 @@ const Player = ({ name, index, numTokens, totalValue }) => {
 const PlayerPanels = ({ players }) => {
   // TODO replace name with call to db for name otherwise add address with ellipsis
   return (
-    <Stack direction="column" spacing="13px" minW="420px" w="100%">
+    <Stack
+      direction="column"
+      spacing="13px"
+      minW="420px"
+      w="100%"
+      pt={[0, 0, 0, 0, "75px"]}
+    >
       {players.map((player, index) => (
         <Player
           index={index}
