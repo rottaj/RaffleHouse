@@ -115,12 +115,12 @@ const Home = () => {
             <Heading fontSize="15px">Recent NFT Wins</Heading>
             <Flex>
               <Text fontSize="20px">
-                  {totalWinnings} + 
+                  {parseFloat(String(totalWinnings)).toFixed(2)} 
               </Text>
-              <Text>
-                  <FaEthereum size={30}/> 
+              <Text pt="1%">
+                  <FaEthereum size={25}/> 
               </Text>
-              <Text>
+              <Text pt="3%" pl="2%" fontSize="15px">
                 won
               </Text>
             </Flex>
