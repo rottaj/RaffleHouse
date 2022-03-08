@@ -15,6 +15,7 @@ import {
   Box,
   Flex,
   Image,
+  Button,
   Heading,
   Text,
   useDisclosure,
@@ -85,9 +86,10 @@ const CoinFlip = (props: Props) => {
       minWidth="300px"
       border="1px solid white"
       cursor="pointer"
-      _hover={{ bgColor: "green" }}
+      _hover={{ border: "3px solid green" }}
       onClick={onOpen}
     >
+      {console.log("BITCH", props.coinFlip.joineeAddress)}
       <CoinFlipViewer isOpen={isOpen} onOpen={onOpen} onClose={onClose} gameInfo={props.coinFlip} creatorImage={creatorImage} joineeImage={joineeImage}/>
       <Flex>
         <>
@@ -129,8 +131,7 @@ const CoinFlip = (props: Props) => {
                 <Image borderRadius="50%"  maxHeight="60px" maxWidth="60px"src={CoinBear}></Image>
               </Box>
             </Flex>
-            {props.coinFlip.joineeAddress !==
-            "0x0000000000000000000000000000000000000000" ? 
+            {props.coinFlip.joineeAddress !== null ? 
               <Box>
                 <Heading fontSize="20px">{props.coinFlip.winner.substr(0, 10)}...</Heading>
 
@@ -146,8 +147,9 @@ const CoinFlip = (props: Props) => {
 
               </Box>
             :
-
-              <Heading color="green"fontSize="20px">Joinable</Heading>
+              <Box>
+                <Button _hover={{bgColor:"lightgreen"}}mt="60%" color="green"fontSize="20px">Join Game</Button>
+              </Box>
             }
           </Box>
 
