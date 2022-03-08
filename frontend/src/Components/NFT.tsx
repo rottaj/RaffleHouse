@@ -25,7 +25,7 @@ import { FaEthereum } from "react-icons/fa";
 
 import { useQuery, QueryClient } from "react-query";
 import { MetaMaskUserContext } from "../utils/contexts";
-import { TokenPrice  } from "../utils/Opensea/TokenPrice";
+import { TokenPrice } from "../utils/Opensea/TokenPrice";
 
 const OPENSEA_CONTRACT_URL =
   "https://testnets-api.opensea.io/api/v1/asset_contract/";
@@ -38,8 +38,6 @@ type NFTProps = {
   handleDeposit: any;
   game: string;
 };
-
-
 
 const NFT = ({ token, handleDeposit, game }: NFTProps) => {
   const { queryClient } = useContext(MetaMaskUserContext);
@@ -54,7 +52,7 @@ const NFT = ({ token, handleDeposit, game }: NFTProps) => {
     <Box height="100%" width="100%" maxW="250px">
       {token?.image ? (
         <>
-          {game != "highrollers-pot" ? (
+          {game !== "highrollers-pot" ? (
             <Box>
               <Image
                 cursor="pointer"
@@ -93,7 +91,7 @@ const NFT = ({ token, handleDeposit, game }: NFTProps) => {
                     <ModalHeader>{token.tokenName}</ModalHeader>
 
                     <ModalBody>
-                      {game == "highrollers" && (
+                      {game === "highrollers" && (
                         <Flex>
                           <Image
                             width="200px"
@@ -170,7 +168,7 @@ const NFT = ({ token, handleDeposit, game }: NFTProps) => {
                               >
                                 <Flex>
                                   <Text>{0}</Text>
-                                  <Box pt="3px">
+                                  <Box pt="3px" color="white">
                                     <FaEthereum />
                                   </Box>
                                 </Flex>
