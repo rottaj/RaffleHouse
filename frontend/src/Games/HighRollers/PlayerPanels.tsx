@@ -28,6 +28,7 @@ const Player = ({ name, index, numTokens, totalValue }) => {
       maxW="480px"
       w="100%"
       px="22px"
+      border={`3px solid ${colorScheme[index % colorScheme.length]}`}
       bgGradient={`linear(to-r,${
         colorScheme[index % colorScheme.length]
       }, #000000 70%)`}
