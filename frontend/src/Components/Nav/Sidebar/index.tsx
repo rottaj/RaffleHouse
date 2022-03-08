@@ -14,8 +14,6 @@ export const Sidebar = () => {
       flexShrink={0}
       bgColor="#141114"
       zIndex={8000}
-      borderRightWidth="1px"
-      borderRightColor="grey"
     >
       <Image pt="22px" src={Logo} />
 

@@ -125,7 +125,7 @@ const HighRollersCircle = ({
           _hover={{ bgColor: "lightGreen" }}
           _active={{ bgColor: "darkGreen" }}
         >
-          {userIsInGame ? "Deposit another token" : "Join Game"}
+          {userIsInGame ? "Deposit another NFT" : "Join Game"}
         </Button>
       </Flex>
 
