@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Button,
@@ -6,7 +6,6 @@ import {
   Flex,
   IconButton,
   Spinner,
-  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import { Sidebar } from "../../Components/Nav/Sidebar";
@@ -104,8 +103,6 @@ const BaseContainer = ({
               marginLeft="auto"
               marginRight="auto"
               pt={["56px", null, "84px"]}
-              pl={[0, 0, 0, isOpen && "240px"]}
-              transition="padding-left 0.2s ease-out"
             >
               {children}
             </Box>

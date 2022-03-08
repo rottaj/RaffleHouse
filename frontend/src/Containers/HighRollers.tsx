@@ -21,7 +21,7 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { useQuery } from "react-query";
-import { MetaMaskUserContext } from "../utils/contexts";
+import { BaseContainerContext, MetaMaskUserContext } from "../utils/contexts";
 import HighRollersGameBoard from "../Games/HighRollers/HighRollersGameBoard";
 import PlayerPanels from "../Games/HighRollers/PlayerPanels";
 import { useMemo } from "react";
@@ -185,8 +185,17 @@ const HighRollersGame = () => {
     return tempUsers;
   }, [data?.gameTokens]);
 
+  const { isSidebarOpen } = useContext(BaseContainerContext);
   return (
-    <Flex flexDir="column" align="center" justify="center" w="100%" h="100%">
+    <Flex
+      pl={isSidebarOpen && [0, 0, 0, "80px"]}
+      transition="padding-left 0.2s ease-out"
+      flexDir="column"
+      align="center"
+      justify="center"
+      w="100%"
+      h="100%"
+    >
       <Box>
         <Flex>
           <Text color="white" fontSize="48px">
