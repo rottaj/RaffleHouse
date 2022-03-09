@@ -39,7 +39,7 @@ type NFTProps = {
   game: string;
 };
 
-const NFT = ({ token, handleDeposit, game }: NFTProps) => {
+export function NFT({ token, handleDeposit, game }: NFTProps) {
   const { queryClient } = useContext(MetaMaskUserContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [reservePrice, setReservePrice]: any = useState(10);
@@ -47,6 +47,42 @@ const NFT = ({ token, handleDeposit, game }: NFTProps) => {
   const [sliderValueOne, setSliderValueOne]: any = useState(0.1);
   const [sliderValueTwo, setSliderValueTwo]: any = useState(0.1);
   const [showTooltip, setShowTooltip] = useState(false);
+
+  const invalidQueries = async () => {
+    await queryClient.invalidateQueries(
+      `${token.tokenName}_${token.tokenID}`
+    );
+  };
+
+  let assetUrl =
+    OPENSEA_ASSET_URL + token.contractAddress + "/" + token.tokenID;
+  const fetchPrice = async () =>
+    await fetch(assetUrl).then((res) => res.json());
+  const {
+    isLoading,
+    isError,
+    error,
+    data,
+    isFetching,
+    isRefetching,
+    isPreviousData,
+  } = useQuery(
+    `${token.tokenName}_${token.tokenID}`,
+    () => fetchPrice(),
+    {
+      keepPreviousData: true,
+      retry: 5,
+      staleTime: Infinity,
+      onSuccess: (data) => {
+        if (
+          data.detail ==
+          "Request was throttled. Expected available in 1 second."
+        ) {
+          invalidQueries();
+        }
+      },
+    }
+  );
 
   return (
     <Box height="100%" width="100%" maxW="250px">
@@ -77,7 +113,29 @@ const NFT = ({ token, handleDeposit, game }: NFTProps) => {
                   Deposit
                 </Button>
                 <Flex pl="8px">
-                  <TokenPrice token={token} queryClient={queryClient} />
+                  {/*<TokenPrice token={token} queryClient={queryClient} /> */}
+                  <Box>
+                    {isFetching || isRefetching ? (
+                      <Flex align="center" justify="center">
+                        <Text color="white" fontSize="md" pr={1}>
+                          <Skeleton>0.03 eth</Skeleton>
+                        </Text>
+                      </Flex>
+                    ) : (
+                      <>
+                        {data.detail == undefined && (
+                          <Flex>
+                            <Text color="white">
+                              Price: {data["collection"]["stats"]["average_price"].toFixed(2)}
+                            </Text>
+                            <Box pt="3px" color="white">
+                              <FaEthereum />
+                            </Box>
+                          </Flex>
+                        )}
+                      </>
+                    )}
+                  </Box>
                 </Flex>
                 <Modal
                   isOpen={isOpen}
@@ -102,13 +160,33 @@ const NFT = ({ token, handleDeposit, game }: NFTProps) => {
                           <Flex ml={4} fontSize="3xl" w="100%" flexDir="column">
                             <Text>Token ID: {token.tokenID}</Text>
 
-                            <TokenPrice
-                              token={token}
-                              queryClient={queryClient}
-                            />
+                            <Box>
+                              {isFetching || isRefetching ? (
+                                <Flex align="center" justify="center">
+                                  <Text color="white" fontSize="md" pr={1}>
+                                  <Skeleton>0.03 eth</Skeleton>
+                                  </Text>
+                                </Flex>
+                              ) : (
+                              <>
+                              {data.detail == undefined && (
+                                <Flex>
+                                  <Text color="white">
+                                  Price: {data["collection"]["stats"]["average_price"].toFixed(2)}
+                                  </Text>
+                                  <Box pt="3px" color="white">
+                                    <FaEthereum />
+                                  </Box>
+                                </Flex>
+                              )}
+                            </>
+                            )}
+                  </Box>
                             <Flex h="full">
                               <Button
-                                onClick={() => handleDeposit(token)}
+                                onClick={() => 
+                                  handleDeposit(Object.assign(token, {"tokenPrice": data["collection"]["stats"]["average_price"].toFixed(2)}))
+                                }
                                 alignSelf="flex-end"
                                 bgColor="#3a0ca3"
                                 w="140px"

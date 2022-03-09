@@ -62,6 +62,8 @@ const Player = ({ name, index, numTokens, totalValue }) => {
 const PlayerPanels = ({ players }) => {
   // TODO replace name with call to db for name otherwise add address with ellipsis
   return (
+    <>
+    {players && 
     <Stack
       direction="column"
       spacing="13px"
@@ -69,15 +71,17 @@ const PlayerPanels = ({ players }) => {
       w="100%"
       pt={[0, 0, 0, 0, "75px"]}
     >
-      {players.map((player, index) => (
+      {Object.keys(players).map((player, index) => (
         <Player
           index={index}
-          name="blake.eth"
-          numTokens={player.numTokens}
-          totalValue={player.totalEth}
+          name={player.substr(0, 11)+ '...'}
+          numTokens={players[player].tokens}
+          totalValue={players[player].totalDeposited}
         />
       ))}
     </Stack>
+    }
+    </>
   );
 };
 
