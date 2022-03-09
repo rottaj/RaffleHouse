@@ -35,6 +35,7 @@ const HighRollersCircle = ({
   const { user: account } = useContext(MetaMaskUserContext);
 
   const handleDeposit = async (selectedToken: any) => {
+    console.log("SELECTED TOKEN", selectedToken)
     var provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const collectionContract = new ethers.Contract(
@@ -53,9 +54,8 @@ const HighRollersCircle = ({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          tickets: selectedToken.tokenPrice,
+          token: selectedToken,
           playerAddress: account,
-          tokenURI: selectedToken.image,
         }), // CREATE REQUEST BODY ( WILL ADD CONTRACT ADDRESS + TOKEN ID FOR BACKEND AUTH)
       };
       await fetch(
@@ -84,7 +84,7 @@ const HighRollersCircle = ({
   const donutItemArr = usersWithData.map((user, index) => {
     return {
       value: (user.totalEth / totalEthInGame) * 100,
-      displayValue: user.totalEth + " eth",
+      displayValue: parseFloat(user.totalEth).toFixed(2) + " eth",
       label: user.totalEth,
       color: colorScheme[index % colorScheme.length],
     };

@@ -27,6 +27,18 @@ import PlayerPanels from "../Games/HighRollers/PlayerPanels";
 import { useMemo } from "react";
 import { groupBy, mapValues } from "lodash";
 import NFT from "../Components/NFT";
+import { db } from "../firebase-config";
+import {
+  collection,
+  query,
+  doc,
+  where,
+  getDocs,
+  setDoc,
+  increment,
+  updateDoc,
+  getDoc,
+} from "firebase/firestore";
 
 interface CurrentGame {
   contractAddress: string;
@@ -50,7 +62,7 @@ const HighRollersGame = () => {
 
   const [minutesLeft, setMinutesLeft] = useState(0);
   const [secondsLeft, setSecondsLeft] = useState(0);
-
+  const highRollersCollectionRef = collection(db, "highrollers");    
   // // START OF GAME INFO
   // const getCountDown = () => {
   //   let dateString: any = parseInt(data?.currentGame.endTime);
@@ -72,37 +84,7 @@ const HighRollersGame = () => {
 
   // END OF GAME INFO
 
-  const getUniqueAddresses = (array: any) => {
-    const unique = array.filter(
-      (item: any, i: any, ar: any) => ar.indexOf(item) === i
-    );
-    return unique;
-  };
 
-  const getOccurances = (array: any, val: any) => {
-    const ticketNumber = array.reduce(
-      (a: any, v: any) => (v === val ? a + 1 : a),
-      0
-    );
-    return ticketNumber;
-  };
-
-  const getTickets = async (uniqueAddresses: any, tickets: any) => {
-    const tempPlayers = [];
-    for (let i = 0; i <= uniqueAddresses.length; i++) {
-      const ticketNumber = getOccurances(tickets, uniqueAddresses[i]);
-      if (uniqueAddresses[i] !== undefined) {
-        const player = {
-          address: uniqueAddresses[i],
-          tickets: ticketNumber,
-          totalEth: ticketNumber.toFixed(2),
-          chance: ((ticketNumber / tickets.length) * 100).toFixed(2),
-        };
-        tempPlayers.push(player);
-      }
-    }
-    return tempPlayers;
-  };
 
   useEffect(() => {
     document.title = "High Rollers - Raffle House";
@@ -113,38 +95,35 @@ const HighRollersGame = () => {
 
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
-    const HighRollersContract = new ethers.Contract(
-      HighRollersAddress,
-      _HighRollers_abi,
-      signer
-    );
-    const currentHighRollerGame: any =
-      await HighRollersContract.getCurrentGame();
-    const currentGameInstance: CurrentGame = {
-      contractAddress: currentHighRollerGame["contractAddress"],
-      startTime: currentHighRollerGame.startTime,
-      endTime: currentHighRollerGame.endTime,
-      winner: currentHighRollerGame.winner,
-    };
 
+    const gamesQuery = query(highRollersCollectionRef, where("winner", "==", "0")); // using winner for now... will add times later.
+    const querySnapshot = await getDocs(gamesQuery);
+    console.log("QUERY SNAPSHOT", querySnapshot.docs[0])
+    const currentHighRollerGame = querySnapshot.docs[0].data();
+    const currentGameRef = doc(highRollersCollectionRef, currentHighRollerGame.contractAddress);
+    const currentGameSnap = await getDoc(currentGameRef);
+
+    //const gameToks = await fetchNFTs(currentHighRollerGame.contractAddress); // FETCHES GAME TOKENS
+    const players = currentGameSnap.data()["players"];
+    const gameToks = currentGameSnap.data()["gameTokens"];
     const userToks = await fetchNFTs(account);
 
-    const gameToks = await fetchNFTs(currentGameInstance.contractAddress); // FETCHES GAME TOKENS
     const currentHighRollerContract = new ethers.Contract(
-      currentGameInstance.contractAddress,
+      currentHighRollerGame.contractAddress,
       _HighRoller_abi,
       signer
     );
+    
+    console.log("TESTING CURRENT GAME", currentHighRollerGame)
     const tickets = await currentHighRollerContract.getTickets();
-    const uniqueAddresses = await getUniqueAddresses(tickets);
-
+    
     // TODO : requests not working
     console.log("ticks", tickets);
-    console.log("uniq", uniqueAddresses);
-    const players = await getTickets(uniqueAddresses, tickets);
+    
+   
 
     return {
-      currentGame: currentGameInstance,
+      currentGame: currentHighRollerGame,
       gameTokens: gameToks,
       userTokens: userToks,
       players: players,
@@ -163,17 +142,17 @@ const HighRollersGame = () => {
   // TODO : replace token id with token value
   const totalEthInGame = data?.gameTokens.reduce(
     (previousValue, currentValue) =>
-      previousValue + parseInt(currentValue.tokenID),
+      previousValue + parseFloat(currentValue.tokenPrice),
     0
   );
-
+  
   const usersWithData = useMemo(() => {
     const groupByUser = mapValues(groupBy(data?.gameTokens, "from"));
     let tempUsers = [];
     for (const user in groupByUser) {
       const totalEthForUser = groupByUser[user].reduce(
         (previousValue, currentValue) =>
-          previousValue + parseInt(currentValue.tokenID),
+          previousValue + parseFloat(currentValue.tokenPrice),
         0
       );
       tempUsers.push({
@@ -241,7 +220,7 @@ const HighRollersGame = () => {
                   userTokens={data?.userTokens || []}
                 />
               </Box>
-              <PlayerPanels players={usersWithData} />
+              <PlayerPanels players={data?.players} />
             </Stack>
             <Box
               w="480px"

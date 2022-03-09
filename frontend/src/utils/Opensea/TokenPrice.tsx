@@ -1,3 +1,12 @@
+
+/*
+    --------------IMPORTANT---------------
+
+    TokenPrice is being deprecated... Moving all logic to NFT.
+    ./Components/NFT.tsx
+*/
+
+
 import { useQuery, QueryClient } from "react-query";
 import {
   Box,
