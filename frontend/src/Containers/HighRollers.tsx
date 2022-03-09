@@ -6,16 +6,39 @@ import {
   HighRollersAddress,
   _HighRollers_abi,
 } from "../interfaces/HighRollers_Interface";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { fetchNFTs } from "../utils/HandleNFTs";
-import NFTSelector from "../Components/NFTSelector";
-import PlayerList from "../Components/PlayersList";
-import HighRollersPot from "../Components/HighRollerPot";
 import BaseContainer from "./BaseContainers/BaseContainer";
 import "../styles/HighRollers/HighRollers.scss";
-import { Box, Heading, Flex, Text, Skeleton } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Flex,
+  Text,
+  Skeleton,
+  Tooltip,
+  Stack,
+  SimpleGrid,
+} from "@chakra-ui/react";
 import { useQuery } from "react-query";
-import { MetaMaskUserContext } from "../utils/contexts";
+import { BaseContainerContext, MetaMaskUserContext } from "../utils/contexts";
+import HighRollersGameBoard from "../Games/HighRollers/HighRollersGameBoard";
+import PlayerPanels from "../Games/HighRollers/PlayerPanels";
+import { useMemo } from "react";
+import { groupBy, mapValues } from "lodash";
+import NFT from "../Components/NFT";
+import { db } from "../firebase-config";
+import {
+  collection,
+  query,
+  doc,
+  where,
+  getDocs,
+  setDoc,
+  increment,
+  updateDoc,
+  getDoc,
+} from "firebase/firestore";
 
 interface CurrentGame {
   contractAddress: string;
@@ -25,107 +48,46 @@ interface CurrentGame {
 }
 
 const HighRollers = () => {
+  return (
+    <BaseContainer>
+      <HighRollersGame />
+    </BaseContainer>
+  );
+};
+
+export default HighRollers;
+
+const HighRollersGame = () => {
   const { user: account, isLoadingUser } = useContext(MetaMaskUserContext);
 
   const [minutesLeft, setMinutesLeft] = useState(0);
   const [secondsLeft, setSecondsLeft] = useState(0);
-
-  const handleDeposit = async (selectedToken: any) => {
-    var provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const collectionContract = new ethers.Contract(
-      selectedToken.contractAddress,
-      _abi,
-      signer
-    );
-    const sendingTxn = await collectionContract.transferFrom(
-      account,
-      data?.currentGame.contractAddress,
-      selectedToken.tokenID
-    );
-    sendingTxn.wait();
-    if (sendingTxn) {
-      const requestParameters = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          tickets: selectedToken.tokenPrice,
-          playerAddress: account,
-          tokenURI: selectedToken.image,
-        }), // CREATE REQUEST BODY ( WILL ADD CONTRACT ADDRESS + TOKEN ID FOR BACKEND AUTH)
-      };
-      await fetch(
-        "http://127.0.0.1:8080/submit-tickets-high-rollers",
-        requestParameters
-      )
-        .then((res) => {
-          // FETCH TO HIGHROLLER API
-          return res.json();
-        })
-        .then((data) => {
-          console.log(data);
-        });
-    }
-  };
-
-  // START OF GAME INFO
-  const getCountDown = () => {
-    let dateString: any = parseInt(data?.currentGame.endTime);
-    var now = new Date().getTime();
-    var countDownDate = new Date(dateString).getTime();
-    var minutes = parseInt(String((countDownDate - now / 1000) / 60));
-    var seconds = parseInt(
-      String(countDownDate - now / 1000 - parseInt(String(minutes)) * 60)
-    );
-    if (minutes <= 0) {
-      minutes = 0;
-    }
-    if (seconds <= 0) {
-      seconds = 0;
-    }
-    setMinutesLeft(minutes);
-    setSecondsLeft(seconds);
-  };
+  const highRollersCollectionRef = collection(db, "highrollers");    
+  // // START OF GAME INFO
+  // const getCountDown = () => {
+  //   let dateString: any = parseInt(data?.currentGame.endTime);
+  //   var now = new Date().getTime();
+  //   var countDownDate = new Date(dateString).getTime();
+  //   var minutes = parseInt(String((countDownDate - now / 1000) / 60));
+  //   var seconds = parseInt(
+  //     String(countDownDate - now / 1000 - parseInt(String(minutes)) * 60)
+  //   );
+  //   if (minutes <= 0) {
+  //     minutes = 0;
+  //   }
+  //   if (seconds <= 0) {
+  //     seconds = 0;
+  //   }
+  //   setMinutesLeft(minutes);
+  //   setSecondsLeft(seconds);
+  // };
 
   // END OF GAME INFO
 
-  const getUniqueAddresses = (array: any) => {
-    const unique = array.filter(
-      (item: any, i: any, ar: any) => ar.indexOf(item) === i
-    );
-    return unique;
-  };
 
-  const getOccurances = (array: any, val: any) => {
-    const ticketNumber = array.reduce(
-      (a: any, v: any) => (v === val ? a + 1 : a),
-      0
-    );
-    return ticketNumber;
-  };
-
-  const getTickets = async (uniqueAddresses: any, tickets: any) => {
-    const tempPlayers = [];
-    for (let i = 0; i <= uniqueAddresses.length; i++) {
-      const ticketNumber = getOccurances(tickets, uniqueAddresses[i]);
-      if (uniqueAddresses[i] !== undefined) {
-        const player = {
-          address: uniqueAddresses[i],
-          tickets: ticketNumber,
-          totalEth: ticketNumber.toFixed(2),
-          chance: ((ticketNumber / tickets.length) * 100).toFixed(2),
-        };
-        tempPlayers.push(player);
-      }
-    }
-    return tempPlayers;
-  };
 
   useEffect(() => {
     document.title = "High Rollers - Raffle House";
-    // var interval = setInterval(() => {
-    //   getCountDown();
-    // }, 1000);
   }, []);
 
   const getGameData = async () => {
@@ -133,34 +95,35 @@ const HighRollers = () => {
 
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
-    const HighRollersContract = new ethers.Contract(
-      HighRollersAddress,
-      _HighRollers_abi,
-      signer
-    );
-    const currentHighRollerGame: any =
-      await HighRollersContract.getCurrentGame();
-    const currentGameInstance: CurrentGame = {
-      contractAddress: currentHighRollerGame["contractAddress"],
-      startTime: currentHighRollerGame.startTime,
-      endTime: currentHighRollerGame.endTime,
-      winner: currentHighRollerGame.winner,
-    };
 
+    const gamesQuery = query(highRollersCollectionRef, where("winner", "==", "0")); // using winner for now... will add times later.
+    const querySnapshot = await getDocs(gamesQuery);
+    console.log("QUERY SNAPSHOT", querySnapshot.docs[0])
+    const currentHighRollerGame = querySnapshot.docs[0].data();
+    const currentGameRef = doc(highRollersCollectionRef, currentHighRollerGame.contractAddress);
+    const currentGameSnap = await getDoc(currentGameRef);
+
+    //const gameToks = await fetchNFTs(currentHighRollerGame.contractAddress); // FETCHES GAME TOKENS
+    const players = currentGameSnap.data()["players"];
+    const gameToks = currentGameSnap.data()["gameTokens"];
     const userToks = await fetchNFTs(account);
 
-    const gameToks = await fetchNFTs(currentGameInstance.contractAddress); // FETCHES GAME TOKENS
     const currentHighRollerContract = new ethers.Contract(
-      currentGameInstance.contractAddress,
+      currentHighRollerGame.contractAddress,
       _HighRoller_abi,
       signer
     );
+    
+    console.log("TESTING CURRENT GAME", currentHighRollerGame)
     const tickets = await currentHighRollerContract.getTickets();
-    const uniqueAddresses = await getUniqueAddresses(tickets);
-    const players = await getTickets(uniqueAddresses, tickets);
+    
+    // TODO : requests not working
+    console.log("ticks", tickets);
+    
+   
 
     return {
-      currentGame: currentGameInstance,
+      currentGame: currentHighRollerGame,
       gameTokens: gameToks,
       userTokens: userToks,
       players: players,
@@ -176,107 +139,119 @@ const HighRollers = () => {
     }
   );
 
-  console.log("MY DATA", data);
+  // TODO : replace token id with token value
+  const totalEthInGame = data?.gameTokens.reduce(
+    (previousValue, currentValue) =>
+      previousValue + parseFloat(currentValue.tokenPrice),
+    0
+  );
+  
+  const usersWithData = useMemo(() => {
+    const groupByUser = mapValues(groupBy(data?.gameTokens, "from"));
+    let tempUsers = [];
+    for (const user in groupByUser) {
+      const totalEthForUser = groupByUser[user].reduce(
+        (previousValue, currentValue) =>
+          previousValue + parseFloat(currentValue.tokenPrice),
+        0
+      );
+      tempUsers.push({
+        totalEth: totalEthForUser,
+        address: user,
+        numTokens: groupByUser[user].length,
+      });
+    }
+    return tempUsers;
+  }, [data?.gameTokens]);
 
+  const { isSidebarOpen } = useContext(BaseContainerContext);
   return (
-    <BaseContainer>
-      <Box mt={6} textAlign="center">
-        <Flex w="100%" justify="center">
-          <Heading color="white" fontSize="40px">
+    <Flex
+      pl={isSidebarOpen && [0, 0, 0, "80px"]}
+      transition="padding-left 0.2s ease-out"
+      flexDir="column"
+      align="center"
+      justify="center"
+      w="100%"
+      h="100%"
+    >
+      <Box>
+        <Flex>
+          <Text color="white" fontSize="48px">
             High&nbsp;
-          </Heading>
-          <Heading color="green" fontSize="40px">
+          </Text>
+          <Text color="green" fontSize="48px">
             Roller
-          </Heading>
+          </Text>
         </Flex>
-
-        <>
-          {isLoading || !isSuccess ? (
-            <Flex flexDir="column" align="center">
-              <Skeleton h="24px" mb="4px">
-                <Text color="white" fontSize="20px">
-                  Game Address: loading game dddress
-                </Text>
-              </Skeleton>
-
-              <Skeleton h="24px" mb="4px">
-                <Text color="#31B67E" fontSize="20px">
-                  Game in Progress
-                </Text>
-              </Skeleton>
-
-              <Skeleton h="24px">
-                <Text color="white">0 Minutes 0 Seconds</Text>
-              </Skeleton>
-            </Flex>
-          ) : (
-            <>
-              {data?.currentGame.contractAddress ? (
-                <Box>
-                  <Heading color="white" fontSize="20px" mb={1}>
-                    Game Address: {data?.currentGame.contractAddress}
-                  </Heading>
-                  {data?.currentGame.winner !==
-                  "0x0000000000000000000000000000000000000000" ? (
-                    <Heading color="#FDCFF3" fontSize="20px">
-                      Winner: {data?.currentGame.winner}
-                    </Heading>
-                  ) : (
-                    <Heading color="#31B67E" fontSize="20px">
-                      Game in Progress
-                    </Heading>
-                  )}
-                  <Text color="white" mt={1}>
-                    {minutesLeft} Minutes {secondsLeft} Seconds{" "}
-                  </Text>
-                </Box>
-              ) : (
-                <Heading color="#FDCFF3" fontSize="20px">
-                  No Game
-                </Heading>
-              )}
-            </>
-          )}
-
-          <Flex justify="center" pt={6} pb={4}>
-            <Box
-              width="800px"
-              height="300px"
-              borderRadius="200px"
-              bgColor="#c1121f"
-              borderWidth="2px"
+        <Flex color="white" flexDir="column">
+          <Box>
+            <Stack
+              spacing="40px"
+              direction={["column", null, null, null, "row"]}
             >
-              <HighRollersPot tokens={data?.gameTokens || []} />
+              <Box>
+                <Flex fontSize="34px" justify="center" pb="12px">
+                  <Text>Game ID:</Text>
+                  <>
+                    {isLoading || !isSuccess ? (
+                      <Flex align="center">
+                        <Skeleton w="200px" h="30px">
+                          loading
+                        </Skeleton>
+                      </Flex>
+                    ) : (
+                      <Tooltip
+                        fontSize="22px"
+                        hasArrow
+                        label={data?.currentGame.contractAddress}
+                      >
+                        <Text cursor="pointer" maxW="200px" noOfLines={1}>
+                          {data?.currentGame.contractAddress}
+                        </Text>
+                      </Tooltip>
+                    )}
+                  </>
+                </Flex>
+                <HighRollersGameBoard
+                  contractAddress={data?.currentGame?.contractAddress}
+                  usersWithData={usersWithData}
+                  totalEthInGame={totalEthInGame}
+                  userTokens={data?.userTokens || []}
+                />
+              </Box>
+              <PlayerPanels players={data?.players} />
+            </Stack>
+            <Box
+              w="480px"
+              mt="18px"
+              borderTopRadius="md"
+              borderRightWidth="4px"
+              borderLeftWidth="4px"
+              borderTopWidth="4px"
+              borderColor="white"
+            >
+              <Flex justify="center">
+                <Text fontSize="32px">Game Pot</Text>
+              </Flex>
+              <SimpleGrid minChildWidth="90px" spacing="8px" px="20px">
+                {data?.gameTokens.map((token, index) => (
+                  <Box key={index}>
+                    <NFT
+                      token={token}
+                      handleDeposit={null}
+                      game={"highrollers-pot"}
+                    />
+                  </Box>
+                ))}
+              </SimpleGrid>
             </Box>
-          </Flex>
-
-          {/* <Button
-          onClick={() => handleDeposit()}
-          variant="contained"
-          type="submit"
-          style={{ maxHeight: "55px" }}
-        >
-          Deposit
-        </Button> */}
-
-          <Box px="120px">
-            <NFTSelector
-              tokens={data?.userTokens || []}
-              handleDeposit={handleDeposit}
-              game={"highrollers"}
-            />
           </Box>
-
-          <PlayerList players={data?.players || []} />
-
-          <PastHighRollerGames />
-        </>
+        </Flex>
       </Box>
-    </BaseContainer>
+    </Flex>
   );
 };
-
-export default HighRollers;
 
 const PastHighRollerGames = () => {
   const [pastGames, setPastGames]: any = useState([]);

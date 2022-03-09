@@ -13,5 +13,13 @@ type MetaMaskUserContextType = {
   setIsLoadingUser: Dispatch<SetStateAction<boolean>>;
   queryClient: any;
 };
+
+type BaseContainerContextType = {
+  isSidebarOpen: boolean;
+};
+
 export const MetaMaskUserContext =
   createContext<MetaMaskUserContextType | null>(null);
+
+export const BaseContainerContext =
+  createContext<BaseContainerContextType | null>(null);

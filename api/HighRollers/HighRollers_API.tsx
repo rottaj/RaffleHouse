@@ -2,12 +2,13 @@
 // WALLET REQUIRES ETH & LINK TO OPERATE W/ CONTRACTS.
 // EDIT PHRASE IN .ENV TO CHANGE WALLET ADDRESS.
 
-
 const ethers = require('ethers');
 const HighRollers_Interface = require("./HighRollers_Interface");
 const HighRoller_Interface = require("./HighRoller_Interface");
 const request = require('request');
 const cors = require('cors');
+const FirebaseProject = require('./firebase-config');
+const firestore = require('firebase/firestore');
 var bodyParser = require('body-parser')
 var app = require('express')();
 var http = require('http').createServer(app);
@@ -17,6 +18,7 @@ app.use(cors())
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 
+      //const playersSnap = await firestore.getDoc(currentGameRef, "players");
 
 // GLOBAL VARIABLES
 const RINKEBY_URL = process.env.RINKEBY_URL;
@@ -27,15 +29,7 @@ const ETHERSCAN_API_KEY = 'FS4Q2NK8JQJ7DPD73R3G1S1T948RPY3JSI';
 
 var provider = new ethers.providers.JsonRpcProvider(process.env.RINKEBY_URL);
 const signer = new ethers.Wallet(PHRASE, provider);
-
-/*
-const pool = new Pool({
-  host: '127.0.0.1',
-  database: 'rafflehouse',
-  port: 5432,
-});
-*/
-// START OF API ROUTES
+const highRollersCollectionRef = firestore.collection(FirebaseProject.db, "highrollers");    
 
 http.listen(8080, () => {
   console.log("Listening on port 8080");
@@ -43,13 +37,45 @@ http.listen(8080, () => {
 
 app.post('/submit-tickets-high-rollers', function (req, res) { // Create submit tickets route.
   console.log("SUBMIT HIGH ROLLERS", req.body);
-  submitTickets(req.body.tickets, req.body.playerAddress, req.body.tokenURI); //  need to add authentication to prevent frontend smuggling
+  submitTickets(req.body.token, req.body.playerAddress); //  need to add authentication to prevent frontend smuggling
   
 })
 
+async function getCurrentGame() { // GET CURRENT GAME CONTRACT { GAME INFO }
+  //const HighRollersContract = new ethers.Contract(HighRollers_Interface.HighRollersAddress, HighRollers_Interface._HighRollers_abi, provider);
+  //const currentHighRollerGame = await HighRollersContract.getCurrentGame();
+  const gamesQuery = firestore.query(highRollersCollectionRef, firestore.where("winner", "==", "0")); // using winner for now... will add times later.
+  console.log("GAMES QUERY", gamesQuery)
+  const querySnapshot = await firestore.getDocs(gamesQuery);
+  console.log("QUERY SNAPSHOT", querySnapshot.docs[0])
+  const currentHighRollerGame = querySnapshot.docs[0].data();
+  return currentHighRollerGame
+}
+
+async function submitTickets(token, playerAddress) { // Call when user deposits NFT --> Grab value from opensea api --> Push ticket count to Tickets[]
+    getCurrentGame().then(async function(currentGame) {
+      const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
+      const submitTicketTxn = await currentGameContract.deposit(parseInt(String(parseFloat(token.tokenPrice) *100)), playerAddress, token.image);
+      submitTicketTxn.wait();
+      console.log(`SUBMITTED PLAYER ${playerAddress} TICKETS. \n TXN: `, submitTicketTxn)
+
+      const currentGameRef = firestore.doc(highRollersCollectionRef, currentGame.contractAddress);
+      await firestore.updateDoc(currentGameRef, {
+        gameTokens: firestore.arrayUnion(token)
+      });
+
+      await firestore.updateDoc(currentGameRef, {
+        [`players.${playerAddress}`]: {
+          tokens: firestore.increment(1),
+          totalDeposited: firestore.increment(token.tokenPrice)
+        }
+      })
+      //const processGameTxn = currentGameContract.processGame(); // JUST FOR TESTING (WILL BE INTERVAL)
+    })
+}
+
 // END OF API ROUTES
-
-
+/*
 // START OF HELPER FUNCTIONS
 async function fetchNFTs(address) { // GET CURRENT NFT'S IN CONTRACT
   var url = ETHERSCAN_API_NFT_TXN + address + '&startblock=0&endblock=999999999&sort=asc&apikey=' + ETHERSCAN_API_KEY
@@ -61,11 +87,7 @@ async function fetchNFTs(address) { // GET CURRENT NFT'S IN CONTRACT
   })
 }
 
-async function getContract() { // GET CURRENT GAME CONTRACT { GAME INFO }
-  const HighRollersContract = new ethers.Contract(HighRollers_Interface.HighRollersAddress, HighRollers_Interface._HighRollers_abi, provider);
-  const currentHighRollerGame = await HighRollersContract.getCurrentGame();
-  return currentHighRollerGame
-}
+
 
 // END OF HELPER FUNCTIONS
 
@@ -73,17 +95,8 @@ async function updateGameStatus() {
     const HighRollersContract = new ethers.Contract(HighRollers_Interface.HighRollersAddress, HighRollers_Interface._HighRollers_abi, signer);
     await HighRollersContract.updateStatus();
 }
-
 // START MAIN  FUNCTIONS
-async function submitTickets(ticketCount, playerAddress, tokenURI) { // Call when user deposits NFT --> Grab value from opensea api --> Push ticket count to Tickets[]
-    getContract().then(async function(currentGame) {
-      const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
-      const submitTicketTxn = await currentGameContract.deposit(ticketCount - 1, playerAddress, tokenURI);
-      submitTicketTxn.wait();
-      console.log(`SUBMITTED PLAYER ${playerAddress} TICKETS. \n TXN: `, submitTicketTxn)
-      //const processGameTxn = currentGameContract.processGame(); // JUST FOR TESTING (WILL BE INTERVAL)
-    })
-}
+
 
 
 async function withDrawToWinner() { // Call when winner game is over --> Withdraws all ERC721 tokens in current game to winner address.
@@ -118,18 +131,19 @@ async function withDrawToWinner() { // Call when winner game is over --> Withdra
 
 }
 
+*/ /*
 async function processCurrentGame() {
   const HighRollersContract = new ethers.Contract(HighRollers_Interface.HighRollersAddress, HighRollers_Interface._HighRollers_abi, signer);
   await HighRollersContract.getCurrentGame().then(async function(currentGame) {
 
     const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
     const gameInfo = await currentGameContract.getGameInfo();
-    /*
     console.log(currentGame)
     console.log("TESTING GAMEINFO", gameInfo.winner)
     console.log("TESTING CURRENTGAME", currentGame.winner)
     console.log("TESTING STATUS", currentGame.status)
-    */
+
+  
    console.log(gameInfo)
     if (currentGame.winner !== undefined) {
       if (currentGame.winner === "0x0000000000000000000000000000000000000000" || currentGame.status === 1) {
@@ -148,6 +162,7 @@ async function processCurrentGame() {
 
 
 }
+
 // END OF MAIN FUNCTIONS
 
 // BUILD INTERVAL FUNCTIONS TO CHECK TIME LIMIT
@@ -160,3 +175,4 @@ setInterval(async function() { // Call Every minute
 //}, 60000)
 //}, 180000)
 
+*/

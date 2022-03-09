@@ -1,7 +1,7 @@
-import { List, ListItem, VStack, Image } from '@chakra-ui/react';
-import Logo from '../../../Logo.svg';
-import { navItems } from './nav-data';
-import { NavItem } from './nav-item';
+import { List, ListItem, VStack, Image } from "@chakra-ui/react";
+import Logo from "../../../Logo.svg";
+import { navItems } from "./nav-data";
+import { NavItem } from "./nav-item";
 
 export const Sidebar = () => {
   return (
@@ -10,8 +10,10 @@ export const Sidebar = () => {
       alignItems="flex-start"
       width="full"
       height="full"
-      maxW={{ base: 56, '2xl': 72 }}
+      maxW={{ base: 56, "2xl": 72 }}
       flexShrink={0}
+      bgColor="#141114"
+      zIndex={8000}
     >
       <Image pt="22px" src={Logo} />
 
