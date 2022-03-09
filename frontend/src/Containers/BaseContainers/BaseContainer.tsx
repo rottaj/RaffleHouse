@@ -1,11 +1,24 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Box, Button, Center, Flex, Spinner } from "@chakra-ui/react";
+import React, { useContext, useState } from "react";
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  IconButton,
+  Spinner,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { Sidebar } from "../../Components/Nav/Sidebar";
 import "./BaseContainer";
-import { MetaMaskUserContext } from "../../utils/contexts";
+import {
+  BaseContainerContext,
+  MetaMaskUserContext,
+} from "../../utils/contexts";
 import "../../styles/Home/Home.scss";
 import DrawerComponent from "../../Components/Nav/MessagesSidebar";
 import NetworkAndUser from "../../Components/NetworkAndUser";
+import { FiMinimize } from "react-icons/fi";
+import { AiOutlineExpand } from "react-icons/ai";
 type BaseContainerProps = {
   showMessages?: boolean;
   children: React.ReactNode;
@@ -15,12 +28,8 @@ const BaseContainer = ({
   showMessages = true,
   children,
 }: BaseContainerProps) => {
-  const {
-    user,
-    setUser,
-    isLoadingUser,
-    setIsLoadingUser,
-  } = useContext(MetaMaskUserContext);
+  const { user, setUser, isLoadingUser, setIsLoadingUser } =
+    useContext(MetaMaskUserContext);
   const [isLoadingConnect, setIsLoadingConnect] = useState(false);
 
   const getUser = async () => {
@@ -32,6 +41,8 @@ const BaseContainer = ({
     setUser(account);
     setIsLoadingUser(false);
   };
+
+  const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
 
   return (
     <Box>
@@ -60,19 +71,42 @@ const BaseContainer = ({
           </Flex>
         </Box>
       ) : (
-        <Box bgColor="#141114"> 
+        <Box bgColor="#141114">
           {showMessages && <DrawerComponent />}
-          <NetworkAndUser/>
-          <Sidebar/>
-          <Box
-            minH="100vh"
-            maxW="1440px"
-            marginLeft="auto"
-            marginRight="auto"
-            pt={["56px", null, "84px"]}
-          >
-            {children}
+
+          <Box pos="fixed" left={0} zIndex={9000}>
+            <IconButton
+              aria-label="toggle sidebar"
+              p={0}
+              bgColor="transparent"
+              color="white"
+              onClick={onToggle}
+              _hover={{ bgColor: "transparent", color: "green" }}
+              _active={{ bgColor: "transparent" }}
+              icon={
+                isOpen ? (
+                  <FiMinimize size="22px" />
+                ) : (
+                  <AiOutlineExpand size="22px" />
+                )
+              }
+            />
           </Box>
+
+          <NetworkAndUser />
+
+          {isOpen && <Sidebar />}
+          <BaseContainerContext.Provider value={{ isSidebarOpen: isOpen }}>
+            <Box
+              minH="100vh"
+              maxW="1440px"
+              marginLeft="auto"
+              marginRight="auto"
+              pt={["56px", null, "84px"]}
+            >
+              {children}
+            </Box>
+          </BaseContainerContext.Provider>
         </Box>
       )}
     </Box>

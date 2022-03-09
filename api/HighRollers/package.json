@@ -1,8 +1,8 @@
 {
-  "name": "gamehandler",
+  "name": "highroller",
   "version": "1.0.0",
-  "description": "Game Handler API for RaffleHouse",
-  "main": "Game_Handler_API.tsx",
+  "description": "High Roller API for RaffleHouse",
+  "main": "HighRollers_API.tsx",
   "scripts": {
     "start": "node HighRollers_API.tsx",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -18,7 +18,9 @@
     "dotenv": "^16.0.0",
     "ethers": "^5.5.4",
     "express": "^4.17.3",
+    "firebase": "^9.6.7",
     "http": "^0.0.1-security",
     "proxy-addr": "^2.0.7"
   }
 }
+

@@ -12,26 +12,18 @@ import FAQ from "./Containers/FAQ";
 import Profile from "./Containers/Profile";
 import { MetaMaskUserContext } from "./utils/contexts";
 import {
-  StylesProvider,
   useToast,
-  useStyles,
   ChakraProvider,
   extendTheme,
-  useControllableProp,
 } from "@chakra-ui/react";
 import { ethers } from "ethers";
-import { useContext } from "react";
-import { MetaMaskDataContext } from "./utils/contexts/UserDataContext";
-import { ReactQueryDevtools } from "react-query/devtools";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { db } from "./firebase-config";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getCurrentEthereumGasPrice, getCurrentEthereumPrice } from "./utils/EthereumStats";
 import {
-  collection,
   getDoc,
   setDoc,
-  addDoc,
   doc,
 } from "firebase/firestore";
 import { url } from "node:inspector";

@@ -73,7 +73,10 @@ export function TokenMetaData(props) {
 
                     {data['traits'].map((trait: any) => {
                         let background="white"
-                        if (((((parseInt(trait.trait_count) * 0.01) * 10000) / 10000) * 100) <= 2 ) {
+                        if (((((parseInt(trait.trait_count) * 0.01) * 10000) / 10000) * 100) <= 1 ) {
+                          background="orange"
+                        }
+                        else if (((((parseInt(trait.trait_count) * 0.01) * 10000) / 10000) * 100) <= 2 ) {
                           background="red"
                         }
                         else if (((((parseInt(trait.trait_count) * 0.01) * 10000) / 10000) * 100) <= 3 ) {
