@@ -1,10 +1,11 @@
 import { FaHome, FaMusic, FaUserAlt, FaHeart, FaDatabase } from 'react-icons/fa';
 import { GiTicket, GiCoinflip, GiRollingDices } from 'react-icons/gi';
-import { CgProfile } from 'react-icons/cg';
+import { CgProfile, CgFileDocument } from 'react-icons/cg';
 import { IoIosSettings } from 'react-icons/io';
 import { BsBoxArrowLeft, BsClockHistory } from 'react-icons/bs';
 import { FaQuestion } from 'react-icons/fa'
 import { NavItem } from './types/nav-item';
+
 
 export const navItems: NavItem[] = [
   {
@@ -63,4 +64,14 @@ export const navItems: NavItem[] = [
     icon: FaQuestion, 
     label: 'FAQ',
   },
+  {
+    type: 'header',
+    label: 'Legal',
+  },
+  {
+    type: 'link',
+    href: '/TOS',
+    icon: CgFileDocument, 
+    label: 'Terms of Use',
+  }
 ];

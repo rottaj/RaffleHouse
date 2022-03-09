@@ -9,6 +9,7 @@ import HighRollerViewer from "./Containers/HighRollerViewer";
 import CoinFlipViewer from "./Containers/CoinFlipViewer";
 import RaffleViewer from "./Containers/RaffleViewer";
 import FAQ from "./Containers/FAQ";
+import TOS from "./Containers/TOS";
 import Profile from "./Containers/Profile";
 import { MetaMaskUserContext } from "./utils/contexts";
 import {
@@ -176,6 +177,7 @@ function App() {
             <Route path="/history" component={MyHistory}/>
             <Route path="/FAQ" component={FAQ}/>
             <Route path="/settings" component={Settings}/>
+            <Route path="/TOS" component={TOS}/>
             <Route path="/raffle/:contractAddress" component={RaffleViewer} />
             <Route
               path="/coin-flip/:contractAddress"

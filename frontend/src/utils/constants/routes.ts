@@ -7,5 +7,6 @@ export const AppRoutePaths = {
   Profile: "/profile",
   History: "/history",
   FAQ: "/faq",
-  Settings: "/settings"
+  Settings: "/settings",
+  TOS: "/TOS",
 };

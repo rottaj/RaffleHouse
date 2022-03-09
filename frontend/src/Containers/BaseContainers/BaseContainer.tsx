@@ -7,6 +7,7 @@ import {
   IconButton,
   Spinner,
   useDisclosure,
+  Heading
 } from "@chakra-ui/react";
 import { Sidebar } from "../../Components/Nav/Sidebar";
 import "./BaseContainer";
@@ -107,6 +108,12 @@ const BaseContainer = ({
               {children}
             </Box>
           </BaseContainerContext.Provider>
+
+          <Box>
+            <Flex justify="center">
+              <Heading color="white">Follow @rafflehouse on Twitter for the latest news</Heading>
+            </Flex>
+          </Box>
         </Box>
       )}
     </Box>
@@ -114,3 +121,4 @@ const BaseContainer = ({
 };
 
 export default BaseContainer;
+
