@@ -47,11 +47,9 @@ const FAQ = () => {
                                     </Box>
                                 </AccordionButton>
                                 <AccordionPanel>
-                                    RaffleHouse currently features 3 different game modes. Raffles feature 
-                                    a 100% random winner chosen through oracle RNG. Coin Flips is a game of Bears
-                                    V Bulls as we like to call it. It's our 1v1/winner takes all mode (user pots 
-                                    must be within ~3% in value). High Roller is your classic winner takes all
-                                    in the ultimate game of chance. Fancy a game, anon?
+                                    To play, it's required you own tokens on at least 1 of the 4 networks we host our service. These include: Ethereum, Polygon, Avalance,
+                                        and Binance Smart Chain. If you want to play one of our NFT dependant games (Raffles / HighRollers) it's required you own a verifiable NFT on the 
+                                        ethereum blockchain. Fancy a game, anon?
                                 </AccordionPanel>
                             </AccordionItem>
                         </Box>
@@ -80,8 +78,8 @@ const FAQ = () => {
                                     </Box>
                                 </AccordionButton>
                                 <AccordionPanel>
-                                    Our site uses Chainlink VRF in order to generate a truely random number for all
-                                    of our games. More can be read here...
+                                    Our contracts use Chainlink VRF to generate a verifiable random number for all
+                                    the games we have. This is the safest, most verifiable way to prove randomness on the blockchain. 
                                 </AccordionPanel>
                             </AccordionItem>
                         </Box>
@@ -107,23 +105,26 @@ const FAQ = () => {
                                     </Box>
                                 </AccordionButton>
                                 <AccordionPanel>
-                                    Raffle House is created by a small team of three working remotely from Texas 
-                                    and New York
-                                    <HStack justify="center">
+                                    We're a small team working remotely from Texas 
+                                    and New York City.
+                                    <HStack pt="10px" justify="center" spacing="60px">
                                         <Box>
-                                            <Image borderRadius="20px" boxSize="200px" src={ape} alt="error"/>
-                                            <Heading size="md">Developer/Co-Founder</Heading>
-                                            <Heading size="md">ahawk.eth</Heading>
+                                            <Image borderRadius="180px" boxSize="200px" src={ape} alt="error"/>
+                                            <Heading color="teal" pt="5px" size="md">ahawk.eth</Heading>
+                                            <Heading pt="5px" size="sm">Co-Founder</Heading>
+                                            <Heading py="5px" size="sm">Head of Design</Heading>
                                         </Box>
                                         <Box>
-                                            <Image borderRadius="20px" boxSize="200px" src={ape} alt="error"/>
-                                            <Heading size="md">Developer/Co-Founder</Heading>
-                                            <Heading size="md">phyllis.eth</Heading>
+                                            <Image borderRadius="180px" boxSize="200px" src={ape} alt="error"/>
+                                            <Heading color="yellow" pt="5px" size="md">phyllis.eth</Heading>
+                                            <Heading pt="5px" size="sm">Founder</Heading>
+                                            <Heading py="5px" size="sm">Head of Development</Heading>
                                         </Box>
                                         <Box>
-                                            <Image borderRadius="20px" boxSize="200px" src={ape} alt="error"/>
-                                            <Heading size="md">Developer/Co-Founder</Heading>
-                                            <Heading size="md">blake.eth</Heading>
+                                            <Image borderRadius="180px" boxSize="200px" src={ape} alt="error"/>
+                                            <Heading color="pink" pt="5px" size="md">blake.eth</Heading>
+                                            <Heading pt="5px" size="sm">Co-Founder</Heading>
+                                            <Heading py="5px" size="sm">Development</Heading>
                                         </Box>
                                     </HStack>
                                 </AccordionPanel>
