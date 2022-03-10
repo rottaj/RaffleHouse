@@ -3,8 +3,8 @@
 // EDIT PHRASE IN .ENV TO CHANGE WALLET ADDRESS.
 
 const ethers = require('ethers');
-const HighRollers_Interface = require("./HighRollers_Interface");
 const HighRoller_Interface = require("./HighRoller_Interface");
+const LinkInterface = require("./ChainLink_Interface");
 const request = require('request');
 const cors = require('cors');
 const FirebaseProject = require('./firebase-config');
@@ -74,38 +74,15 @@ async function submitTickets(token, playerAddress) { // Call when user deposits 
     })
 }
 
-// END OF API ROUTES
-/*
-// START OF HELPER FUNCTIONS
-async function fetchNFTs(address) { // GET CURRENT NFT'S IN CONTRACT
-  var url = ETHERSCAN_API_NFT_TXN + address + '&startblock=0&endblock=999999999&sort=asc&apikey=' + ETHERSCAN_API_KEY
-  var tokens = {}
-  request(url, function(error, response, body) {
-    let json = JSON.parse(response.body);
-    tokens = json.result;
-    return tokens;
-  })
-}
-
-
-
-// END OF HELPER FUNCTIONS
-
-async function updateGameStatus() {
-    const HighRollersContract = new ethers.Contract(HighRollers_Interface.HighRollersAddress, HighRollers_Interface._HighRollers_abi, signer);
-    await HighRollersContract.updateStatus();
-}
-// START MAIN  FUNCTIONS
-
 
 
 async function withDrawToWinner() { // Call when winner game is over --> Withdraws all ERC721 tokens in current game to winner address.
-  getContract().then(async function(currentGame) {
+  getCurrentGame().then(async function(currentGame) {
     var url = ETHERSCAN_API_NFT_TXN + currentGame.contractAddress + '&startblock=0&endblock=999999999&sort=asc&apikey=' + ETHERSCAN_API_KEY
     const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
-    //const gameInfo = await currentGameContract.getGameInfo();
-    if (currentGame.winner != "0x0000000000000000000000000000000000000000") {
-      var tokens = []; // maybe keep json request length as variable? ( To make this suck even more )
+    const gameInfo = await currentGameContract.getGameInfo();
+    if (gameInfo.winner != "0x0000000000000000000000000000000000000000") {
+      var tokens = []; 
       request(url, async function(error, response, body) {
         let json = JSON.parse(response.body);
         console.log(json.result)
@@ -124,18 +101,14 @@ async function withDrawToWinner() { // Call when winner game is over --> Withdra
             withDrawNFTTxn.wait();
           } //catch( err ) { console.log("Err", err )} // Just for now
         }
-        updateGameStatus() // THIS WHOLE FUNCTION FUCKING SUCKS.... I SUCK
       })
     }
   })
 
 }
 
-*/ /*
 async function processCurrentGame() {
-  const HighRollersContract = new ethers.Contract(HighRollers_Interface.HighRollersAddress, HighRollers_Interface._HighRollers_abi, signer);
-  await HighRollersContract.getCurrentGame().then(async function(currentGame) {
-
+  getCurrentGame().then(async function(currentGame) {
     const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
     const gameInfo = await currentGameContract.getGameInfo();
     console.log(currentGame)
@@ -145,22 +118,59 @@ async function processCurrentGame() {
 
   
    console.log(gameInfo)
-    if (currentGame.winner !== undefined) {
-      if (currentGame.winner === "0x0000000000000000000000000000000000000000" || currentGame.status === 1) {
-        console.log("PROCESSING GAME", currentGame.contractAddress)
-        const HighRollersProcessTxn = await HighRollersContract.processCurrentGame();
-        HighRollersProcessTxn.wait()
-      }
-
-      else {
-        console.log("WITHDRAWING TOKENS")
-        await withDrawToWinner();
-      }
+    if (gameInfo.winner === "0x0000000000000000000000000000000000000000" || currentGame.status === 1) {
+      console.log("PROCESSING GAME", currentGame.contractAddress)
+      const ProcessCurrentGameTxn = await currentGameContract.processGame();
+      ProcessCurrentGameTxn.wait();
+    }
+    else { // If a winner has been picked through VRF
+      console.log("WITHDRAWING TOKENS")
+      await withDrawToWinner();
+      const currentGameRef = firestore.doc(FirebaseProject.db, "highrollers", currentGame.contractAddress);
+      // Update winner address in firestore
+      await firestore.updateDoc(currentGameRef, {
+        winner: gameInfo.winner
+      });
+      await deployNewGame();
     }
 
   });
 
 
+}
+
+async function deployNewGame() {
+  const CoinFlipFactory = new ethers.ContractFactory(
+    HighRoller_Interface._HighRoller_abi,
+    HighRoller_Interface._HighRoller_bytecode,
+    signer
+  ); 
+  // DEPLOY CONTRACT
+  const contract = await CoinFlipFactory.deploy(); 
+  await contract.deployed()
+  console.log("\n\nHIGH ROLLERS CONTRACT DEPLOYED TO: ", contract.address);
+
+  // SEND ETH AND LINK TO HIGHROLLERS CONTRACT
+  const ether_tx_HighRollers = { 
+    from: signer.address,
+    to: contract.address,
+    value: ethers.utils.parseEther ( "0.2" ) ,
+    gasLimit: ethers.utils.hexlify( 2100000 ) , // 100000 
+    gasPrice: 8000000000 ,
+  };
+
+
+  console.log("SIGNER ADDRESS", signer.address);
+  console.log("HIGH ROLLER ADDRESS", contract.address);
+  const ethTxn = await signer.sendTransaction ( ether_tx_HighRollers ).then( ( transaction ) => {  
+    console.log("SENT ETHER TO HIGHROLLERS")
+  });
+  await firestore.setDoc(firestore.doc(FirebaseProject.db, "highrollers", contract.address), {
+    contractAddress: contract.address,
+    gameTokens: [],
+    players: {},
+    winner: "0"
+  });
 }
 
 // END OF MAIN FUNCTIONS
@@ -171,8 +181,6 @@ setInterval(async function() { // Call Every minute
     console.log("PROCESSING GAME")
   });
 //}, 2000)
-}, 30000)
+}, 10000)
 //}, 60000)
 //}, 180000)
-
-*/
