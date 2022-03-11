@@ -1,8 +1,6 @@
 const LinkInterface = require('../interfaces/ChainLink_Interface');
-const fs = require('fs');
-const Web3 = require('web3');
+const HighRoller_Interface = require('../interfaces/HighRoller_Interface')
 const ethers = require('ethers');
-const { parseEther } = require('ethers/lib/utils');
 
 require('dotenv').config()
 const RINKEBY_URL = process.env.RINKEBY_URL;
@@ -18,100 +16,39 @@ const main = async() => {
   console.log("SIGNER", signer)
   console.log("LINK INTERFACE: ", abi);
   console.log("LINK ADDRESS: ", LinkInterface.linkAddress);
-  //const ChainLinkContract = new ethers.Contract(LinkInterface.linkAddress, abi, signer); // add this later ?
   //console.log("LINK CONTRACT", ChainLinkContract); 
   // INITIALIZE RAFFLES CONTRACT
-  const rafflesContractFactory = await hre.ethers.getContractFactory("Raffles");
-  const RafflesContract = await rafflesContractFactory.deploy(LinkInterface.linkAddress);
-  await RafflesContract.deployed();
-  console.log("RAFFLES CONTRACT DEPLOYED TO: ", RafflesContract.address);
-
-  const coinFlipsContractFactory = await hre.ethers.getContractFactory("CoinFlips");
-  const CoinFlipsContract = await coinFlipsContractFactory.deploy(LinkInterface.linkAddress);
-  await CoinFlipsContract.deployed();
-  console.log("\n\nCOIN FLIPS CONTRACT DEPLOYED TO: ", CoinFlipsContract.address);
-  const ether_tx_CoinFlips = { 
-    from: signer.address,
-    to: CoinFlipsContract.address,
-    value: ethers.utils.parseEther ( "0.2" ) ,
-    gasLimit: ethers.utils.hexlify( 2100000 ) , // 100000 
-    gasPrice: 8000000000 ,
-  };
-  const ethTxn_CoinFlips = await signer.sendTransaction ( ether_tx_CoinFlips ).then( ( transaction ) => {  
-    console.log("\nSENT ETHER TO COINFLIPS")
-  });
-
-  const chainLinkTxn_CoinFlips = await ChainLinkContract.transfer(CoinFlipsContract.address, ethers.utils.parseUnits("1"));
-  console.log("\n SENT ETHER TO COINFLIPS")
-
-  const highRollersContractFactory = await hre.ethers.getContractFactory("HighRollers");
-  const HighRollersContract = await highRollersContractFactory.deploy(LinkInterface.linkAddress);
-  await HighRollersContract.deployed();
-  console.log("\n\nHIGH ROLLERS CONTRACT DEPLOYED TO: ", HighRollersContract.address);
+/*
+  const HighRollerFactory = new ethers.ContractFactory(
+    HighRoller_Interface._HighRoller_abi,
+    HighRoller_Interface._HighRoller_bytecode,
+    signer
+  ); 
+  */
+  // DEPLOY CONTRACT
+  const HighRollerFactory = await hre.ethers.getContractFactory("HighRoller");
+  const contract = await HighRollerFactory.deploy(); 
+  await contract.deployed()
+  console.log("\n\nHIGH ROLLERS CONTRACT DEPLOYED TO: ", contract.address);
 
   // SEND ETH AND LINK TO HIGHROLLERS CONTRACT
   const ether_tx_HighRollers = { 
     from: signer.address,
-    to: HighRollersContract.address,
-    value: ethers.utils.parseEther ( "0.2" ) ,
+    to: contract.address,
+    value: ethers.utils.parseEther ( "0.02" ) ,
     gasLimit: ethers.utils.hexlify( 2100000 ) , // 100000 
     gasPrice: 8000000000 ,
   };
-
 
   console.log("SIGNER ADDRESS", signer.address);
-  console.log("HIGH ROLLER ADDRESS", HighRollersContract.address);
+  console.log("HIGH ROLLER ADDRESS", contract.address);
   const ethTxn = await signer.sendTransaction ( ether_tx_HighRollers ).then( ( transaction ) => {  
-    console.log("SENT ETHER TO HIGHROLLERS")
+    console.log("SENT ETHER TO HIGHROLLER")
   });
 
-  const chainLinkTxn_HighRollers = await ChainLinkContract.transfer(HighRollersContract.address, ethers.utils.parseUnits("1"));
-  //chainLinkTxn_One.wait();
+  const chainLinkTxn_CoinFlips = await ChainLinkContract.transfer(contract.address, ethers.utils.parseUnits("0.1"));
+  console.log("\n SENT LINK TO HIGHROLLER")
 
-
-  // SEND ETH & LINK TO FIRST GAME
-
-  const startingGame = await HighRollersContract.getCurrentGame();
-  const ether_tx_two = { 
-    from: signer.address,
-    to: startingGame.contractAddress,
-    value: ethers.utils.parseEther ( "0.1" ) ,
-    gasLimit: ethers.utils.hexlify( 2100000 ) , // 100000 
-    gasPrice: 8000000000 ,
-  };
-
-
-   const ethTxnTwo = await signer.sendTransaction ( ether_tx_two ).then( ( transaction ) => {  
-    console.log("SENT ETHER TO STARTING GAME", startingGame.contractAddress)
-  });
-
-  const chainLinkTxn_Two = await ChainLinkContract.transfer(startingGame.contractAddress, ethers.utils.parseUnits("0.1"));
-  //chainLinkTxn_Two.wait();
-  console.log("HIGH ROLLERS DEPLOYMENT FINISHED")
- 
-
-
-
-  const messagesContractFactory = await hre.ethers.getContractFactory("Messages");
-  const MessagesContract = await messagesContractFactory.deploy();
-  await MessagesContract.deployed();
-  console.log("\n\nMESSAGES CONTRACT DEPLOYED TO: ", MessagesContract.address);
-
-
-
- 
-
-
- 
-
-  /* // WORK ON THIS LATER  ---> MANUALLY SEND LINK FOR NOW.
-  const address = RafflesContract.address;
-  console.log("RAFFLES ADDRESS: ", address);
-  console.log(signer);
-  const ChainLinkTransferTxn = await ChainLinkContract.transfer(address, parseInt(10));
-  console.log("TRANSFER COMPLETE!");
-  */
-  let txn;
 }
 
 const runMain = async () => {

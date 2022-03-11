@@ -108,6 +108,7 @@ const HighRollersGame = () => {
     const gameToks = currentGameSnap.data()["gameTokens"];
     const userToks = await fetchNFTs(account);
 
+    /*
     const currentHighRollerContract = new ethers.Contract(
       currentHighRollerGame.contractAddress,
       _HighRoller_abi,
@@ -115,11 +116,11 @@ const HighRollersGame = () => {
     );
     
     console.log("TESTING CURRENT GAME", currentHighRollerGame)
-    const tickets = await currentHighRollerContract.getTickets();
+    //const tickets = await currentHighRollerContract.getTickets();
     
     // TODO : requests not working
-    console.log("ticks", tickets);
-    
+    //console.log("ticks", tickets);
+    */
    
 
     return {
