@@ -1,4 +1,4 @@
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import Home from "./Containers/Home";
 import Raffles from "./Containers/Raffles";
@@ -12,25 +12,20 @@ import FAQ from "./Containers/FAQ";
 import TOS from "./Containers/TOS";
 import Profile from "./Containers/Profile";
 import { MetaMaskUserContext } from "./utils/contexts";
-import {
-  useToast,
-  ChakraProvider,
-  extendTheme,
-} from "@chakra-ui/react";
+import { useToast, ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { ethers } from "ethers";
-import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { db } from "./firebase-config";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { getCurrentEthereumGasPrice, getCurrentEthereumPrice } from "./utils/EthereumStats";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import {
-  getDoc,
-  setDoc,
-  doc,
-} from "firebase/firestore";
-import { url } from "node:inspector";
-import { CgArrowsExpandDownLeft } from "react-icons/cg";
+  getCurrentEthereumGasPrice,
+  getCurrentEthereumPrice,
+} from "./utils/EthereumStats";
+import { getDoc, setDoc, doc } from "firebase/firestore";
+
 import MyHistory from "./Containers/MyHistory";
 import Settings from "./Containers/Settings";
+import { AppRoutePaths } from "./utils/constants/routes";
 declare global {
   interface Window {
     ethereum: any;
@@ -39,9 +34,9 @@ declare global {
 
 function App() {
   const [user, setUser] = useState<string>(null);
-  const [userProfile, setUserProfile]: any = useState({})
-  const [network, setNetwork] = useState("")
-  const [networkStats, setNetworkStats]:any = useState();
+  const [userProfile, setUserProfile]: any = useState({});
+  const [network, setNetwork] = useState("");
+  const [networkStats, setNetworkStats]: any = useState();
   const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true);
   const [provider, setProvider] = useState<any>(null);
   const queryClient = new QueryClient();
@@ -74,15 +69,17 @@ function App() {
   };
 
   useEffect(() => {
-
     const mountNetworkStats = async () => {
-        const ethereumPrice = await getCurrentEthereumPrice();
-        const ethereumGasPrice = await getCurrentEthereumGasPrice();
-        console.log("HELLO", ethereumGasPrice)
-        const ethereumStats = {...ethereumPrice.result, ...ethereumGasPrice.result}
-        console.log("FOOOBAR", ethereumStats)
-        setNetworkStats(ethereumStats)
-    }
+      const ethereumPrice = await getCurrentEthereumPrice();
+      const ethereumGasPrice = await getCurrentEthereumGasPrice();
+      console.log("HELLO", ethereumGasPrice);
+      const ethereumStats = {
+        ...ethereumPrice.result,
+        ...ethereumGasPrice.result,
+      };
+      console.log("FOOOBAR", ethereumStats);
+      setNetworkStats(ethereumStats);
+    };
 
     if (typeof window.ethereum != undefined) {
       checkConnectedUser();
@@ -92,7 +89,6 @@ function App() {
         setUser(accounts[0]);
       });
       mountNetworkStats();
-
     } else {
       toast({
         title: "Metamask is not installed",
@@ -126,67 +122,77 @@ function App() {
     },
   });
 
-  const fetchUserProfile = async() => {
+  const fetchUserProfile = async () => {
     if (user) {
-    const docRef = doc(db, "users", user);
-    const docSnap = await getDoc(docRef);
-    //const userImage = '';
-    getDownloadURL(ref(storage, `${String(user)}`))
-    .then((url) => {
-        const xhr = new XMLHttpRequest();
-        xhr.responseType = 'blob';
-        xhr.onload = (event) => {
-        const blob = xhr.response;
-        };
-        xhr.open('GET', url);
-        xhr.send();
-        docSnap['profileImage'] = url
-
-    })
-    .catch((error) => {
-        // Handle any errors
-    });
+      const docRef = doc(db, "users", user);
+      const docSnap = await getDoc(docRef);
+      //const userImage = '';
+      getDownloadURL(ref(storage, `${String(user)}`))
+        .then((url) => {
+          const xhr = new XMLHttpRequest();
+          xhr.responseType = "blob";
+          xhr.onload = (event) => {
+            const blob = xhr.response;
+          };
+          xhr.open("GET", url);
+          xhr.send();
+          docSnap["profileImage"] = url;
+        })
+        .catch((error) => {
+          // Handle any errors
+        });
       if (docSnap.exists()) {
         // Should store profile image from storage in users doc to avoid unecessary fetching
-        setUserProfile(docSnap)
-      }
-      else {
+        setUserProfile(docSnap);
+      } else {
         await setDoc(doc(db, "users", user), {
           //profileImage: url,
           id: user,
           totalWinnings: 0,
           totalDeposited: 0,
           gamesWon: 0,
-          gamesLost: 0
+          gamesLost: 0,
         });
       }
     }
-  }
+  };
 
   return (
     <QueryClientProvider client={queryClient}>
       <MetaMaskUserContext.Provider value={value}>
         <ChakraProvider theme={theme}>
           <BrowserRouter>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/raffles" component={Raffles} />
-            <Route exact path="/coin-flips" component={CoinFlips} />
-            <Route exact path="/high-rollers" component={HighRollers} />
-            <Route exact path="/host" component={Host} />
-            <Route exact path="/profile" component={Profile} />
-            <Route path="/history" component={MyHistory}/>
-            <Route path="/FAQ" component={FAQ}/>
-            <Route path="/settings" component={Settings}/>
-            <Route path="/TOS" component={TOS}/>
-            <Route path="/raffle/:contractAddress" component={RaffleViewer} />
-            <Route
+            <Routes>
+              <Route path={AppRoutePaths.Root} element={<Home />} />
+              <Route path={AppRoutePaths.Raffles} element={<Raffles />} />
+              <Route path={AppRoutePaths.CoinFlips} element={<CoinFlips />} />
+              <Route
+                path={AppRoutePaths.HighRollers}
+                element={<HighRollers />}
+              />
+              <Route path={AppRoutePaths.Host} element={Host} />
+              <Route path={AppRoutePaths.Profile} element={<Profile />} />
+              <Route path={AppRoutePaths.History} element={<MyHistory />} />
+              <Route path={AppRoutePaths.FAQ} element={<FAQ />} />
+              <Route path={AppRoutePaths.Settings} element={<Settings />} />
+              <Route path={AppRoutePaths.TOS} element={<TOS />} />
+              <Route
+                path={AppRoutePaths.RaffleViewer}
+                element={<RaffleViewer />}
+              />
+              {/* <Route
               path="/coin-flip/:contractAddress"
-              component={CoinFlipViewer}
-            />
-            <Route
-              path="/high-roller/:contractAddress"
-              component={HighRollerViewer}
-            />
+              element={<CoinFlipViewer />}
+            /> */}
+              {/* <Route
+                path="/high-roller/:contractAddress"
+                element={<HighRollerViewer />}
+              /> */}
+              <Route
+                path="*"
+                element={<Navigate replace to={AppRoutePaths.Root} />}
+              />
+            </Routes>
           </BrowserRouter>
         </ChakraProvider>
       </MetaMaskUserContext.Provider>
