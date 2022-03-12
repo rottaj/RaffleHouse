@@ -18,11 +18,15 @@ const CoinFlipUser = ({
   isBull,
   buyInPrice,
   ethusd,
+  isViewer,
+  isCreator,
 }: {
   address: string;
-  isBull: boolean;
+  isBull?: boolean;
   buyInPrice: number;
   ethusd: number;
+  isCreator?: boolean;
+  isViewer?: boolean;
 }) => {
   const storage = getStorage();
   const getImage = async () => {
@@ -38,14 +42,20 @@ const CoinFlipUser = ({
 
   return (
     <Box
-      minHeight="100px"
+      // minHeight="100px"
       width="50%"
+      // w="100%"
       border="1px solid white"
       borderRadius="20px"
       textAlign="center"
     >
+      {isViewer && (
+        <Text fontSize="20px" fontWeight="bold">
+          {isCreator ? "Creator" : "Joinee"}
+        </Text>
+      )}
       <Flex>
-        <Box pt="10%" px="10px" w="100%" h="100%">
+        <Box pt="30px" px="10px" w="100%" h="100%">
           <Image
             borderRadius="50%"
             fallback={<SkeletonCircle w="100%" h="100%" />}
@@ -58,10 +68,12 @@ const CoinFlipUser = ({
             maxHeight="60px"
             maxWidth="60px"
             src={isBull ? CoinBull : CoinBear}
-          ></Image>
+          />
         </Box>
       </Flex>
-      <Heading fontSize="20px">{address.substr(0, 10)}...</Heading>
+      {!isViewer && (
+        <Heading fontSize="20px">{address.substr(0, 10)}...</Heading>
+      )}
 
       <Flex
         pt="40px"
@@ -73,13 +85,20 @@ const CoinFlipUser = ({
         align="center"
         fontSize="30px"
       >
-        <Flex margin="0">
+        <Flex margin="0" align="center" justifyContent="center">
           {buyInPrice}
-          <Box pl="3px" pt="3px">
+          <Box pl="2px" pt="3px">
             <FaEthereum />
           </Box>
         </Flex>
         <Text>${parseFloat(String(buyInPrice * ethusd)).toFixed(2)}</Text>
+        {isViewer && (
+          <Box w="100%">
+            <Text fontSize="16px" fontWeight="bold">
+              {address}
+            </Text>
+          </Box>
+        )}
       </Flex>
     </Box>
   );
