@@ -62,7 +62,7 @@ const HighRollersGame = () => {
 
   const [minutesLeft, setMinutesLeft] = useState(0);
   const [secondsLeft, setSecondsLeft] = useState(0);
-  const highRollersCollectionRef = collection(db, "highrollers");    
+  const highRollersCollectionRef = collection(db, "highrollers");
   // // START OF GAME INFO
   // const getCountDown = () => {
   //   let dateString: any = parseInt(data?.currentGame.endTime);
@@ -84,8 +84,6 @@ const HighRollersGame = () => {
 
   // END OF GAME INFO
 
-
-
   useEffect(() => {
     document.title = "High Rollers - Raffle House";
   }, []);
@@ -96,11 +94,17 @@ const HighRollersGame = () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
 
-    const gamesQuery = query(highRollersCollectionRef, where("winner", "==", "0")); // using winner for now... will add times later.
+    const gamesQuery = query(
+      highRollersCollectionRef,
+      where("winner", "==", "0")
+    ); // using winner for now... will add times later.
     const querySnapshot = await getDocs(gamesQuery);
-    console.log("QUERY SNAPSHOT", querySnapshot.docs[0])
+    console.log("QUERY SNAPSHOT", querySnapshot.docs[0]);
     const currentHighRollerGame = querySnapshot.docs[0].data();
-    const currentGameRef = doc(highRollersCollectionRef, currentHighRollerGame.contractAddress);
+    const currentGameRef = doc(
+      highRollersCollectionRef,
+      currentHighRollerGame.contractAddress
+    );
     const currentGameSnap = await getDoc(currentGameRef);
 
     //const gameToks = await fetchNFTs(currentHighRollerGame.contractAddress); // FETCHES GAME TOKENS
@@ -121,7 +125,6 @@ const HighRollersGame = () => {
     // TODO : requests not working
     //console.log("ticks", tickets);
     */
-   
 
     return {
       currentGame: currentHighRollerGame,
@@ -146,7 +149,7 @@ const HighRollersGame = () => {
       previousValue + parseFloat(currentValue.tokenPrice),
     0
   );
-  
+
   const usersWithData = useMemo(() => {
     const groupByUser = mapValues(groupBy(data?.gameTokens, "from"));
     let tempUsers = [];
@@ -226,26 +229,39 @@ const HighRollersGame = () => {
             <Box
               w="480px"
               mt="18px"
+              minH="200px"
               borderTopRadius="md"
               borderRightWidth="4px"
               borderLeftWidth="4px"
               borderTopWidth="4px"
+              borderBottomWidth="4px"
               borderColor="white"
             >
               <Flex justify="center">
                 <Text fontSize="32px">Game Pot</Text>
               </Flex>
-              <SimpleGrid minChildWidth="90px" spacing="8px" px="20px">
-                {data?.gameTokens.map((token, index) => (
-                  <Box key={index}>
-                    <NFT
-                      token={token}
-                      handleDeposit={null}
-                      game={"highrollers-pot"}
-                    />
-                  </Box>
-                ))}
-              </SimpleGrid>
+
+              {isLoading ? (
+                <Flex pt="22px" justify="center">
+                  <Text fontSize="3xl">Loading NFTS ...</Text>
+                </Flex>
+              ) : data?.gameTokens.length === 0 ? (
+                <Flex pt="22px" justify="center">
+                  <Text fontSize="3xl">Pot is empty ...</Text>
+                </Flex>
+              ) : (
+                <SimpleGrid minChildWidth="90px" spacing="8px" px="20px">
+                  {data?.gameTokens.map((token, index) => (
+                    <Box key={index}>
+                      <NFT
+                        token={token}
+                        handleDeposit={null}
+                        game={"highrollers-pot"}
+                      />
+                    </Box>
+                  ))}
+                </SimpleGrid>
+              )}
             </Box>
           </Box>
         </Flex>
