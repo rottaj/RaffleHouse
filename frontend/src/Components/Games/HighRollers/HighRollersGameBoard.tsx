@@ -16,10 +16,10 @@ import { ethers } from "ethers";
 import { useContext } from "react";
 import { DonutChart } from "react-circle-chart";
 import { FaEthereum } from "react-icons/fa";
-import NFT from "../../Components/NFT";
+import NFT from "../../NFT";
 
-import { _abi } from "../../interfaces/Eyescream_Interface";
-import { MetaMaskUserContext } from "../../utils/contexts";
+import { _abi } from "../../../interfaces/Eyescream_Interface";
+import { MetaMaskUserContext } from "../../../utils/contexts";
 
 const HighRollersCircle = ({
   usersWithData,
@@ -35,7 +35,7 @@ const HighRollersCircle = ({
   const { user: account } = useContext(MetaMaskUserContext);
 
   const handleDeposit = async (selectedToken: any) => {
-    console.log("SELECTED TOKEN", selectedToken)
+    console.log("SELECTED TOKEN", selectedToken);
     var provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const collectionContract = new ethers.Contract(
