@@ -29,6 +29,8 @@ const ETHERSCAN_API_KEY = 'FS4Q2NK8JQJ7DPD73R3G1S1T948RPY3JSI';
 
 var provider = new ethers.providers.JsonRpcProvider(process.env.RINKEBY_URL);
 const signer = new ethers.Wallet(PHRASE, provider);
+const abi = JSON.parse(LinkInterface._abi_two.result);
+const ChainLinkContract = new ethers.Contract(LinkInterface.linkAddress, abi, signer); // add this later ?
 const highRollersCollectionRef = firestore.collection(FirebaseProject.db, "highrollers");    
 
 http.listen(8080, () => {
@@ -46,12 +48,12 @@ async function getCurrentGame() { // GET CURRENT GAME CONTRACT { GAME INFO }
   //const currentHighRollerGame = await HighRollersContract.getCurrentGame();
   const gamesQuery = firestore.query(highRollersCollectionRef, firestore.where("winner", "==", "0")); // using winner for now... will add times later.
   const querySnapshot = await firestore.getDocs(gamesQuery);
-  console.log("QUERYSNAPSHOT", querySnapshot.docs)
   const currentHighRollerGame = querySnapshot.docs[0].data();
   return currentHighRollerGame
 }
 
 async function submitTickets(token, playerAddress) { // Call when user deposits NFT --> Grab value from opensea api --> Push ticket count to Tickets[]
+    // NEED TO ADD NONCE TO AVOID CRASHING
     getCurrentGame().then(async function(currentGame) {
       const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
       const submitTicketTxn = await currentGameContract.deposit(parseInt(String(parseFloat(token.tokenPrice) *100)), playerAddress, token.image);
@@ -74,14 +76,34 @@ async function submitTickets(token, playerAddress) { // Call when user deposits 
 }
 
 
+async function sendNFT(currentGameContract, currentGame, token) {
+  /*
+  let baseNonce = await provider.getTransactionCount(signer.getAddress());
+  let nonceOffset = 0;
+  function getNonce() {
+    return baseNonce.then((nonce) => (nonce + (nonceOffset++)));
+  }
+  let gasPrice = await provider.getGasPrice();
+  const signerAddress = await signer.getAddress();
+  var withDrawNFT = await currentGameContract.withDrawNFT(token.contractAddress, token.tokenID)
+  let txn = {to: currentGame.contractAddress, from: signerAddress, data: withDrawNFT, nonce: baseNonce+1, gasPrice: (gasPrice * 2).toFixed(2)}
+  console.log("TXN", txn)
+  const nftOut = await signer.sendTransaction(txn)
 
-async function withDrawToWinner() { // Call when winner game is over --> Withdraws all ERC721 tokens in current game to winner address.
-  getCurrentGame().then(async function(currentGame) {
+  nftOut.wait();
+  */
+  const nftTxn = await currentGameContract.withDrawNFT(token.contractAddress, token.tokenID)
+  nftTxn.wait();
+}
+
+
+
+async function withDrawToWinner(currentGame) { // Call when winner game is over --> Withdraws all ERC721 tokens in current game to winner address.
+  //getCurrentGame().then(async function(currentGame) {
     var url = ETHERSCAN_API_NFT_TXN + currentGame.contractAddress + '&startblock=0&endblock=999999999&sort=asc&apikey=' + ETHERSCAN_API_KEY
     const currentGameContract = new ethers.Contract(currentGame.contractAddress, HighRoller_Interface._HighRoller_abi, signer); // Initialize current game
     const gameInfo = await currentGameContract.getGameInfo();
     if (gameInfo.winner != "0x0000000000000000000000000000000000000000") {
-      console.log("FOOOBAR")
       //var tokens = currentGame.gameTokens; 
       var tokens = [];
       ///*
@@ -97,17 +119,24 @@ async function withDrawToWinner() { // Call when winner game is over --> Withdra
           }
         }
         //*/
+
         for (let token in tokens) {
           if (tokens[token]) { // Just for testing now
-            console.log("Sending NFT", tokens[token])
-            const withDrawNFTTxn = await currentGameContract.withDrawNFT(tokens[token].contractAddress, tokens[token].tokenID)
-            withDrawNFTTxn.wait();
+            console.log("Sending NFT CURRENTGAME", currentGame.contractAddress, tokens[token].tokenID)
+            await sendNFT(currentGameContract, currentGame, tokens[token])
           } //catch( err ) { console.log("Err", err )} // Just for now
+        }
+        if (tokens.length == 0) { // if tokens have been emptied
+          const currentGameRef = firestore.doc(FirebaseProject.db, "highrollers", currentGame.contractAddress);
+          await deployNewGame().then(async () => {
+            await firestore.updateDoc(currentGameRef, {
+              winner: gameInfo.winner
+            });
+          });
         }
       })
     }
-  })
-
+  //})
 }
 
 async function processCurrentGame() {
@@ -129,16 +158,7 @@ async function processCurrentGame() {
     }
     else { // If a winner has been picked through VRF
       console.log("WITHDRAWING TOKENS")
-      await withDrawToWinner().then(async () => {;
-      const currentGameRef = firestore.doc(FirebaseProject.db, "highrollers", currentGame.contractAddress);
-        // Update winner address in firestore
-
-        await deployNewGame().then(async () => {
-          await firestore.updateDoc(currentGameRef, {
-            winner: gameInfo.winner
-          });
-        });
-      })
+      await withDrawToWinner(currentGame)
     }
 
   });
@@ -170,8 +190,11 @@ async function deployNewGame() {
   console.log("SIGNER ADDRESS", signer.address);
   console.log("HIGH ROLLER ADDRESS", contract.address);
   const ethTxn = await signer.sendTransaction ( ether_tx_HighRollers ).then( ( transaction ) => {  
-    console.log("SENT ETHER TO HIGHROLLERS")
+    console.log("SENT ETHER TO HIGHROLLER")
   });
+  const chainLinkTxn_CoinFlips = await ChainLinkContract.transfer(contract.address, ethers.utils.parseUnits("0.1"));
+  console.log("\n SENT LINK TO HIGHROLLER")
+
   await firestore.setDoc(firestore.doc(FirebaseProject.db, "highrollers", contract.address), {
     contractAddress: contract.address,
     gameTokens: [],
@@ -188,6 +211,6 @@ setInterval(async function() { // Call Every minute
     console.log("PROCESSING GAME")
   });
 //}, 2000)
-}, 10000)
+}, 40000)
 //}, 60000)
 //}, 180000)
