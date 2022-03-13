@@ -1,10 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 //import { Redirect, Link, useHistory } from "react-router-dom";
 import { ethers } from "ethers";
-import CoinFlip from "../Components/CoinFlip";
-import {
-  _CoinFlips_abi,
-} from "../interfaces/CoinFlips_Interface";
+import CoinFlip from "../Components/Games/CoinFlip/CoinFlip";
+import { _CoinFlips_abi } from "../interfaces/CoinFlips_Interface";
 import {
   _CoinFlip_abi,
   _CoinFlip_bytecode,
@@ -29,8 +27,7 @@ import {
   SliderThumb,
   Spinner,
   Grid,
-  GridItem
-
+  GridItem,
 } from "@chakra-ui/react";
 import { FaEthereum } from "react-icons/fa";
 import {
@@ -53,7 +50,7 @@ const CoinFlips = () => {
   const [currentCoinFlips, setCurrentCoinFlips]: any = useState([]);
   const [pastCoinFlips, setPastCoinFlips]: any = useState([]);
 
-  const coinflipsCollectionRef = collection(db, "coinflips");      
+  const coinflipsCollectionRef = collection(db, "coinflips");
   useEffect(() => {
     document.title = "Coin Flips - Raffle House";
     if (window.ethereum) {
@@ -66,12 +63,14 @@ const CoinFlips = () => {
       const data = await getDocs(coinflipsCollectionRef);
       data.docs.map((doc) => {
         if (doc.data().winner != "0") {
-          setPastCoinFlips((pastCoinFlips) => [...pastCoinFlips, doc.data()])
-        } 
-        else {
-          setCurrentCoinFlips((currentCoinFlips) => [...currentCoinFlips, doc.data()])
+          setPastCoinFlips((pastCoinFlips) => [...pastCoinFlips, doc.data()]);
+        } else {
+          setCurrentCoinFlips((currentCoinFlips) => [
+            ...currentCoinFlips,
+            doc.data(),
+          ]);
         }
-      })
+      });
     }
   };
 
@@ -107,16 +106,15 @@ const CoinFlips = () => {
               </Box>
             </Flex>
           </Box>
-          <Grid 
-            color="white"
-            templateColumns='repeat(2, 1fr)' 
-            gap={2}
-          >
+          <Grid color="white" templateColumns="repeat(2, 1fr)" gap={2}>
             {currentCoinFlips.map((coinFlip: any) => {
-              return (<GridItem><CoinFlip coinFlip={coinFlip}></CoinFlip></GridItem>)
+              return (
+                <GridItem>
+                  <CoinFlip coinFlip={coinFlip}></CoinFlip>
+                </GridItem>
+              );
             })}
           </Grid>
-
         </Box>
         <Box py="5%" height="100%" justifyContent="center">
           <Box alignItems="center" borderBottom="4px dotted green">
@@ -139,13 +137,13 @@ const CoinFlips = () => {
               </Heading>
             </Flex>
           </Box>
-          <Grid 
-            color="white"
-            templateColumns='repeat(2, 1fr)' 
-            gap={2}
-          >
+          <Grid color="white" templateColumns="repeat(2, 1fr)" gap={2}>
             {pastCoinFlips.map((coinFlip: any) => {
-              return (<GridItem><CoinFlip coinFlip={coinFlip}></CoinFlip></GridItem>)
+              return (
+                <GridItem>
+                  <CoinFlip coinFlip={coinFlip}></CoinFlip>
+                </GridItem>
+              );
             })}
           </Grid>
         </Box>
@@ -161,7 +159,7 @@ type ModalProps = {
   onOpen: () => void;
   onClose: () => void;
 };
- 
+
 const CreateGameModal = (props: ModalProps) => {
   const { user: account, networkStats } = useContext(MetaMaskUserContext);
   const [balance, setBalance]: any = useState(0);
@@ -171,7 +169,7 @@ const CreateGameModal = (props: ModalProps) => {
   const [txnNumber, setTxnNumber] = useState(0);
   const [isCreated, setCreated] = useState(false);
   const [contract, setContract]: any = useState();
-  const coinflipsCollectionRef = collection(db, "coinflips");      
+  const coinflipsCollectionRef = collection(db, "coinflips");
 
   const handleSubmit = () => {
     setLoading(true);
@@ -180,32 +178,34 @@ const CreateGameModal = (props: ModalProps) => {
     createCoinFlipGame(parseFloat(sliderValue)).then((contract) => {
       setContract(contract);
       setTxnNumber(2);
-      sendTransactionToCoinFlips(contract, parseFloat(sliderValue)).then(async () => {
-        setTxnNumber(3);
-        await setDoc(doc(db, "coinflips", contract.address), {
-          creatorAddress: account, 
-          contractAddress: contract.address,
-          buyInPrice: parseFloat(sliderValue),
-          joineeAddress: null,
-          winner: "0",
-        });
-        const playerRef =  doc(db, "users", account);
-        await updateDoc(playerRef, {
-          totalDeposited: increment(parseFloat(sliderValue))
-        });
-        const requestParameters = {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contractAddress: contract.address
-          }), // CREATE REQUEST BODY 
-        };
-        await fetch(
-          "https://rafflehouse.uk.r.appspot.com/fundGame",
-          //"http://127.0.0.1:8080/fundGame",
-          requestParameters
-        )
-      });
+      sendTransactionToCoinFlips(contract, parseFloat(sliderValue)).then(
+        async () => {
+          setTxnNumber(3);
+          await setDoc(doc(db, "coinflips", contract.address), {
+            creatorAddress: account,
+            contractAddress: contract.address,
+            buyInPrice: parseFloat(sliderValue),
+            joineeAddress: null,
+            winner: "0",
+          });
+          const playerRef = doc(db, "users", account);
+          await updateDoc(playerRef, {
+            totalDeposited: increment(parseFloat(sliderValue)),
+          });
+          const requestParameters = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contractAddress: contract.address,
+            }), // CREATE REQUEST BODY
+          };
+          await fetch(
+            "https://rafflehouse.uk.r.appspot.com/fundGame",
+            //"http://127.0.0.1:8080/fundGame",
+            requestParameters
+          );
+        }
+      );
     });
   };
 
@@ -245,8 +245,17 @@ const CreateGameModal = (props: ModalProps) => {
                 <Text width="auto">Your Balance: {balance}</Text>
                 <FaEthereum />
               </Flex>
-              <Text width="auto">USD: ${String(parseFloat(String(parseFloat(balance) * parseFloat(networkStats.ethusd))).toFixed(2)).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text> 
-              
+              <Text width="auto">
+                USD: $
+                {String(
+                  parseFloat(
+                    String(
+                      parseFloat(balance) * parseFloat(networkStats?.ethusd)
+                    )
+                  ).toFixed(2)
+                ).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+              </Text>
+
               <Slider
                 id="slider"
                 defaultValue={5}
@@ -314,7 +323,14 @@ const CreateGameModal = (props: ModalProps) => {
                 </Tooltip>
               </Slider>
               <Box pt="10%">
-                <Heading fontSize="20px">${parseFloat(String(sliderValue * parseFloat(networkStats.ethusd))).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Heading>
+                <Heading fontSize="20px">
+                  $
+                  {parseFloat(
+                    String(sliderValue * parseFloat(networkStats?.ethusd))
+                  )
+                    .toFixed(2)
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                </Heading>
               </Box>
               <Box pt="30%" pb="10%">
                 <Button
@@ -355,5 +371,3 @@ const CreateGameModal = (props: ModalProps) => {
     </Box>
   );
 };
-
-
