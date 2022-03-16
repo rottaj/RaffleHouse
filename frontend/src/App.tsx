@@ -1,10 +1,9 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import Home from "./Containers/Home";
-import Raffles from "./Containers/Raffles";
+import Raffles from "./Components/Games/Raffles/Raffles";
 import CoinFlips from "./Containers/CoinFlips";
 import HighRollers from "./Components/Games/HighRollers/HighRollers";
-import Host from "./Containers/Host";
 import HighRollerViewer from "./Containers/HighRollerViewer";
 import CoinFlipViewer from "./Components/Games/CoinFlip/CoinFlipViewer";
 import RaffleViewer from "./Containers/RaffleViewer";
@@ -170,7 +169,6 @@ function App() {
                 path={AppRoutePaths.HighRollers}
                 element={<HighRollers />}
               />
-              <Route path={AppRoutePaths.Host} element={Host} />
               <Route path={AppRoutePaths.Profile} element={<Profile />} />
               <Route path={AppRoutePaths.History} element={<MyHistory />} />
               <Route path={AppRoutePaths.FAQ} element={<FAQ />} />

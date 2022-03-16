@@ -1,13 +1,9 @@
-import React, { useEffect, useState, useContext } from "react";
-import { _abi } from "../interfaces/Eyescream_Interface";
-import { ethers } from "ethers";
+import { useEffect, useState, useContext } from "react";
+import { _abi } from "../../../interfaces/Eyescream_Interface";
 import { Link } from "react-router-dom";
-import { RafflesAddress, _abi_raffles } from "../interfaces/Raffles_Interface";
-import { _Raffle_abi } from "../interfaces/RaffleEscrow_Interface";
-import Footer from "../Components/Footer";
-import BaseContainer from "./BaseContainers/BaseContainer";
-import { getMetaDataSingle } from "../utils/HandleNFTs";
-import { MetaMaskUserContext } from "../utils/contexts";
+import { _Raffle_abi } from "../../../interfaces/RaffleEscrow_Interface";
+import BaseContainer from "../../../Containers/BaseContainers/BaseContainer";
+import { MetaMaskUserContext } from "../../../utils/contexts";
 import {
   Box,
   Flex,
@@ -20,52 +16,32 @@ import {
   ModalContent,
   ModalBody,
   useDisclosure,
-  Slider,
-  SliderMark,
-  SliderTrack,
-  SliderFilledTrack,
-  Tooltip,
-  SliderThumb,
   Spinner,
   Grid,
   GridItem
 
 } from "@chakra-ui/react";
 
-import { db } from "../firebase-config";
+import { db } from "../../../firebase-config";
 import {
   collection,
   getDocs,
-  setDoc,
-  increment,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
 } from "firebase/firestore";
 import {CheckIcon} from "@chakra-ui/icons"
 import { FaEthereum, FaWpbeginner } from "react-icons/fa"
 
-import RaffleCreator from "../Components/RaffleCreator";
+import RaffleCreator from "./RaffleCreator";
 
 declare let window: any;
 const Raffles = () => {
   const [currentRaffles, setCurrentRaffles]: any = useState([]);
   const [pastRaffles, setPastRaffles]: any = useState([]);
-  const [account, setAccount] = useState("");
   const rafflesCollectionRef = collection(db, "raffles");   
+  const { user: account } = useContext(MetaMaskUserContext);
 
   useEffect(() => {
     document.title = "Raffles - Raffle House";
-    const getAccount = async () => {
-      var accounts = await window.ethereum.send("eth_requestAccounts");
-      const account = accounts.result[0];
-      setAccount(account);
-    };
-    if (window.ethereum) {
-      getAccount();
-      getRaffles();
-    }
+    getRaffles();
   }, []);
 
   const getRaffles = async () => {
