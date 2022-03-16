@@ -1,51 +1,60 @@
-import { useState, useEffect } from "react";
-import NFTSelector from "./NFTSelector";
+import { useState, useEffect, useContext } from "react";
+import { useQuery } from "react-query";
+import NFT from "../../NFT";
 import { ethers, ContractFactory } from "ethers";
-import { _abi } from "../interfaces/Eyescream_Interface";
+import { _abi } from "../../../interfaces/Eyescream_Interface";
 import {
   _Raffle_abi,
   _Raffle_bytecode,
-} from "../interfaces/RaffleEscrow_Interface";
-import { fetchNFTs } from "../utils/HandleNFTs";
-import { RafflesAddress, _abi_raffles } from "../interfaces/Raffles_Interface";
-import { Box, Flex, Heading, Input, Button } from "@chakra-ui/react";
-import { db } from "../firebase-config";
+} from "../../../interfaces/RaffleEscrow_Interface";
+import { fetchNFTs } from "../../../utils/HandleNFTs";
 import {
-  collection,
-  getDocs,
+  Box, 
+  Flex,
+  Heading, 
+  SimpleGrid, 
+  Input, 
+  Button,
+  Skeleton } from "@chakra-ui/react";
+import { db } from "../../../firebase-config";
+import {
   setDoc,
-  increment,
-  addDoc,
-  updateDoc,
-  deleteDoc,
   doc,
 } from "firebase/firestore";
+import { MetaMaskUserContext } from "../../../utils/contexts";
 
 declare let window: any;
 const RaffleCreator = () => {
   const [tokens, setTokens]: any = useState([]);
-  const [RaffleFormOpen, setRaffleFormOpen] = useState(false);
+  const {user: account, isLoadingUser } = useContext(MetaMaskUserContext);
 
-  const handleRaffleForm = () => {
-    setRaffleFormOpen(!RaffleFormOpen);
-  };
 
   useEffect(() => {
     const mountTokenData = async () => {
-      var accounts = await window.ethereum.send("eth_requestAccounts");
-      const account = accounts.result[0];
-      fetchNFTs(account).then((data) => {
-        setTokens(data);
-      });
+
     };
     if (window.ethereum) {
       mountTokenData();
     }
   }, []);
 
+  const getUserData = async () => {
+      const userToks = await fetchNFTs(account);
+      return {userTokens: userToks}
+
+  }
+
+  const { data, isLoading, isSuccess }: any = useQuery(
+    `${account}raffles`,
+    () => getUserData(),
+    {
+      enabled: !isLoadingUser && Boolean(account),
+      staleTime: Infinity,
+    }
+  );
+
   const handleDeposit = async ( selectedToken: any, buyInPrice: any, reservePrice: any ) => {
     if (window.ethereum) {
-      console.log("BIIIITCH", selectedToken, parseFloat(buyInPrice).toFixed(2), parseFloat(reservePrice).toFixed(2))
       var accounts = await window.ethereum.send("eth_requestAccounts");
       var provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
@@ -54,11 +63,6 @@ const RaffleCreator = () => {
         _Raffle_bytecode,
         signer
       ); // Initialize new Raffle
-      const rafflesContract = await new ethers.Contract(
-        RafflesAddress,
-        _abi_raffles,
-        signer
-      ); // connect to Raffles Contract
       // DEPLOY CONTRACT
       const account = accounts.result[0];
       const contract = await raffleFactory.deploy(
@@ -117,7 +121,26 @@ const RaffleCreator = () => {
         <Heading fontSize="40px" color="white">
           Create your Raffle!
         </Heading>
-        <NFTSelector tokens={tokens} handleDeposit={handleDeposit} game={"raffles"}/>
+        {isLoading || !isSuccess ? 
+            <Box>
+              <Skeleton w="200px" h="30px">
+                Loading
+              </Skeleton>
+            </Box>
+          :
+          <SimpleGrid minChildWidth="90px" spacing="8px" px="20px">
+            {console.log(data?.userTokens)}
+            {data?.userTokens.map((token, index) => (
+              <Box key={index}>
+                <NFT
+                  token={token}
+                  handleDeposit={handleDeposit}
+                  game={"raffles"}
+                />
+              </Box>
+            ))}
+          </SimpleGrid>
+        }
       </Box>
     </Flex>
   );
