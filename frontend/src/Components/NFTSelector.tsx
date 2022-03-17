@@ -10,6 +10,7 @@ type NftSelectorProps = {
 const NFTSelector = ({ tokens, handleDeposit, game }: NftSelectorProps) => {
   return (
     <Box>
+      {console.log("TOKENS", tokens)}
       <Text color="white" fontSize="22px">
         NFT Portfolio
       </Text>
