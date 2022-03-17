@@ -50,6 +50,8 @@ interface CurrentGame {
   winner: string;
 }
 
+const ETHERSCAN_URL = 'https://rinkeby.etherscan.io/address/'
+
 const HighRollers = () => {
   return (
     <BaseContainer>
@@ -171,6 +173,10 @@ const HighRollersGame = () => {
     return tempUsers;
   }, [data?.gameTokens]);
 
+  const handleContractRedirect = () => {
+    window.open(ETHERSCAN_URL + data?.currentGame.contractAddress)
+  }
+
   const { isSidebarOpen } = useContext(BaseContainerContext);
   return (
     <Flex
@@ -213,7 +219,7 @@ const HighRollersGame = () => {
                         hasArrow
                         label={data?.currentGame.contractAddress}
                       >
-                        <Text cursor="pointer" maxW="200px" noOfLines={1}>
+                        <Text cursor="pointer" maxW="200px" noOfLines={1} onClick={handleContractRedirect}>
                           {data?.currentGame.contractAddress}
                         </Text>
                       </Tooltip>
