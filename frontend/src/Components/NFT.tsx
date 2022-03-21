@@ -88,7 +88,6 @@ export function NFT({ token, handleDeposit, game }: NFTProps) {
     let tokenPrice: any = parseFloat(data['collection']['stats']['average_price']).toFixed(2);
     const total_supply: any = parseInt(data['collection']['stats']['total_supply']);
     const traits = data['traits']
-    console.log(traits)
     for (let trait in traits) {
         let average_price = parseFloat(data['collection']['stats']['average_price']).toFixed(2);
         let trait_price: any = parseFloat(String(parseInt(traits[trait].trait_count) / parseInt(total_supply)))
@@ -186,7 +185,7 @@ export function NFT({ token, handleDeposit, game }: NFTProps) {
                               {data.detail == undefined && (
                                 <Flex>
                                   <Text color="white">
-                                  Price: {data["collection"]["stats"]["average_price"].toFixed(2)}
+                                  Price: {getTokenPrice(data)}
                                   </Text>
                                   <Box pt="3px" color="white">
                                     <FaEthereum />
@@ -199,7 +198,7 @@ export function NFT({ token, handleDeposit, game }: NFTProps) {
                             <Flex h="full">
                               <Button
                                 onClick={() => 
-                                  handleDeposit(Object.assign(token, {"tokenPrice": data["collection"]["stats"]["average_price"].toFixed(2)}))
+                                  handleDeposit(Object.assign(token, {"tokenPrice": getTokenPrice(data)}))
                                 }
                                 alignSelf="flex-end"
                                 bgColor="#3a0ca3"
