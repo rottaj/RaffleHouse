@@ -153,8 +153,21 @@ async function processCurrentGame() {
    console.log(gameInfo)
     if (gameInfo.winner === "0x0000000000000000000000000000000000000000" || currentGame.status === 1) {
       console.log("PROCESSING GAME", currentGame.contractAddress)
-      const ProcessCurrentGameTxn = await currentGameContract.processGame();
-      ProcessCurrentGameTxn.wait();
+      //const ProcessCurrentGameTxn = await currentGameContract.processGame();
+      //ProcessCurrentGameTxn.wait();
+      let baseNonce = await provider.getTransactionCount(signer.getAddress());
+      let gasPrice = await provider.getGasPrice();
+      const signerAddress = await signer.getAddress();
+      const options = 
+      {
+        nonce: parseInt(baseNonce+1),
+        gasPrice: parseFloat((gasPrice * 2).toFixed(2))
+      }
+      try {
+        await currentGameContract.processGame();
+      } catch( error ) {
+        console.log("ERROR PROCESSING GAME", error, "^ERROR PROCESSING GAME^")
+      }
     }
     else { // If a winner has been picked through VRF
       console.log("WITHDRAWING TOKENS")
