@@ -123,7 +123,12 @@ async function withDrawToWinner(currentGame) { // Call when winner game is over 
         for (let token in tokens) {
           if (tokens[token]) { // Just for testing now
             console.log("Sending NFT CURRENTGAME", currentGame.contractAddress, tokens[token].tokenID)
-            await sendNFT(currentGameContract, currentGame, tokens[token])
+            try {
+
+              await sendNFT(currentGameContract, currentGame, tokens[token])
+            } catch(error) {
+              console.log("ERROR SENDING NFT")
+            }
           } //catch( err ) { console.log("Err", err )} // Just for now
         }
         if (tokens.length == 0) { // if tokens have been emptied
