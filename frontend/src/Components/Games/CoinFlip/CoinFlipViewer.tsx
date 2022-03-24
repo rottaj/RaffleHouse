@@ -5,6 +5,7 @@ import CoinBull from "../../../images/coinBull.png";
 import CoinBear from "../../../images/coinBear.png";
 import Footer from "../../Footer";
 import { FaEthereum } from "react-icons/fa";
+import etherscan_light from "../../../images/etherscan-logos/etherscan-logo-light.png";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
   Box,
@@ -25,6 +26,9 @@ import { MetaMaskUserContext } from "../../../utils/contexts";
 import { db } from "../../../firebase-config";
 import { setDoc, doc, increment, getDoc, updateDoc } from "firebase/firestore";
 import CoinFlipUser from "./CoinFlipUser";
+
+
+const ETHERSCAN_URL = 'https://rinkeby.etherscan.io/address/'
 
 type ModalViewerProps = {
   isOpen: boolean;
@@ -85,6 +89,10 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
       });
     }
   };
+
+  const handleContractRedirect = (contractAddress) => {
+    window.open(ETHERSCAN_URL + contractAddress)
+  }
 
   return (
     <>
@@ -196,6 +204,12 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
                     <div className="side head"></div>
                     <div className="side tail"></div>
                   </div>
+                <Image 
+                  height="25%"
+                  width="25%"
+                  src={etherscan_light} 
+                  onClick={() => handleContractRedirect(props.gameInfo.contractAddress)}>
+                </Image>
                 </Box>
               ) : (
                 "GAME DOESN'T EXIST"
@@ -255,6 +269,12 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
               <Button marginTop="10%" variant="ghost" onClick={props.onClose}>
                 Watch Game
               </Button>
+              <Image 
+                height="25%"
+                width="25%"
+                src={etherscan_light} 
+                onClick={() => handleContractRedirect(props.gameInfo.contractAddress)}>
+              </Image>
             </ModalBody>
           </ModalContent>
         </Modal>

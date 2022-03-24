@@ -109,12 +109,12 @@ const CoinFlipUser = ({
       </Box>
     }
     {view == "Table" && 
-      <Td>
+      <Box>
         <Flex>
-          <Image borderRadius="180px" src={image} height="5%" width="5%"></Image>
+          <Image borderRadius="180px" src={image} height="7%" width="7%"></Image>
           <Heading fontSize="20px">{address.substr(0, 10)}...</Heading>
         </Flex>
-      </Td> 
+      </Box>
     }
     </>
   );

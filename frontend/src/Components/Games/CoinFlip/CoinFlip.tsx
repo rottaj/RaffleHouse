@@ -16,7 +16,7 @@ import {
   useDisclosure,
   Td,
   Tr,
-
+  Spinner
 } from "@chakra-ui/react";
 import { MetaMaskUserContext } from "../../../utils/contexts";
 import CoinFlipUser from "./CoinFlipUser";
@@ -109,7 +109,7 @@ const CoinFlip = (props: Props) => {
         width="100%"
         cursor="pointer"
         onClick={onOpen}
-        _hover={{ border: "3px solid green" }}
+        _hover={{ border: "1.5px solid green" }}
       >
       <CoinFlipViewer
         isOpen={isOpen}
@@ -122,6 +122,7 @@ const CoinFlip = (props: Props) => {
         {props.coinFlip.winner !==
           "0" ? (
           <>
+            <Td width="50%">
             <CoinFlipUser
               address={props.coinFlip.creatorAddress as string}
               isBull={true}
@@ -129,7 +130,8 @@ const CoinFlip = (props: Props) => {
               ethusd={parseFloat(networkStats?.ethusd)}
               view={props.view}
             />
-
+            </Td>
+            <Td>
             <CoinFlipUser
               address={props.coinFlip.winner as string}
               isBull={true}
@@ -137,6 +139,7 @@ const CoinFlip = (props: Props) => {
               ethusd={parseFloat(networkStats?.ethusd)}
               view={props.view}
             />
+            </Td> 
             <Td>
               <Flex>
                 {props.coinFlip.buyInPrice}
@@ -151,6 +154,7 @@ const CoinFlip = (props: Props) => {
           {props.coinFlip.joineeAddress !==
           null ? (
             <>
+              <Td width="50%">
               <CoinFlipUser
                 address={props.coinFlip.creatorAddress as string}
                 isBull={true}
@@ -158,9 +162,11 @@ const CoinFlip = (props: Props) => {
                 ethusd={parseFloat(networkStats?.ethusd)}
                 view={props.view}
               />
-              <Td>In Progress</Td>
-
-              <Td>
+              </Td>
+              <Td pl="3.5%">
+                <Spinner size="md"/>
+              </Td>
+              <Td pl='18%'>
                 <Flex>
                   {props.coinFlip.buyInPrice}{" "}
                   <Box pl="3px" pt="3px">
@@ -171,8 +177,17 @@ const CoinFlip = (props: Props) => {
             </>
           ) : (
             <>
+              <Td width="50%">
+              <CoinFlipUser
+                address={props.coinFlip.creatorAddress as string}
+                isBull={true}
+                buyInPrice={props.coinFlip.buyInPrice}
+                ethusd={parseFloat(networkStats?.ethusd)}
+                view={props.view}
+              />
+              </Td>
               <Td color="green">Joinable</Td>
-              <Td>
+              <Td pl="18%">
                 <Flex>
                   {props.coinFlip.buyInPrice}{" "}
                   <Box pl="3px" pt="3px">

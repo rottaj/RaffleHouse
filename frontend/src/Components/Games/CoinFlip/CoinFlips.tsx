@@ -113,10 +113,13 @@ const CoinFlips = () => {
                 GAMES
               </Heading>
               <Box alignSelf="right" marginLeft="auto">
-                <Switch onChange={handleViewChange}></Switch>
+                <Flex>
+                  <Heading fontSize="20px">{currentView} View</Heading>
+                  <Switch type="green" onChange={handleViewChange}></Switch>
                 <Button bgColor="green" color="white" onClick={onOpen}>
                   Create Game
                 </Button>
+                </Flex>
               </Box>
             </Flex>
           </Box>
