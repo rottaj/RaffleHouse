@@ -123,7 +123,12 @@ async function withDrawToWinner(currentGame) { // Call when winner game is over 
         for (let token in tokens) {
           if (tokens[token]) { // Just for testing now
             console.log("Sending NFT CURRENTGAME", currentGame.contractAddress, tokens[token].tokenID)
-            await sendNFT(currentGameContract, currentGame, tokens[token])
+            try {
+
+              await sendNFT(currentGameContract, currentGame, tokens[token])
+            } catch(error) {
+              console.log("ERROR SENDING NFT")
+            }
           } //catch( err ) { console.log("Err", err )} // Just for now
         }
         if (tokens.length == 0) { // if tokens have been emptied
@@ -153,8 +158,21 @@ async function processCurrentGame() {
    console.log(gameInfo)
     if (gameInfo.winner === "0x0000000000000000000000000000000000000000" || currentGame.status === 1) {
       console.log("PROCESSING GAME", currentGame.contractAddress)
-      const ProcessCurrentGameTxn = await currentGameContract.processGame();
-      ProcessCurrentGameTxn.wait();
+      //const ProcessCurrentGameTxn = await currentGameContract.processGame();
+      //ProcessCurrentGameTxn.wait();
+      let baseNonce = await provider.getTransactionCount(signer.getAddress());
+      let gasPrice = await provider.getGasPrice();
+      const signerAddress = await signer.getAddress();
+      const options = 
+      {
+        nonce: parseInt(baseNonce+1),
+        gasPrice: parseFloat((gasPrice * 2).toFixed(2))
+      }
+      try {
+        await currentGameContract.processGame();
+      } catch( error ) {
+        console.log("ERROR PROCESSING GAME", error, "^ERROR PROCESSING GAME^")
+      }
     }
     else { // If a winner has been picked through VRF
       console.log("WITHDRAWING TOKENS")

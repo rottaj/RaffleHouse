@@ -56,6 +56,7 @@ const HighRollers = () => {
   return (
     <BaseContainer>
       <HighRollersGame />
+      <PastHighRollerGames/>
     </BaseContainer>
   );
 };
@@ -94,11 +95,6 @@ const HighRollersGame = () => {
   }, []);
 
   const getGameData = async () => {
-    // game data arrays
-
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-
     const gamesQuery = query(
       highRollersCollectionRef,
       where("winner", "==", "0")
@@ -116,20 +112,6 @@ const HighRollersGame = () => {
     const players = currentGameSnap.data()["players"];
     const gameToks = currentGameSnap.data()["gameTokens"];
     const userToks = await fetchNFTs(account);
-
-    /*
-    const currentHighRollerContract = new ethers.Contract(
-      currentHighRollerGame.contractAddress,
-      _HighRoller_abi,
-      signer
-    );
-    
-    console.log("TESTING CURRENT GAME", currentHighRollerGame)
-    //const tickets = await currentHighRollerContract.getTickets();
-    
-    // TODO : requests not working
-    //console.log("ticks", tickets);
-    */
 
     return {
       currentGame: currentHighRollerGame,
@@ -281,29 +263,36 @@ const HighRollersGame = () => {
 
 const PastHighRollerGames = () => {
   const [pastGames, setPastGames]: any = useState([]);
+  const highRollersCollectionRef = collection(db, "highrollers");
 
   const getPastGames = async () => {
     if (window.ethereum) {
-      var provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const HighRollersContract = new ethers.Contract(
-        HighRollersAddress,
-        _HighRollers_abi,
-        signer
-      );
-      const pastGames = await HighRollersContract.getPastGames();
-      const tempGames = [];
-      for (let i = 0; i <= parseInt(pastGames) - 1; i++) {
-        const tempGame = await HighRollersContract.getPastGameByIndex(i);
-        tempGames.push(tempGame);
-      }
-      setPastGames(tempGames);
+      const gamesQuery = query(
+        highRollersCollectionRef,
+        where("winner", "!=", "0")
+      ); // using winner for now... will add times later.
+      const querySnapshot = await getDocs(gamesQuery);
+      console.log("QUERY SNAPSHOT", querySnapshot.docs);
+      querySnapshot.docs.map((doc) => {
+        try {
+          const tempDoc = doc.data();
+          setPastGames((pastGames) => [...pastGames, tempDoc])
+        } catch( error ) {}
+
+      })
+          
+        
+
     }
   };
 
   useEffect(() => {
     getPastGames();
   }, []);
+
+  const handleContractRedirect = (contractAddress) => {
+    window.open(ETHERSCAN_URL + contractAddress)
+  }
 
   return (
     <Flex py="80px" px="60px" flexDir="column" align="flex-start">
@@ -314,13 +303,13 @@ const PastHighRollerGames = () => {
         <Box>
           {pastGames.map((game: any, index) => {
             return (
-              <Link key={index} to={`high-roller/${game["contractAddress"]}`}>
+              <Box onClick={() => handleContractRedirect(game.contractAddress)}>
                 <HighRollerGame
                   winner={game.winner}
-                  tickets={parseInt(game.tickets)}
+                  tickets={parseInt(game.gameTokens.length)}
                   contractAddress={game.contractAddress}
                 />
-              </Link>
+              </Box>
             );
           })}
         </Box>
@@ -352,7 +341,7 @@ const HighRollerGame = (props: HighRollerGameProps) => {
       _active={{ bgColor: "#390099" }}
     >
       <Text fontSize="16px">Winner: {props.winner}</Text>
-      <Text fontSize="16px">Tickets: {props.tickets}</Text>
+      <Text fontSize="16px">Tokens: {props.tickets}</Text>
       <Text fontSize="20px">Contract: {props.contractAddress}</Text>
     </Flex>
   );
