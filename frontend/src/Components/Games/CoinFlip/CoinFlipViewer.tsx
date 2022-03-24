@@ -165,6 +165,7 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
                         isBull={true}
                         buyInPrice={props.gameInfo.buyInPrice}
                         ethusd={parseFloat(networkStats?.ethusd)}
+                        view={"Card"}
                       />
                       <Flex
                         bgColor="white"
@@ -183,6 +184,7 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
                         address={props.gameInfo.joineeAddress as string}
                         buyInPrice={props.gameInfo.buyInPrice}
                         ethusd={parseFloat(networkStats?.ethusd)}
+                        view={"Card"}
                       />
                     </>
                   </Flex>

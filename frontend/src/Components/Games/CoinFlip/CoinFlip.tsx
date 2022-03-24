@@ -65,6 +65,7 @@ const CoinFlip = (props: Props) => {
             isBull={true}
             buyInPrice={props.coinFlip.buyInPrice}
             ethusd={parseFloat(networkStats?.ethusd)}
+            view={props.view}
           />
           <Flex
             bgColor="white"
@@ -84,6 +85,7 @@ const CoinFlip = (props: Props) => {
               address={props.coinFlip.joineeAddress as string}
               buyInPrice={props.coinFlip.buyInPrice}
               ethusd={parseFloat(networkStats?.ethusd)}
+              view={props.view}
             />
           ) : (
             <Box>
@@ -106,13 +108,35 @@ const CoinFlip = (props: Props) => {
         fontSize="13px"
         width="100%"
         cursor="pointer"
-        _hover={{ bgColor: "green" }}
+        onClick={onOpen}
+        _hover={{ border: "3px solid green" }}
       >
+      <CoinFlipViewer
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
+        gameInfo={props.coinFlip}
+        creatorImage={creatorImage}
+        joineeImage={joineeImage}
+      />
         {props.coinFlip.winner !==
-          "0x0000000000000000000000000000000000000000" ? (
+          "0" ? (
           <>
-          <Td>{props.coinFlip.creatorAddress.split(20)}</Td>
-            <Td>{props.coinFlip.winner.split(20)}</Td>
+            <CoinFlipUser
+              address={props.coinFlip.creatorAddress as string}
+              isBull={true}
+              buyInPrice={props.coinFlip.buyInPrice}
+              ethusd={parseFloat(networkStats?.ethusd)}
+              view={props.view}
+            />
+
+            <CoinFlipUser
+              address={props.coinFlip.winner as string}
+              isBull={true}
+              buyInPrice={props.coinFlip.buyInPrice}
+              ethusd={parseFloat(networkStats?.ethusd)}
+              view={props.view}
+            />
             <Td>
               <Flex>
                 {props.coinFlip.buyInPrice}
@@ -125,10 +149,17 @@ const CoinFlip = (props: Props) => {
       ) : (
         <>
           {props.coinFlip.joineeAddress !==
-          "0x0000000000000000000000000000000000000000" ? (
+          null ? (
             <>
-              <Td>{props.coinFlip.creatorAddress.split(20)}</Td>
+              <CoinFlipUser
+                address={props.coinFlip.creatorAddress as string}
+                isBull={true}
+                buyInPrice={props.coinFlip.buyInPrice}
+                ethusd={parseFloat(networkStats?.ethusd)}
+                view={props.view}
+              />
               <Td>In Progress</Td>
+
               <Td>
                 <Flex>
                   {props.coinFlip.buyInPrice}{" "}
@@ -140,7 +171,6 @@ const CoinFlip = (props: Props) => {
             </>
           ) : (
             <>
-              <Td>{props.coinFlip.creatorAddress.split(20)}</Td>
               <Td color="green">Joinable</Td>
               <Td>
                 <Flex>

@@ -5,6 +5,8 @@ import {
   Image,
   SkeletonCircle,
   Text,
+  Tr,
+  Td
 } from "@chakra-ui/react";
 import React from "react";
 import { FaEthereum } from "react-icons/fa";
@@ -20,6 +22,7 @@ const CoinFlipUser = ({
   ethusd,
   isViewer,
   isCreator,
+  view
 }: {
   address: string;
   isBull?: boolean;
@@ -27,6 +30,7 @@ const CoinFlipUser = ({
   ethusd: number;
   isCreator?: boolean;
   isViewer?: boolean;
+  view: string;
 }) => {
   const storage = getStorage();
   const getImage = async () => {
@@ -41,66 +45,78 @@ const CoinFlipUser = ({
   });
 
   return (
-    <Box
-      // minHeight="100px"
-      width="50%"
-      // w="100%"
-      border="1px solid white"
-      borderRadius="20px"
-      textAlign="center"
-    >
-      {isViewer && (
-        <Text fontSize="20px" fontWeight="bold">
-          {isCreator ? "Creator" : "Joinee"}
-        </Text>
-      )}
-      <Flex>
-        <Box pt="30px" px="10px" w="100%" h="100%">
-          <Image
-            borderRadius="50%"
-            fallback={<SkeletonCircle w="100%" h="100%" />}
-            src={image}
-          />
-        </Box>
-        <Box position="absolute" pl="16px" pt="0.5%">
-          <Image
-            borderRadius="50%"
-            maxHeight="60px"
-            maxWidth="60px"
-            src={isBull ? CoinBull : CoinBear}
-          />
-        </Box>
-      </Flex>
-      {!isViewer && (
-        <Heading fontSize="20px">{address.substr(0, 10)}...</Heading>
-      )}
-
-      <Flex
-        pt="40px"
-        minHeight="100px"
-        width="100%"
-        justifyContent="center"
-        margin="0"
-        flexDir="column"
-        align="center"
-        fontSize="30px"
+    <>
+    {view == "Card" && 
+      <Box
+        // minHeight="100px"
+        width="50%"
+        // w="100%"
+        border="1px solid white"
+        borderRadius="20px"
+        textAlign="center"
       >
-        <Flex margin="0" align="center" justifyContent="center">
-          {buyInPrice}
-          <Box pl="2px" pt="3px">
-            <FaEthereum />
+        {isViewer && (
+          <Text fontSize="20px" fontWeight="bold">
+            {isCreator ? "Creator" : "Joinee"}
+          </Text>
+        )}
+        <Flex>
+          <Box pt="30px" px="10px" w="100%" h="100%">
+            <Image
+              borderRadius="50%"
+              fallback={<SkeletonCircle w="100%" h="100%" />}
+              src={image}
+            />
+          </Box>
+          <Box position="absolute" pl="16px" pt="0.5%">
+            <Image
+              borderRadius="50%"
+              maxHeight="60px"
+              maxWidth="60px"
+              src={isBull ? CoinBull : CoinBear}
+            />
           </Box>
         </Flex>
-        <Text>${parseFloat(String(buyInPrice * ethusd)).toFixed(2)}</Text>
-        {isViewer && (
-          <Box w="100%">
-            <Text fontSize="16px" fontWeight="bold">
-              {address}
-            </Text>
-          </Box>
+        {!isViewer && (
+          <Heading fontSize="20px">{address.substr(0, 10)}...</Heading>
         )}
-      </Flex>
-    </Box>
+
+        <Flex
+          pt="40px"
+          minHeight="100px"
+          width="100%"
+          justifyContent="center"
+          margin="0"
+          flexDir="column"
+          align="center"
+          fontSize="30px"
+        >
+          <Flex margin="0" align="center" justifyContent="center">
+            {buyInPrice}
+            <Box pl="2px" pt="3px">
+              <FaEthereum />
+            </Box>
+          </Flex>
+          <Text>${parseFloat(String(buyInPrice * ethusd)).toFixed(2)}</Text>
+          {isViewer && (
+            <Box w="100%">
+              <Text fontSize="16px" fontWeight="bold">
+                {address}
+              </Text>
+            </Box>
+          )}
+        </Flex>
+      </Box>
+    }
+    {view == "Table" && 
+      <Td>
+        <Flex>
+          <Image borderRadius="180px" src={image} height="5%" width="5%"></Image>
+          <Heading fontSize="20px">{address.substr(0, 10)}...</Heading>
+        </Flex>
+      </Td> 
+    }
+    </>
   );
 };
 
