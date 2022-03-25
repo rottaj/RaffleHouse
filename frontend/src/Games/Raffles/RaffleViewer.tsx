@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from "react";
 import { ethers } from "ethers";
-import { _abi } from "../../../interfaces/Eyescream_Interface";
-import { _Raffle_abi } from "../../../interfaces/RaffleEscrow_Interface";
-import BaseContainer from "../../../Containers/BaseContainers/BaseContainer";
-import RaffleDeposit from "../../DepositRaffle";
-import PlayersList from "../../PlayersList";
-import { fetchNFTs, getMetaDataSingle } from "../../../utils/HandleNFTs";
-import { MetaMaskUserContext } from "../../../utils/contexts";
+import { _abi } from "../../interfaces/Eyescream_Interface";
+import { _Raffle_abi } from "../../interfaces/RaffleEscrow_Interface";
+import BaseContainer from "../../Containers/BaseContainers/BaseContainer";
+import RaffleDeposit from "../../Components/DepositRaffle";
+import PlayersList from "../../Components/PlayersList";
+import { fetchNFTs, getMetaDataSingle } from "../../utils/HandleNFTs";
+import { MetaMaskUserContext } from "../../utils/contexts";
 import { FaEthereum } from "react-icons/fa";
 import {
   Box,
@@ -30,8 +30,8 @@ import {
   Grid,
   GridItem
 } from "@chakra-ui/react"
-import { TokenPrice } from "../../../utils/Opensea/TokenPrice";
-import { TokenMetaData } from "../../../utils/Opensea/TokenMetaData";
+import { TokenPrice } from "../../utils/Opensea/TokenPrice";
+import { TokenMetaData } from "../../utils/Opensea/TokenMetaData";
 
 /*
     The reason for this shenanigans is RaffleViewer is not a child component.. so no props. ( getting contract address from path :shit: )

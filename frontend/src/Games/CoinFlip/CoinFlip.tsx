@@ -2,11 +2,11 @@ import { useState, useEffect, useContext } from "react";
 //import { Redirect, Link, useHistory } from "react-router-dom";
 
 import CoinFlipViewer from "./CoinFlipViewer";
-import { _CoinFlips_abi } from "../../../interfaces/CoinFlips_Interface";
+import { _CoinFlips_abi } from "../../interfaces/CoinFlips_Interface";
 import {
   _CoinFlip_abi,
   _CoinFlip_bytecode,
-} from "../../../interfaces/CoinFlip_Interface";
+} from "../../interfaces/CoinFlip_Interface";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { 
   Box,
@@ -18,7 +18,7 @@ import {
   Tr,
   Spinner
 } from "@chakra-ui/react";
-import { MetaMaskUserContext } from "../../../utils/contexts";
+import { MetaMaskUserContext } from "../../utils/contexts";
 import CoinFlipUser from "./CoinFlipUser";
 import { FaEthereum } from "react-icons/fa";
 interface Props {

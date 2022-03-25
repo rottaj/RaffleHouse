@@ -2,12 +2,12 @@ import { useState, useEffect, useContext } from "react";
 //import { Redirect, Link, useHistory } from "react-router-dom";
 import { ethers } from "ethers";
 import CoinFlip from "./CoinFlip";
-import { _CoinFlips_abi } from "../../../interfaces/CoinFlips_Interface";
+import { _CoinFlips_abi } from "../../interfaces/CoinFlips_Interface";
 import {
   _CoinFlip_abi,
   _CoinFlip_bytecode,
-} from "../../../interfaces/CoinFlip_Interface";
-import BaseContainer from "../../../Containers/BaseContainers/BaseContainer";
+} from "../../interfaces/CoinFlip_Interface";
+import BaseContainer from "../../Containers/BaseContainers/BaseContainer";
 import {
   Box,
   Flex,
@@ -41,9 +41,9 @@ import { FaEthereum } from "react-icons/fa";
 import {
   createCoinFlipGame,
   sendTransactionToCoinFlips,
-} from "../../../utils/CreateCoinFlipGame";
-import { MetaMaskUserContext } from "../../../utils/contexts";
-import { db } from "../../../firebase-config";
+} from "../../utils/CreateCoinFlipGame";
+import { MetaMaskUserContext } from "../../utils/contexts";
+import { db } from "../../firebase-config";
 import {
   collection,
   getDocs,

@@ -16,10 +16,10 @@ import { ethers } from "ethers";
 import { useContext } from "react";
 import { DonutChart } from "react-circle-chart";
 import { FaEthereum } from "react-icons/fa";
-import NFT from "../../NFT";
+import NFT from "../../Components/NFT";
 
-import { _abi } from "../../../interfaces/Eyescream_Interface";
-import { MetaMaskUserContext } from "../../../utils/contexts";
+import { _abi } from "../../interfaces/Eyescream_Interface";
+import { MetaMaskUserContext } from "../../utils/contexts";
 
 const HighRollersCircle = ({
   usersWithData,

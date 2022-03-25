@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import BaseContainer from "./BaseContainers/BaseContainer";
-import CoinFlip from "../Components/Games/CoinFlip/CoinFlip";
+import CoinFlip from "../Games/CoinFlip/CoinFlip";
 import {
   Box,
   Flex,

@@ -1,11 +1,10 @@
 import { useState, useEffect, useContext } from "react";
 import { ethers } from "ethers";
-import { _CoinFlip_abi } from "../../../interfaces/CoinFlip_Interface";
-import CoinBull from "../../../images/coinBull.png";
-import CoinBear from "../../../images/coinBear.png";
-import Footer from "../../Footer";
+import { _CoinFlip_abi } from "../../interfaces/CoinFlip_Interface";
+import CoinBull from "../../images/coinBull.png";
+import CoinBear from "../../images/coinBear.png";
 import { FaEthereum } from "react-icons/fa";
-import etherscan_light from "../../../images/etherscan-logos/etherscan-logo-light.png";
+import etherscan_light from "../../images/etherscan-logos/etherscan-logo-light.png";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
   Box,
@@ -21,9 +20,9 @@ import {
   HStack,
   Spacer,
 } from "@chakra-ui/react";
-import "../../../styles/CoinFlips/CoinFlipViewer.scss";
-import { MetaMaskUserContext } from "../../../utils/contexts";
-import { db } from "../../../firebase-config";
+import "../../styles/CoinFlips/CoinFlipViewer.scss";
+import { MetaMaskUserContext } from "../../utils/contexts";
+import { db } from "../../firebase-config";
 import { setDoc, doc, increment, getDoc, updateDoc } from "firebase/firestore";
 import CoinFlipUser from "./CoinFlipUser";
 

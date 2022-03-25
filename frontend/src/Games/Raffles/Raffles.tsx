@@ -1,9 +1,9 @@
 import { useEffect, useState, useContext } from "react";
-import { _abi } from "../../../interfaces/Eyescream_Interface";
+import { _abi } from "../../interfaces/Eyescream_Interface";
 import { Link } from "react-router-dom";
-import { _Raffle_abi } from "../../../interfaces/RaffleEscrow_Interface";
-import BaseContainer from "../../../Containers/BaseContainers/BaseContainer";
-import { MetaMaskUserContext } from "../../../utils/contexts";
+import { _Raffle_abi } from "../../interfaces/RaffleEscrow_Interface";
+import BaseContainer from "../../Containers/BaseContainers/BaseContainer";
+import { MetaMaskUserContext } from "../../utils/contexts";
 import {
   Box,
   Flex,
@@ -22,7 +22,7 @@ import {
 
 } from "@chakra-ui/react";
 
-import { db } from "../../../firebase-config";
+import { db } from "../../firebase-config";
 import {
   collection,
   getDocs,

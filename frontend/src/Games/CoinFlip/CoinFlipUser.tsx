@@ -10,8 +10,8 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { FaEthereum } from "react-icons/fa";
-import CoinBull from "../../../images/coinBull.png";
-import CoinBear from "../../../images/coinBear.png";
+import CoinBull from "../../images/coinBull.png";
+import CoinBear from "../../images/coinBear.png";
 import { useQuery } from "react-query";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 
