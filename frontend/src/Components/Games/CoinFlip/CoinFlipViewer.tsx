@@ -122,13 +122,11 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
                   textShadow="green 3px 3px"
                   fontSize="40px"
                 >
-                  COIN FLIP
+                  {props.gameInfo.creatorAddress.substr(0, 10)}...'s Game 
                 </Heading>
-                <Heading color="white" fontSize="20px">
-                  {props.gameInfo.contractAddress}
-                </Heading>
+
                 {props.gameInfo.winner !==
-                "0x0000000000000000000000000000000000000000" ? (
+                "0" ? (
                   <Heading color="white" fontSize="20px">
                     Winner: {props.gameInfo.winner}
                   </Heading>
@@ -208,7 +206,8 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
                   height="25%"
                   width="25%"
                   src={etherscan_light} 
-                  onClick={() => handleContractRedirect(props.gameInfo.contractAddress)}>
+                  onClick={() => handleContractRedirect(props.gameInfo.contractAddress)}
+                  >
                 </Image>
                 </Box>
               ) : (

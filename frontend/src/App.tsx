@@ -6,7 +6,7 @@ import CoinFlips from "./Components/Games/CoinFlip/CoinFlips";
 import HighRollers from "./Components/Games/HighRollers/HighRollers";
 import HighRollerViewer from "./Containers/HighRollerViewer";
 import CoinFlipViewer from "./Components/Games/CoinFlip/CoinFlipViewer";
-import RaffleViewer from "./Containers/RaffleViewer";
+import RaffleViewer from "./Components/Games/Raffles/RaffleViewer";
 import FAQ from "./Containers/FAQ";
 import TOS from "./Containers/TOS";
 import Profile from "./Containers/Profile";

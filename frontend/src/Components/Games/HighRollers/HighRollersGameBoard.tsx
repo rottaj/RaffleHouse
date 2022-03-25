@@ -100,7 +100,9 @@ const HighRollersCircle = ({
         <Box pos="absolute" borderRadius="50%" border="4px solid white" p={8}>
           <Text fontSize="18px">Current pot value</Text>
           <Flex fontSize="34px" justify="center" align="center">
-            <Text>~{totalEthInGame}</Text>
+            {totalEthInGame &&
+            <Text>~{totalEthInGame.toFixed(2)}</Text>
+            }
             <FaEthereum />
           </Flex>
           <Flex align="center" flexDir="column">
