@@ -1,13 +1,13 @@
 import { useState, useEffect, useContext } from "react";
 //import { Redirect, Link, useHistory } from "react-router-dom";
 import { ethers } from "ethers";
-import CoinFlip from "../Components/Games/CoinFlip/CoinFlip";
-import { _CoinFlips_abi } from "../interfaces/CoinFlips_Interface";
+import CoinFlip from "./CoinFlip";
+import { _CoinFlips_abi } from "../../interfaces/CoinFlips_Interface";
 import {
   _CoinFlip_abi,
   _CoinFlip_bytecode,
-} from "../interfaces/CoinFlip_Interface";
-import BaseContainer from "./BaseContainers/BaseContainer";
+} from "../../interfaces/CoinFlip_Interface";
+import BaseContainer from "../../Containers/BaseContainers/BaseContainer";
 import {
   Box,
   Flex,
@@ -28,14 +28,22 @@ import {
   Spinner,
   Grid,
   GridItem,
+  Table,
+  Thead,
+  Tr,
+  Th,
+  Tbody,
+  Td,
+  Tfoot,
+  Switch
 } from "@chakra-ui/react";
 import { FaEthereum } from "react-icons/fa";
 import {
   createCoinFlipGame,
   sendTransactionToCoinFlips,
-} from "../utils/CreateCoinFlipGame";
-import { MetaMaskUserContext } from "../utils/contexts";
-import { db } from "../firebase-config";
+} from "../../utils/CreateCoinFlipGame";
+import { MetaMaskUserContext } from "../../utils/contexts";
+import { db } from "../../firebase-config";
 import {
   collection,
   getDocs,
@@ -49,6 +57,7 @@ declare let window: any;
 const CoinFlips = () => {
   const [currentCoinFlips, setCurrentCoinFlips]: any = useState([]);
   const [pastCoinFlips, setPastCoinFlips]: any = useState([]);
+  const [currentView, setCurrentView]: any = useState("Card");
 
   const coinflipsCollectionRef = collection(db, "coinflips");
   useEffect(() => {
@@ -73,6 +82,10 @@ const CoinFlips = () => {
       });
     }
   };
+
+  const handleViewChange = () => {
+    setCurrentView(currentView == "Card" ? "Table" : "Card")
+  }
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -100,21 +113,43 @@ const CoinFlips = () => {
                 GAMES
               </Heading>
               <Box alignSelf="right" marginLeft="auto">
+                <Flex>
+                  <Heading fontSize="20px">{currentView} View</Heading>
+                  <Switch type="green" onChange={handleViewChange}></Switch>
                 <Button bgColor="green" color="white" onClick={onOpen}>
                   Create Game
                 </Button>
+                </Flex>
               </Box>
             </Flex>
           </Box>
-          <Grid color="white" templateColumns="repeat(2, 1fr)" gap={2}>
-            {currentCoinFlips.map((coinFlip: any) => {
-              return (
-                <GridItem>
-                  <CoinFlip coinFlip={coinFlip}></CoinFlip>
-                </GridItem>
-              );
-            })}
-          </Grid>
+          {currentView == "Card" && 
+            <Grid color="white" templateColumns="repeat(2, 1fr)" gap={2}>
+              {currentCoinFlips.map((coinFlip: any) => {
+                return (
+                  <GridItem>
+                    <CoinFlip coinFlip={coinFlip} view={currentView}></CoinFlip>
+                  </GridItem>
+                );
+              })}
+            </Grid>
+          }
+          {currentView == "Table" && 
+            <Table color="white">
+              <Thead w="100%">
+                <Tr>
+                  <Th>Creator</Th>
+                  <Th>Status</Th>
+                  <Th>Buy In</Th>
+                </Tr>
+              </Thead>
+              <Tbody w="100%">
+                {currentCoinFlips.map((coinFlip: any) => {
+                  return <CoinFlip coinFlip={coinFlip} view={currentView}></CoinFlip>;
+                })}
+              </Tbody>
+            </Table>
+          } 
         </Box>
         <Box py="5%" height="100%" justifyContent="center">
           <Box alignItems="center" borderBottom="4px dotted green">
@@ -137,15 +172,33 @@ const CoinFlips = () => {
               </Heading>
             </Flex>
           </Box>
-          <Grid color="white" templateColumns="repeat(2, 1fr)" gap={2}>
-            {pastCoinFlips.map((coinFlip: any) => {
-              return (
-                <GridItem>
-                  <CoinFlip coinFlip={coinFlip}></CoinFlip>
-                </GridItem>
-              );
-            })}
-          </Grid>
+          {currentView == "Card" && 
+            <Grid color="white" templateColumns="repeat(2, 1fr)" gap={2}>
+              {pastCoinFlips.map((coinFlip: any) => {
+                return (
+                  <GridItem>
+                    <CoinFlip coinFlip={coinFlip} view={currentView}></CoinFlip>
+                  </GridItem>
+                );
+              })}
+            </Grid>
+          }
+          {currentView == "Table" &&
+            <Table color="white">
+              <Thead w="100%">
+                <Tr>
+                  <Th>Creator</Th>
+                  <Th>Winner</Th>
+                  <Th>Buy In</Th>
+                </Tr>
+              </Thead>
+              <Tbody w="100%">
+                {pastCoinFlips.map((coinFlip: any) => {
+                  return <CoinFlip coinFlip={coinFlip} view={currentView}></CoinFlip>;
+                })}
+              </Tbody>
+            </Table>
+          }
         </Box>
       </Box>
     </BaseContainer>

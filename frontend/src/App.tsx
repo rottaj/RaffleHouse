@@ -1,12 +1,12 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import Home from "./Containers/Home";
-import Raffles from "./Components/Games/Raffles/Raffles";
-import CoinFlips from "./Containers/CoinFlips";
-import HighRollers from "./Components/Games/HighRollers/HighRollers";
+import Raffles from "./Games/Raffles/Raffles";
+import CoinFlips from "./Games/CoinFlip/CoinFlips";
+import HighRollers from "./Games/HighRollers/HighRollers";
 import HighRollerViewer from "./Containers/HighRollerViewer";
-import CoinFlipViewer from "./Components/Games/CoinFlip/CoinFlipViewer";
-import RaffleViewer from "./Containers/RaffleViewer";
+import CoinFlipViewer from "./Games/CoinFlip/CoinFlipViewer";
+import RaffleViewer from "./Games/Raffles/RaffleViewer";
 import FAQ from "./Containers/FAQ";
 import TOS from "./Containers/TOS";
 import Profile from "./Containers/Profile";

@@ -1,15 +1,15 @@
 import { ethers } from "ethers";
-import { _abi } from "../../../interfaces/Eyescream_Interface";
-import { _HighRoller_abi } from "../../../interfaces/HighRoller_Interface";
+import { _abi } from "../../interfaces/Eyescream_Interface";
+import { _HighRoller_abi } from "../../interfaces/HighRoller_Interface";
 import { useState, useEffect, useContext } from "react";
 import {
   HighRollersAddress,
   _HighRollers_abi,
-} from "../../../interfaces/HighRollers_Interface";
+} from "../../interfaces/HighRollers_Interface";
 import { Link } from "react-router-dom";
-import { fetchNFTs } from "../../../utils/HandleNFTs";
-import BaseContainer from "../../../Containers/BaseContainers/BaseContainer";
-import "../../../styles/HighRollers/HighRollers.scss";
+import { fetchNFTs } from "../../utils/HandleNFTs";
+import BaseContainer from "../../Containers/BaseContainers/BaseContainer";
+import "../../styles/HighRollers/HighRollers.scss";
 import {
   Box,
   Heading,
@@ -24,13 +24,13 @@ import { useQuery } from "react-query";
 import {
   BaseContainerContext,
   MetaMaskUserContext,
-} from "../../../utils/contexts";
+} from "../../utils/contexts";
 import HighRollersGameBoard from "./HighRollersGameBoard";
 import PlayerPanels from "./PlayerPanels";
 import { useMemo } from "react";
 import { groupBy, mapValues } from "lodash";
-import NFT from "../../NFT";
-import { db } from "../../../firebase-config";
+import NFT from "../../Components/NFT";
+import { db } from "../../firebase-config";
 import {
   collection,
   query,

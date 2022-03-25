@@ -16,10 +16,10 @@ import { ethers } from "ethers";
 import { useContext } from "react";
 import { DonutChart } from "react-circle-chart";
 import { FaEthereum } from "react-icons/fa";
-import NFT from "../../NFT";
+import NFT from "../../Components/NFT";
 
-import { _abi } from "../../../interfaces/Eyescream_Interface";
-import { MetaMaskUserContext } from "../../../utils/contexts";
+import { _abi } from "../../interfaces/Eyescream_Interface";
+import { MetaMaskUserContext } from "../../utils/contexts";
 
 const HighRollersCircle = ({
   usersWithData,
@@ -100,7 +100,9 @@ const HighRollersCircle = ({
         <Box pos="absolute" borderRadius="50%" border="4px solid white" p={8}>
           <Text fontSize="18px">Current pot value</Text>
           <Flex fontSize="34px" justify="center" align="center">
-            <Text>~{totalEthInGame}</Text>
+            {totalEthInGame &&
+            <Text>~{totalEthInGame.toFixed(2)}</Text>
+            }
             <FaEthereum />
           </Flex>
           <Flex align="center" flexDir="column">

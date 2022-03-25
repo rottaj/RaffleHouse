@@ -1,10 +1,10 @@
 import { useState, useEffect, useContext } from "react";
 import { ethers } from "ethers";
-import { _CoinFlip_abi } from "../../../interfaces/CoinFlip_Interface";
-import CoinBull from "../../../images/coinBull.png";
-import CoinBear from "../../../images/coinBear.png";
-import Footer from "../../Footer";
+import { _CoinFlip_abi } from "../../interfaces/CoinFlip_Interface";
+import CoinBull from "../../images/coinBull.png";
+import CoinBear from "../../images/coinBear.png";
 import { FaEthereum } from "react-icons/fa";
+import etherscan_light from "../../images/etherscan-logos/etherscan-logo-light.png";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
   Box,
@@ -20,11 +20,14 @@ import {
   HStack,
   Spacer,
 } from "@chakra-ui/react";
-import "../../../styles/CoinFlips/CoinFlipViewer.scss";
-import { MetaMaskUserContext } from "../../../utils/contexts";
-import { db } from "../../../firebase-config";
+import "../../styles/CoinFlips/CoinFlipViewer.scss";
+import { MetaMaskUserContext } from "../../utils/contexts";
+import { db } from "../../firebase-config";
 import { setDoc, doc, increment, getDoc, updateDoc } from "firebase/firestore";
 import CoinFlipUser from "./CoinFlipUser";
+
+
+const ETHERSCAN_URL = 'https://rinkeby.etherscan.io/address/'
 
 type ModalViewerProps = {
   isOpen: boolean;
@@ -86,6 +89,10 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
     }
   };
 
+  const handleContractRedirect = (contractAddress) => {
+    window.open(ETHERSCAN_URL + contractAddress)
+  }
+
   return (
     <>
       {props.gameInfo.joineeAddress != null ? (
@@ -114,13 +121,11 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
                   textShadow="green 3px 3px"
                   fontSize="40px"
                 >
-                  COIN FLIP
+                  {props.gameInfo.creatorAddress.substr(0, 10)}...'s Game 
                 </Heading>
-                <Heading color="white" fontSize="20px">
-                  {props.gameInfo.contractAddress}
-                </Heading>
+
                 {props.gameInfo.winner !==
-                "0x0000000000000000000000000000000000000000" ? (
+                "0" ? (
                   <Heading color="white" fontSize="20px">
                     Winner: {props.gameInfo.winner}
                   </Heading>
@@ -165,6 +170,7 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
                         isBull={true}
                         buyInPrice={props.gameInfo.buyInPrice}
                         ethusd={parseFloat(networkStats?.ethusd)}
+                        view={"Card"}
                       />
                       <Flex
                         bgColor="white"
@@ -183,6 +189,7 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
                         address={props.gameInfo.joineeAddress as string}
                         buyInPrice={props.gameInfo.buyInPrice}
                         ethusd={parseFloat(networkStats?.ethusd)}
+                        view={"Card"}
                       />
                     </>
                   </Flex>
@@ -194,6 +201,13 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
                     <div className="side head"></div>
                     <div className="side tail"></div>
                   </div>
+                <Image 
+                  height="25%"
+                  width="25%"
+                  src={etherscan_light} 
+                  onClick={() => handleContractRedirect(props.gameInfo.contractAddress)}
+                  >
+                </Image>
                 </Box>
               ) : (
                 "GAME DOESN'T EXIST"
@@ -253,6 +267,12 @@ const CoinFlipViewer = (props: ModalViewerProps) => {
               <Button marginTop="10%" variant="ghost" onClick={props.onClose}>
                 Watch Game
               </Button>
+              <Image 
+                height="25%"
+                width="25%"
+                src={etherscan_light} 
+                onClick={() => handleContractRedirect(props.gameInfo.contractAddress)}>
+              </Image>
             </ModalBody>
           </ModalContent>
         </Modal>

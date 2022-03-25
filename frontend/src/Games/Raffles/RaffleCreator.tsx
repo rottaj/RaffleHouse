@@ -1,13 +1,13 @@
 import { useState, useEffect, useContext } from "react";
 import { useQuery } from "react-query";
-import NFT from "../../NFT";
+import NFT from "../../Components/NFT";
 import { ethers, ContractFactory } from "ethers";
-import { _abi } from "../../../interfaces/Eyescream_Interface";
+import { _abi } from "../../interfaces/Eyescream_Interface";
 import {
   _Raffle_abi,
   _Raffle_bytecode,
-} from "../../../interfaces/RaffleEscrow_Interface";
-import { fetchNFTs } from "../../../utils/HandleNFTs";
+} from "../../interfaces/RaffleEscrow_Interface";
+import { fetchNFTs } from "../../utils/HandleNFTs";
 import {
   Box, 
   Flex,
@@ -16,12 +16,12 @@ import {
   Input, 
   Button,
   Skeleton } from "@chakra-ui/react";
-import { db } from "../../../firebase-config";
+import { db } from "../../firebase-config";
 import {
   setDoc,
   doc,
 } from "firebase/firestore";
-import { MetaMaskUserContext } from "../../../utils/contexts";
+import { MetaMaskUserContext } from "../../utils/contexts";
 
 declare let window: any;
 const RaffleCreator = () => {
