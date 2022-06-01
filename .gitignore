@@ -6,3 +6,5 @@ artifacts
 # GAE API
 api/GameHandler/app.yaml
 api/HighRollers/app.yaml
+api/GameHandler/firebase-config.js
+api/HighRollers/firebase-config.js
