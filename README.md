@@ -12,6 +12,7 @@ Hosted on Rinkeby Test Network.
 
 Fancy a game anon?
 
+:point_down: Some Gifs might take a while to load.  :point_down:
 
 ![alt text](https://github.com/rottaj/RaffleHouse/blob/master/media/Screen_Recording_1.gif?raw=true)
 ![alt text](https://github.com/rottaj/RaffleHouse/blob/master/media/Screen_Recording_2.gif?raw=true)
